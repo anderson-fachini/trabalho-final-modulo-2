@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,9 +21,15 @@ public class Apuracao {
 	@GeneratedValue
 	private Long id;
 	private Colaborador colaborador;
+	
+	@Column(columnDefinition = "DATE")
 	private LocalDate data;
+	
 	private Usuario responsavelAprovacao;
+	
+	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dataAprovacao;
+	
 	private String observacoes;
 	private BigDecimal horasTrabalhadas;
 	private BigDecimal horasFaltantes;

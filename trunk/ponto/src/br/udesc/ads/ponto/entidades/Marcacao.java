@@ -1,5 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +15,10 @@ public class Marcacao {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Apuracao apuracao;
+	
+	@Column(columnDefinition = "TIME")
 	private LocalTime hora;
+	
 	private MotivoMarcacao motivo;
 	private Boolean digitada;
 	private Boolean excluida;
