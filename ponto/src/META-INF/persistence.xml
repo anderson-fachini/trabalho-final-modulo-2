@@ -6,6 +6,21 @@
 		<class>br.udesc.ads.ponto.jpaconverters.DiaSemanaToIntConverter</class>
 		<class>br.udesc.ads.ponto.entidades.EscalaMarcacao</class>
 		<class>br.udesc.ads.ponto.jpaconverters.LocalTimeToDateConverter</class>
+		<class>br.udesc.ads.ponto.entidades.Escala</class>
+		<class>br.udesc.ads.ponto.entidades.Abono</class>
+		<class>br.udesc.ads.ponto.entidades.AjusteBH</class>
+		<class>br.udesc.ads.ponto.entidades.Apuracao</class>
+		<class>br.udesc.ads.ponto.entidades.Colaborador</class>
+		<class>br.udesc.ads.ponto.entidades.Config</class>
+		<class>br.udesc.ads.ponto.entidades.Marcacao</class>
+		<class>br.udesc.ads.ponto.entidades.MotivoAbono</class>
+		<class>br.udesc.ads.ponto.entidades.MotivoMarcacao</class>
+		<class>br.udesc.ads.ponto.entidades.Setor</class>
+		<class>br.udesc.ads.ponto.entidades.Usuario</class>
+		<class>br.udesc.ads.ponto.jpaconverters.LocalDateTimeToDateConverter</class>
+		<class>br.udesc.ads.ponto.jpaconverters.PerfilUsuarioToStringConverter</class>
+		<class>br.udesc.ads.ponto.jpaconverters.SituacaoToStringConverter</class>
+		<class>br.udesc.ads.ponto.jpaconverters.OcorrenciaToIntConverter</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ponto"/>
 			<property name="javax.persistence.jdbc.user" value="usuario"/>

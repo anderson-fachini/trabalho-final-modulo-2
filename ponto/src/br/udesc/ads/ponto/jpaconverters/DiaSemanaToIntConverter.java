@@ -13,20 +13,15 @@ public class DiaSemanaToIntConverter implements AttributeConverter<DiaSemana, In
 		if (diaSemana == null) {
 			return null;
 		}
-		return diaSemana.ordinal();
+		return diaSemana.getId();
 	}
 
 	@Override
-	public DiaSemana convertToEntityAttribute(Integer ordinal) {
-		if (ordinal == null) {
+	public DiaSemana convertToEntityAttribute(Integer id) {
+		if (id == null) {
 			return null;
 		}
-		DiaSemana[] values = DiaSemana.values();
-		if (ordinal >= values.length) {
-			throw new RuntimeException(String.format("'%d' is not a valid value for %s.", ordinal,
-					DiaSemana.class.getSimpleName()));
-		}
-		return values[ordinal];
+		return DiaSemana.fromId(id);
 	}
 
 }

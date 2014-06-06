@@ -1,13 +1,23 @@
 package br.udesc.ads.ponto.entidades;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+@Entity
 public class Apuracao {
 
+	@Id
+	@GeneratedValue
 	private Long id;
 	private Colaborador colaborador;
 	private LocalDate data;
@@ -18,7 +28,10 @@ public class Apuracao {
 	private BigDecimal horasFaltantes;
 	private BigDecimal horasExcedentes;
 	private BigDecimal horasAbonadas;
-	private List<Ocorrencia> ocorrencias;
+
+	@ElementCollection(fetch=FetchType.EAGER, targetClass=Ocorrencia.class)
+//	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -99,13 +112,17 @@ public class Apuracao {
 	public void setHorasAbonadas(BigDecimal horasAbonadas) {
 		this.horasAbonadas = horasAbonadas;
 	}
-
-	public List<Ocorrencia> getOcorrencias() {
-		return ocorrencias;
+	
+	public void addOcorrencia(Ocorrencia ocorrencia) {
+		this.ocorrencias.add(ocorrencia);
 	}
-
-	public void setOcorrencias(List<Ocorrencia> ocorrencias) {
-		this.ocorrencias = ocorrencias;
+	
+	public int getOcorrenciasSize() {
+		return this.ocorrencias.size();
+	}
+	
+	public Ocorrencia getOcorrencia(int index) {
+		return this.ocorrencias.get(index);
 	}
 
 }

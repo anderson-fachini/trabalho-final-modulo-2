@@ -1,6 +1,8 @@
 package br.udesc.ads.ponto.entidades;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.joda.time.LocalTime;
@@ -9,6 +11,7 @@ import org.joda.time.LocalTime;
 public class Marcacao {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Apuracao apuracao;
 	private LocalTime hora;

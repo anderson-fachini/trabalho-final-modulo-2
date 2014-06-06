@@ -2,17 +2,25 @@ package br.udesc.ads.ponto.entidades;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import org.joda.time.LocalDateTime;
 
+@Entity
 public class AjusteBH {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Colaborador colaborador;
 	private LocalDateTime dataHora;
 	private BigDecimal valorAjuste; // Pode ser positivo ou negativo
 	private String observacoes;
 	private Usuario responsavel;
-	private Apuracao apuracao; // Somente quando foi um ajuste "automático"
+	private Apuracao apuracao; // Somente preenchido quando foi um ajuste "automático"
 
 	public Long getId() {
 		return id;
