@@ -22,7 +22,6 @@ public class MainTest {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("ponto");
 		EntityManager entityManager = factory.createEntityManager();
 		
-		
 		EntityTransaction transaction = entityManager.getTransaction();
 		
 		transaction.begin();
@@ -35,40 +34,33 @@ public class MainTest {
 		entityManager.close();
 		
 		factory.close();
-		
-		
 	}
 
 	private static void insereUmasEscalas(EntityManager entityManager) {
 		
-//		Escala escala = new Escala();
-//		escala.setNome("Escala padrão");
-//		List<EscalaMarcacao> marcacoes = escala.getMarcacoes();
-//		
-//		marcacoes.add(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(8, 0)));
-//		marcacoes.add(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(12, 0)));
-//		marcacoes.add(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(13, 30)));
-//		marcacoes.add(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(18, 0)));
+		Escala escala = new Escala();
+		escala.setNome("Escala padrão");
+		escala.addMarcacao(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(8, 0)));
+		escala.addMarcacao(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(12, 0)));
+		escala.addMarcacao(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(13, 30)));
+		escala.addMarcacao(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(18, 0)));
+		entityManager.persist(escala);
+		Long id = escala.getId();
 		
-		entityManager.persist(new EscalaMarcacao(DiaSemana.DOMINGO, new LocalTime(8, 0)));
-		entityManager.persist(new EscalaMarcacao(DiaSemana.SEGUNDA_FEIRA, new LocalTime(12, 00)));
-		entityManager.persist(new EscalaMarcacao(DiaSemana.TERCA_FEIRA, new LocalTime(13, 30)));
-		entityManager.persist(new EscalaMarcacao(DiaSemana.SABADO, new LocalTime(18, 01)));
-		
-		EscalaMarcacao marca = entityManager.find(EscalaMarcacao.class, 703L);
-		System.out.println(marca);
+		Escala recuperada = entityManager.find(Escala.class, id);
+		System.out.println(recuperada);
 	}
 
 	private static void insereUnsFeriados(EntityManager entityManager) {
-		Feriado feriado = new Feriado();
-		feriado.setData(new LocalDate(2014, 12, 25));
-		feriado.setNome("Natal");
-		entityManager.persist(feriado);
+		Feriado natal = new Feriado();
+		natal.setData(new LocalDate(2014, 12, 25));
+		natal.setNome("Natal");
+		entityManager.persist(natal);
 		
-		Feriado pascoa = new Feriado();
-		pascoa.setData(new LocalDate(2014, 11, 15));
-		pascoa.setNome("Proclamação da República");
-		entityManager.persist(pascoa);
+		Feriado proclamacao = new Feriado();
+		proclamacao.setData(new LocalDate(2014, 11, 15));
+		proclamacao.setNome("Proclamação da República");
+		entityManager.persist(proclamacao);
 	}
 	
 }

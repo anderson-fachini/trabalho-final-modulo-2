@@ -1,12 +1,26 @@
 package br.udesc.ads.ponto.entidades;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Usuario {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String nomeUsuario;
 	private String senha;
+
+	@Column(columnDefinition = "CHAR(1)")
 	private Situacao situacao;
+
+	@Column(columnDefinition = "CHAR(1)")
 	private PerfilUsuario perfil;
+
 	private Colaborador colaborador;
 
 	public Long getId() {
