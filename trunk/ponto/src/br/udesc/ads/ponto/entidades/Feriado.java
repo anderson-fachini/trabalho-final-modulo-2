@@ -1,6 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.time.LocalDate;
+import org.joda.time.LocalDate;
 
 public class Feriado {
 

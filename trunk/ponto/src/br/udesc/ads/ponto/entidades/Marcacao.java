@@ -1,6 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.time.LocalTime;
+import org.joda.time.LocalTime;
 
 public class Marcacao {
 

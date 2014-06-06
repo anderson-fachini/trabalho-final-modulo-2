@@ -1,9 +1,10 @@
 package br.udesc.ads.ponto.entidades;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 public class Apuracao {
 
