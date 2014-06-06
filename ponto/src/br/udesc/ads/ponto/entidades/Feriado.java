@@ -1,11 +1,25 @@
 package br.udesc.ads.ponto.entidades;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import org.joda.time.LocalDate;
 
+@Entity
+// TODO Botar as sequences pra funcionar depois.
+// @SequenceGenerator(name = "SEQ_FERIADO")
 public class Feriado {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@Column(columnDefinition = "DATE")
 	private LocalDate data;
+
 	private String nome;
 
 	public Long getId() {
