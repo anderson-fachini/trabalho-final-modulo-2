@@ -1,5 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,8 +14,13 @@ public class Abono {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@Column(columnDefinition = "TIME")
 	private LocalTime horaInicio;
+	
+	@Column(columnDefinition = "TIME")
 	private LocalTime horaFim;
+	
 	private MotivoAbono motivo;
 	private Apuracao apuracao;
 
