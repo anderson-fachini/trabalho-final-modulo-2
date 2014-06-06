@@ -1,9 +1,14 @@
 package br.udesc.ads.ponto.entidades;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import org.joda.time.LocalTime;
 
+@Entity
 public class Marcacao {
 
+	@Id
 	private Long id;
 	private Apuracao apuracao;
 	private LocalTime hora;

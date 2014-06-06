@@ -2,8 +2,13 @@ package br.udesc.ads.ponto.entidades;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Escala {
 
+	@Id
 	private Long id;
 	private String nome;
 	private List<EscalaMarcacao> marcacoes;
