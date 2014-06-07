@@ -5,10 +5,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ //
+@SuiteClasses({//
 TestFeriadoPersistence.class, //
 		TestEscalaPersistence.class, //
-		TestApuracaoPersistence.class //
+		TestApuracaoPersistence.class, //
+		TestColaboradorPersistence.class //
 })
 public class SuitePontoTest {
 

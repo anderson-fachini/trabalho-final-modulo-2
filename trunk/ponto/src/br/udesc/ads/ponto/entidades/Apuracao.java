@@ -14,18 +14,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "colaborador_id", "data" }))
 public class Apuracao {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {}, optional = false)
 	@JoinColumn(insertable = true, updatable = false, nullable = false)
 	private Colaborador colaborador;
 
@@ -38,9 +41,13 @@ public class Apuracao {
 	private LocalDateTime dataAprovacao;
 
 	private String observacoes;
+
 	private BigDecimal horasTrabalhadas;
+
 	private BigDecimal horasFaltantes;
+
 	private BigDecimal horasExcedentes;
+
 	private BigDecimal horasAbonadas;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
@@ -49,8 +56,7 @@ public class Apuracao {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
 	private List<Abono> abonos = new ArrayList<>();
 
-	@ElementCollection(fetch = FetchType.EAGER, targetClass = Ocorrencia.class)
-	// @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
 	public Long getId() {
@@ -158,11 +164,11 @@ public class Apuracao {
 			abono.setApuracao(this);
 		}
 	}
-	
+
 	public int getAbonosSize() {
 		return this.abonos.size();
 	}
-	
+
 	public Abono getAbono(int index) {
 		return this.abonos.get(index);
 	}
