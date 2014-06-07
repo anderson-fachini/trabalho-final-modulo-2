@@ -75,6 +75,7 @@ public class TestApuracaoPersistence extends PersistenceTest {
 		apuracao.addMarcacao(new Marcacao(new LocalTime(11, 58)));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(13, 29)));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(17, 57)));
+		apuracao.setApurada(true);
 
 		Assert.assertNull(apuracao.getId());
 		entityManager.persist(apuracao);
@@ -94,6 +95,7 @@ public class TestApuracaoPersistence extends PersistenceTest {
 		Assert.assertTrue(actual == actual.getMarcacao(1).getApuracao());
 		Assert.assertTrue(actual == actual.getMarcacao(2).getApuracao());
 		Assert.assertTrue(actual == actual.getMarcacao(3).getApuracao());
+		Assert.assertEquals(true, actual.getApurada());
 	}
 	
 	@Test
