@@ -10,8 +10,8 @@ import org.junit.Before;
 
 /**
  * Classe base para os testes de persistência.
+ * 
  * @author Samuel
- *
  */
 public abstract class PersistenceTest {
 

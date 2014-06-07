@@ -2,9 +2,12 @@ package br.udesc.ads.ponto.entidades;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.joda.time.LocalTime;
 
@@ -22,6 +25,9 @@ public class Abono {
 	private LocalTime horaFim;
 	
 	private MotivoAbono motivo;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
+	@JoinColumn(nullable = false, updatable= false)
 	private Apuracao apuracao;
 
 	public Long getId() {
@@ -62,6 +68,9 @@ public class Abono {
 
 	public void setApuracao(Apuracao apuracao) {
 		this.apuracao = apuracao;
+		if (!apuracao.containsAbono(this)) {
+			apuracao.addAbono(this);
+		}
 	}
 
 }
