@@ -50,6 +50,8 @@ public class Apuracao {
 
 	private BigDecimal horasAbonadas;
 
+	private Boolean apurada;
+
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
 	private List<Marcacao> marcacoes = new ArrayList<>();
 
@@ -137,6 +139,14 @@ public class Apuracao {
 
 	public void setHorasAbonadas(BigDecimal horasAbonadas) {
 		this.horasAbonadas = horasAbonadas;
+	}
+
+	public Boolean getApurada() {
+		return apurada;
+	}
+
+	public void setApurada(Boolean apurada) {
+		this.apurada = apurada;
 	}
 
 	public void addMarcacao(Marcacao marcacao) {
