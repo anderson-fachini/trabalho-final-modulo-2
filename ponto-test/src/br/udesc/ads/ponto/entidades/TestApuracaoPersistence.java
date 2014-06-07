@@ -95,5 +95,59 @@ public class TestApuracaoPersistence extends PersistenceTest {
 		Assert.assertTrue(actual == actual.getMarcacao(2).getApuracao());
 		Assert.assertTrue(actual == actual.getMarcacao(3).getApuracao());
 	}
+	
+	@Test
+	public void testInsereRecuperaApuracao_ComOcorrencias() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 6, 7));
+		apuracao.addOcorrencia(Ocorrencia.HORAS_EXCEDENTES);
+		apuracao.addOcorrencia(Ocorrencia.INTERVALO_ALMOCO_INCOMPLETO);
 
+		Assert.assertNull(apuracao.getId());
+		entityManager.persist(apuracao);
+		Assert.assertNotNull(apuracao.getId());
+
+		Apuracao actual = entityManager.find(Apuracao.class, apuracao.getId());
+
+		Assert.assertEquals(apuracao.getId(), actual.getId());
+		Assert.assertEquals(new LocalDate(2014, 6, 7), actual.getData());
+		Assert.assertTrue(colaborador == actual.getColaborador());
+		Assert.assertEquals(2, actual.getOcorrenciasSize());
+		Assert.assertEquals(Ocorrencia.HORAS_EXCEDENTES, actual.getOcorrencia(0));
+		Assert.assertEquals(Ocorrencia.INTERVALO_ALMOCO_INCOMPLETO, actual.getOcorrencia(1));
+	}
+
+	@Test
+	public void testInsereRecuperaApuracao_ComAbonos() {
+		
+		MotivoAbono motivoConsulta = new MotivoAbono();
+		motivoConsulta.setDescricao("Consulta médica");
+		entityManager.persist(motivoConsulta);
+		
+		MotivoAbono motivoCachaca = new MotivoAbono();
+		motivoCachaca.setDescricao("Bebendo cachaça com os amigos");
+		entityManager.persist(motivoCachaca);
+		
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 6, 7));
+		apuracao.addAbono(new Abono(new LocalTime(8, 0), new LocalTime(12, 0), motivoConsulta));
+		apuracao.addAbono(new Abono(new LocalTime(13, 30), new LocalTime(18, 0), motivoCachaca));
+
+		Assert.assertNull(apuracao.getId());
+		entityManager.persist(apuracao);
+		Assert.assertNotNull(apuracao.getId());
+
+		Apuracao actual = entityManager.find(Apuracao.class, apuracao.getId());
+
+		Assert.assertEquals(apuracao.getId(), actual.getId());
+		Assert.assertEquals(new LocalDate(2014, 6, 7), actual.getData());
+		Assert.assertTrue(colaborador == actual.getColaborador());
+		Assert.assertEquals(2, actual.getAbonosSize());
+		Assert.assertTrue(motivoConsulta == actual.getAbono(0).getMotivo());
+		Assert.assertTrue(motivoCachaca == actual.getAbono(1).getMotivo());
+		Assert.assertTrue(actual == actual.getAbono(0).getApuracao());
+		Assert.assertTrue(actual == actual.getAbono(1).getApuracao());
+	}
 }

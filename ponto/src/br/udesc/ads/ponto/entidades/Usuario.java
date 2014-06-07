@@ -12,7 +12,11 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@Column(nullable = false, updatable = false, unique = true)
 	private String nomeUsuario;
+	
+	@Column(nullable = false)
 	private String senha;
 
 	@Column(columnDefinition = "CHAR(1)")

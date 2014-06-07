@@ -17,18 +17,30 @@ public class Abono {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@Column(columnDefinition = "TIME")
 	private LocalTime horaInicio;
-	
+
 	@Column(columnDefinition = "TIME")
 	private LocalTime horaFim;
-	
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {}, optional = false)
+	@JoinColumn(nullable = false)
 	private MotivoAbono motivo;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
-	@JoinColumn(nullable = false, updatable= false)
+	@JoinColumn(nullable = false, updatable = false)
 	private Apuracao apuracao;
+	
+	public Abono() {
+	}
+	
+	public Abono(LocalTime horaInicio, LocalTime horaFim, MotivoAbono motivo) {
+		this();
+		this.horaInicio = horaInicio;
+		this.horaFim = horaFim;
+		this.motivo = motivo;
+	}
 
 	public Long getId() {
 		return id;
