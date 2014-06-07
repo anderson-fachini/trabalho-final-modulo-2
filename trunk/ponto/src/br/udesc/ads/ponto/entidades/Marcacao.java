@@ -2,9 +2,12 @@ package br.udesc.ads.ponto.entidades;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.joda.time.LocalTime;
 
@@ -14,14 +17,28 @@ public class Marcacao {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
+	@JoinColumn(nullable = false, updatable = false)
 	private Apuracao apuracao;
-	
+
 	@Column(columnDefinition = "TIME")
 	private LocalTime hora;
-	
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private MotivoMarcacao motivo;
+
 	private Boolean digitada;
+	
 	private Boolean excluida;
+	
+	public Marcacao() {
+	}
+	
+	public Marcacao(LocalTime hora) {
+		this();
+		this.hora = hora;
+	}
 
 	public Long getId() {
 		return id;
@@ -37,6 +54,9 @@ public class Marcacao {
 
 	public void setApuracao(Apuracao apuracao) {
 		this.apuracao = apuracao;
+		if (!apuracao.containsMarcacao(this)) {
+			apuracao.addMarcacao(this);
+		}
 	}
 
 	public LocalTime getHora() {

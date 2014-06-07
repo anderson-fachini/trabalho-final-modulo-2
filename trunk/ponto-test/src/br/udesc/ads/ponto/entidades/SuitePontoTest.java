@@ -7,7 +7,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ //
 TestFeriadoPersistence.class, //
-		TestEscalaPersistence.class //
+		TestEscalaPersistence.class, //
+		TestApuracaoPersistence.class //
 })
 public class SuitePontoTest {
 

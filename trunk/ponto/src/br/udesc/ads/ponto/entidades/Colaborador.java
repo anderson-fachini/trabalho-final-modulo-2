@@ -2,10 +2,13 @@ package br.udesc.ads.ponto.entidades;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Colaborador {
@@ -13,10 +16,19 @@ public class Colaborador {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
 	private Long codigo;
+
+	@Column(nullable = false)
 	private String nome;
+
+	@Column(nullable = false, unique = true, updatable = false)
 	private String cpf;
+
+	@Column(nullable = false)
 	private BigDecimal saldoBH;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private Setor setor;
 
 	public Long getId() {
