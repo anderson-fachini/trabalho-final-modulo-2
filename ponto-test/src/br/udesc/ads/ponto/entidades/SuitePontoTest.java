@@ -9,7 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 TestFeriadoPersistence.class, //
 		TestEscalaPersistence.class, //
 		TestApuracaoPersistence.class, //
-		TestColaboradorPersistence.class //
+		TestColaboradorPersistence.class, //
+		TestUsuarioPersistence.class //
 })
 public class SuitePontoTest {
 
