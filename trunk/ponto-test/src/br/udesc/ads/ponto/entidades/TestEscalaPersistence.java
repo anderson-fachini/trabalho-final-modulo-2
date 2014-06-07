@@ -11,23 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestEscala {
-
-	private EntityManager entityManager;
-	private EntityTransaction transaction;
-
-	@Before
-	public void setup() {
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("ponto");
-		this.entityManager = factory.createEntityManager();
-		this.transaction = entityManager.getTransaction();
-		transaction.begin();
-	}
-
-	@After
-	public void tearDown() {
-		transaction.rollback();
-	}
+public class TestEscalaPersistence extends PersistenceTest {
 
 	@Test
 	public void testInsereRecuperaEscala() {
