@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:tns="http://leitoraponto.services.ponto.ads.udesc.br/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://leitoraponto.services.ponto.ads.udesc.br/" version="1.0">
+<xs:element name="confirmarLeitura" type="tns:confirmarLeitura"/>
+<xs:element name="confirmarLeituraResponse" type="tns:confirmarLeituraResponse"/>
+<xs:element name="lerMarcacoes" type="tns:lerMarcacoes"/>
+<xs:element name="lerMarcacoesResponse" type="tns:lerMarcacoesResponse"/>
+<xs:complexType name="confirmarLeitura">
+    <xs:sequence>
+      <xs:element name="idInicial" type="xs:long"/>
+      <xs:element name="idFinal" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="confirmarLeituraResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="lerMarcacoes">
+    <xs:sequence>
+      <xs:element name="quantidade" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="lerMarcacoesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:registroMarcacao"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="registroMarcacao">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codFuncionario" type="xs:long"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="marcacao" type="tns:localDateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType final="extension restriction" name="localDateTime">
+    <xs:complexContent>
+      <xs:extension base="tns:baseLocal">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="baseLocal">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractPartial">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+<xs:complexType abstract="true" name="abstractPartial">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

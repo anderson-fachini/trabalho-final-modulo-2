@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="LeitoraPontoService" targetNamespace="http://leitoraponto.services.ponto.ads.udesc.br/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://leitoraponto.services.ponto.ads.udesc.br/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://leitoraponto.services.ponto.ads.udesc.br/" schemaLocation="leitorapontoservice_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="lerMarcacoesResponse">
+    <wsdl:part name="parameters" element="tns:lerMarcacoesResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lerMarcacoes">
+    <wsdl:part name="parameters" element="tns:lerMarcacoes">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="confirmarLeituraResponse">
+    <wsdl:part name="parameters" element="tns:confirmarLeituraResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="confirmarLeitura">
+    <wsdl:part name="parameters" element="tns:confirmarLeitura">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="LeitoraPontoService">
+    <wsdl:operation name="confirmarLeitura">
+      <wsdl:input name="confirmarLeitura" message="tns:confirmarLeitura">
+    </wsdl:input>
+      <wsdl:output name="confirmarLeituraResponse" message="tns:confirmarLeituraResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="lerMarcacoes">
+      <wsdl:input name="lerMarcacoes" message="tns:lerMarcacoes">
+    </wsdl:input>
+      <wsdl:output name="lerMarcacoesResponse" message="tns:lerMarcacoesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LeitoraPontoServiceSoapBinding" type="tns:LeitoraPontoService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="confirmarLeitura">
+      <soap12:operation soapAction="confirmarLeitura" style="document"/>
+      <wsdl:input name="confirmarLeitura">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="confirmarLeituraResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="lerMarcacoes">
+      <soap12:operation soapAction="lerMarcacoes" style="document"/>
+      <wsdl:input name="lerMarcacoes">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="lerMarcacoesResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LeitoraPontoService">
+    <wsdl:port name="LeitoraPontoServicePort" binding="tns:LeitoraPontoServiceSoapBinding">
+      <soap12:address location="http://localhost:9090/LeitoraPontoServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
