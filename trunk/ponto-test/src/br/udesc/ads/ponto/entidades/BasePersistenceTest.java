@@ -13,7 +13,7 @@ import org.junit.Before;
  * 
  * @author Samuel
  */
-public abstract class PersistenceTest {
+public abstract class BasePersistenceTest {
 
 	protected EntityManager entityManager;
 	private EntityTransaction transaction;
