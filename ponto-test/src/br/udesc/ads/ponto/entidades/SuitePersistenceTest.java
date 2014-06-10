@@ -12,6 +12,6 @@ TestFeriadoPersistence.class, //
 		TestColaboradorPersistence.class, //
 		TestUsuarioPersistence.class //
 })
-public class SuitePontoTest {
+public class SuitePersistenceTest {
 
 }

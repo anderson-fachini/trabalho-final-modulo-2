@@ -4,7 +4,7 @@ import org.joda.time.LocalTime;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestEscalaPersistence extends PersistenceTest {
+public class TestEscalaPersistence extends BasePersistenceTest {
 
 	@Test
 	public void testInsereRecuperaEscala() {

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestColaboradorPersistence extends PersistenceTest {
+public class TestColaboradorPersistence extends BasePersistenceTest {
 
 	private Setor setor;
 

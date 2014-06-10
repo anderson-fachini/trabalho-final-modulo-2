@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestFeriadoPersistence extends PersistenceTest {
+public class TestFeriadoPersistence extends BasePersistenceTest {
 
 	@Test
 	public void testInsereRecuperaFeriado() {
