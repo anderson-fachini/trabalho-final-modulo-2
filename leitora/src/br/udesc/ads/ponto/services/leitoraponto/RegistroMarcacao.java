@@ -32,4 +32,9 @@ public class RegistroMarcacao {
 		this.marcacao = marcacao;
 	}
 
+	@Override
+	public String toString() {
+		return "RegistroMarcacao [id=" + id + ", codFuncionario=" + codFuncionario + ", marcacao=" + marcacao + "]";
+	}
+
 }
