@@ -152,5 +152,13 @@ public class LeitoraPonto {
 			return false;
 		}
 	}
+
+	public void resetarConfirmacoes() throws IOException {
+		if (arquivoConfirmacoes.exists()) {
+			arquivoConfirmacoes.delete();
+		}
+		arquivoConfirmacoes.createNewFile();
+		confirmadas.clear();
+	}
 	
 }

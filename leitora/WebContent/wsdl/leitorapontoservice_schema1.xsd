@@ -3,6 +3,8 @@
 <xs:element name="confirmarLeituraResponse" type="tns:confirmarLeituraResponse"/>
 <xs:element name="lerMarcacoes" type="tns:lerMarcacoes"/>
 <xs:element name="lerMarcacoesResponse" type="tns:lerMarcacoesResponse"/>
+<xs:element name="resetarConfirmacoes" type="tns:resetarConfirmacoes"/>
+<xs:element name="resetarConfirmacoesResponse" type="tns:resetarConfirmacoesResponse"/>
 <xs:complexType name="confirmarLeitura">
     <xs:sequence>
       <xs:element name="idInicial" type="xs:long"/>
@@ -10,6 +12,12 @@
     </xs:sequence>
   </xs:complexType>
 <xs:complexType name="confirmarLeituraResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="resetarConfirmacoes">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="resetarConfirmacoesResponse">
     <xs:sequence/>
   </xs:complexType>
 <xs:complexType name="lerMarcacoes">
@@ -26,24 +34,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="codFuncionario" type="xs:long"/>
       <xs:element minOccurs="0" name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="marcacao" type="tns:localDateTime"/>
+      <xs:element minOccurs="0" name="marcacao" type="xs:dateTime"/>
     </xs:sequence>
-  </xs:complexType>
-<xs:complexType final="extension restriction" name="localDateTime">
-    <xs:complexContent>
-      <xs:extension base="tns:baseLocal">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-<xs:complexType abstract="true" name="baseLocal">
-    <xs:complexContent>
-      <xs:extension base="tns:abstractPartial">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-<xs:complexType abstract="true" name="abstractPartial">
-    <xs:sequence/>
   </xs:complexType>
 </xs:schema>

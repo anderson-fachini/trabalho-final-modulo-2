@@ -52,4 +52,15 @@ public class LeitoraPontoService {
 		}
 	}
 	
+	@WebMethod(operationName = "resetarConfirmacoes", action = "resetarConfirmacoes")
+	public void resetarConfirmacoes() {
+		
+		try {
+			leitora.resetarConfirmacoes();
+		} catch (IOException e) {
+			// TODO Vamos fazer um tratamento de exceção mais elegante?
+			e.printStackTrace();
+		}
+	}
+	
 }
