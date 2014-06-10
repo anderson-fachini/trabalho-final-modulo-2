@@ -64,6 +64,7 @@ public class ApuracaoService {
 	 */
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
 
+		// TODO Implementar
 	}
 
 }
