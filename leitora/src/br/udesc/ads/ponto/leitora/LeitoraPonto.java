@@ -1,4 +1,4 @@
-package br.udesc.ads.ponto.services.leitoraponto;
+package br.udesc.ads.ponto.leitora;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,15 +14,15 @@ import org.joda.time.LocalDateTime;
 
 public class LeitoraPonto {
 
-	private String arquivoMarcacoes;
-	private String arquivoConfirmacoes;
+	private File arquivoMarcacoes;
+	private File arquivoConfirmacoes;
 
 	private boolean leuConfirmacoes = false;
 	private List<Long> confirmadas = new ArrayList<>();
 
-	public LeitoraPonto(String arquivoMarcacoes, String arquivoConfirmadas) {
-		this.arquivoMarcacoes = arquivoMarcacoes;
-		this.arquivoConfirmacoes = arquivoConfirmadas;
+	public LeitoraPonto(File marcacoes, File confirmacoes) {
+		this.arquivoMarcacoes = marcacoes;
+		this.arquivoConfirmacoes = confirmacoes;
 	}
 
 	private void lerConfirmacoes() throws IOException, FormatoInvalidoException {
@@ -84,7 +84,7 @@ public class LeitoraPonto {
 					RegistroMarcacao registro = new RegistroMarcacao();
 					registro.setId(id);
 					registro.setCodFuncionario(Long.parseLong(tokens[1]));
-					registro.setMarcacao(parseLocalDateTime(tokens[2], tokens[3]));
+					registro.setMarcacao(parseLocalDateTime(tokens[2], tokens[3]).toDate());
 					result.add(registro);
 					quantidade--;
 				} catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
@@ -100,7 +100,7 @@ public class LeitoraPonto {
 
 	public void confirmarMarcacoes(long idInicial, long idFinal) throws IOException {
 		
-		boolean breakLine = new File(arquivoConfirmacoes).length() > 0;
+		boolean breakLine = arquivoConfirmacoes.length() > 0;
 
 		FileWriter writer = new FileWriter(arquivoConfirmacoes, true);
 		BufferedWriter bufWriter = new BufferedWriter(writer);
@@ -153,16 +153,4 @@ public class LeitoraPonto {
 		}
 	}
 	
-	private static final String ARQUIVO_MARCACOES = "marcacoes.csv";
-	private static final String ARQUIVO_CONFIRMACOES = "confirmacoes.txt";
-	
-	public static void main(String[] args) throws IOException, FormatoInvalidoException {
-		
-		LeitoraPonto leitoraPonto = new LeitoraPonto(ARQUIVO_MARCACOES, ARQUIVO_CONFIRMACOES);
-		List<RegistroMarcacao> marca = leitoraPonto.lerMarcacoes(2);
-		leitoraPonto.confirmarMarcacoes(marca.get(0).getId(), marca.get(marca.size() - 1).getId());
-		
-		System.out.println(marca);
-	}
-
 }
