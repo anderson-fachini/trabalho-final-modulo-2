@@ -1,4 +1,4 @@
-package br.udesc.ads.ponto.services.leitoraponto;
+package br.udesc.ads.ponto.leitora;
 
 public class FormatoInvalidoException extends Exception {
 

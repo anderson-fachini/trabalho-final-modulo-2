@@ -1,12 +1,12 @@
-package br.udesc.ads.ponto.services.leitoraponto;
+package br.udesc.ads.ponto.leitora;
 
-import org.joda.time.LocalDateTime;
+import java.util.Date;
 
 public class RegistroMarcacao {
 
 	private Long id;
 	private Long codFuncionario;
-	private LocalDateTime marcacao;
+	private Date marcacao;
 
 	public Long getId() {
 		return id;
@@ -24,11 +24,11 @@ public class RegistroMarcacao {
 		this.codFuncionario = codFuncionario;
 	}
 
-	public LocalDateTime getMarcacao() {
+	public Date getMarcacao() {
 		return marcacao;
 	}
 
-	public void setMarcacao(LocalDateTime marcacao) {
+	public void setMarcacao(Date marcacao) {
 		this.marcacao = marcacao;
 	}
 
