@@ -17,6 +17,7 @@ public class Colaborador {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Column(unique = true)
 	private Long codigo;
 
 	@Column(nullable = false)
