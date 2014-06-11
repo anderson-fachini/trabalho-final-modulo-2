@@ -10,6 +10,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 public class LeitoraPonto {
@@ -53,6 +54,7 @@ public class LeitoraPonto {
 			leuConfirmacoes = true;
 		}
 
+		LocalDate hoje = LocalDate.now();
 		List<RegistroMarcacao> result = new ArrayList<>();
 
 		FileReader reader = new FileReader(arquivoMarcacoes);
@@ -79,12 +81,16 @@ public class LeitoraPonto {
 					}
 					long id = Long.parseLong(tokens[0]);
 					if (confirmadas.contains(id)) {
-						continue;
+						continue; // Para não enviar as confirmadas novamente.
+					}
+					LocalDateTime dataHora = parseLocalDateTime(tokens[2], tokens[3]);
+					if (!dataHora.toLocalDate().isBefore(hoje)) {
+						continue; // Para não enviar a marcações do dia atual.
 					}
 					RegistroMarcacao registro = new RegistroMarcacao();
 					registro.setId(id);
 					registro.setCodFuncionario(Long.parseLong(tokens[1]));
-					registro.setMarcacao(parseLocalDateTime(tokens[2], tokens[3]).toDate());
+					registro.setMarcacao(dataHora.toDate());
 					result.add(registro);
 					quantidade--;
 				} catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
