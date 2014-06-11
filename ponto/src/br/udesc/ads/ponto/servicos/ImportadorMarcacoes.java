@@ -21,6 +21,7 @@ import org.joda.time.LocalTime;
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Marcacao;
+import br.udesc.ads.ponto.entidades.MarcacaoLida;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService;
 import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService_Service;
@@ -41,17 +42,23 @@ public class ImportadorMarcacoes {
 	}
 
 	public void importar() {
+		// Importa da leitora para uma fila no banco, ignorando duplicidades:
+		importarRegistrosDaLeitora();
+		
+		// Seleciona da fila e converte para Apuracoes:
+		List<MarcacaoLida> lidas = selecionarMarcacoesLidas();
+		List<Apuracao> apuracoes = converterRegistrosEmApuracoes(lidas);
+
+		// Persiste as Apuracoes e remove da fila:
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
 		try {
-		
-			List<RegistroMarcacao> registros = lerRegistrosDaLeitora();
-			List<Apuracao> apuracoes = converterRegistrosEmApuracoes(registros);
 			for (Apuracao apura : apuracoes) {
 				entityManager.persist(apura);
 			}
-			confirmarRegistrosProcessados(registros);
-			
+			for (MarcacaoLida lida : lidas) {
+				entityManager.remove(lida);
+			}
 			transaction.commit();
 		} catch (Throwable ex) {
 			transaction.rollback();
@@ -59,28 +66,55 @@ public class ImportadorMarcacoes {
 		}
 	}
 
-	private List<RegistroMarcacao> lerRegistrosDaLeitora() {
-		List<RegistroMarcacao> registros = new ArrayList<>();
+	private void importarRegistrosDaLeitora() {
 		while (true) {
-			List<RegistroMarcacao> bloco = leitora.lerMarcacoes(tamanhoBloco);
-			registros.addAll(bloco);
-			// TODO Para cada bloco lido, já precisa ser processado (ou pelo menos enviada a confirmação de recebimento).
-			// TODO Tratar recebimento parcial de Apuracoes?
-			if (bloco.size() < tamanhoBloco) {
+			List<RegistroMarcacao> registros = leitora.lerMarcacoes(tamanhoBloco);
+
+			EntityTransaction transaction = entityManager.getTransaction();
+			transaction.begin();
+			try {
+				for (RegistroMarcacao reg : registros) {
+					MarcacaoLida lida = new MarcacaoLida();
+					lida.setId(reg.getId());
+					lida.setCodFuncionario(reg.getCodFuncionario());
+					lida.setData(getDateSection(reg.getMarcacao()));
+					lida.setHora(getTimeSection(reg.getMarcacao()));
+
+					// Caso a marcação já esteja na base, ignora.
+					// (Isto pode acontecer se ficou uma operação incompleta)
+					MarcacaoLida existente = entityManager.find(MarcacaoLida.class, reg.getId());
+					if (!lida.equals(existente)) {
+						entityManager.persist(lida);
+					}
+				}
+				transaction.commit();
+			} catch (Throwable ex) {
+				transaction.rollback();
+				throw ex;
+			}
+			confirmarRegistrosProcessados(registros);
+
+			if (registros.size() < tamanhoBloco) {
 				break;
 			}
 		}
-		return registros;
 	}
 
-	private List<Apuracao> converterRegistrosEmApuracoes(List<RegistroMarcacao> registros) {
+	private List<MarcacaoLida> selecionarMarcacoesLidas() {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MarcacaoLida> criteria = builder.createQuery(MarcacaoLida.class);
+		criteria.select(criteria.from(MarcacaoLida.class));
+		return entityManager.createQuery(criteria).getResultList();
+	}
+
+	private List<Apuracao> converterRegistrosEmApuracoes(List<MarcacaoLida> lidas) {
 
 		Map<ApuracaoChave, Apuracao> map = new LinkedHashMap<>();
 
-		for (RegistroMarcacao reg : registros) {
-			Long codFunc = reg.getCodFuncionario();
-			LocalDate data = getDateSection(reg.getMarcacao());
-			LocalTime hora = getTimeSection(reg.getMarcacao());
+		for (MarcacaoLida lida : lidas) {
+			Long codFunc = lida.getCodFuncionario();
+			LocalDate data = lida.getData();
+			LocalTime hora = lida.getHora();
 			ApuracaoChave chave = new ApuracaoChave(codFunc, data);
 
 			Apuracao apuracao = map.get(chave);
@@ -94,7 +128,6 @@ public class ImportadorMarcacoes {
 		}
 
 		List<Apuracao> result = new ArrayList<>(map.values());
-		// TODO Ordernar as marcações por hora dentro de cada apuração.
 		return result;
 	}
 

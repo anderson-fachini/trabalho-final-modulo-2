@@ -4,6 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ * Classe principal que contém as configurações do ambiente, conexão com o banco e etc.
+ * @author Samuel
+ *
+ */
 public class Manager {
 
 	private static Manager instance;
@@ -31,7 +36,7 @@ public class Manager {
 	}
 	
 	public int getTamanhoBlocoLeituraMarcacoes() {
-		return 1000; // TODO Parametrizar;
+		return 64; // TODO Parametrizar;
 	}
 
 }

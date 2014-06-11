@@ -71,6 +71,9 @@ public class ApuracaoService {
 	
 	// TODO Remover este método depois e criar um Cenário de teste
 	public static void main(String[] args) {
+		
+		// TODO Primeiro deletar todas as apurações.
+		
 		new ApuracaoService().importarMarcacoes();
 	}
 

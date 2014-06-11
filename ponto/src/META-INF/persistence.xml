@@ -21,6 +21,7 @@
 		<class>br.udesc.ads.ponto.jpaconverters.PerfilUsuarioToStringConverter</class>
 		<class>br.udesc.ads.ponto.jpaconverters.SituacaoToStringConverter</class>
 		<class>br.udesc.ads.ponto.jpaconverters.OcorrenciaToIntConverter</class>
+		<class>br.udesc.ads.ponto.entidades.MarcacaoLida</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ponto"/>
 			<property name="javax.persistence.jdbc.user" value="usuario"/>
