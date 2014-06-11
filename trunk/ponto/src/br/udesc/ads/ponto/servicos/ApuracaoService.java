@@ -18,7 +18,8 @@ public class ApuracaoService {
 	 */
 	public void importarMarcacoes() {
 
-		// TODO Implementar
+		ImportadorMarcacoes importador = new ImportadorMarcacoes();
+		importador.importar();
 	}
 
 	/**
@@ -65,6 +66,12 @@ public class ApuracaoService {
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
 
 		// TODO Implementar
+	}
+	
+	
+	// TODO Remover este método depois e criar um Cenário de teste
+	public static void main(String[] args) {
+		new ApuracaoService().importarMarcacoes();
 	}
 
 }
