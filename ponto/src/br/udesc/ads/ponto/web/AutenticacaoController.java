@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 
 import br.udesc.ads.ponto.entidades.Usuario;
@@ -14,7 +14,7 @@ import br.udesc.ads.ponto.util.Constants;
 import br.udesc.ads.ponto.util.JsfUtils;
 
 @ManagedBean(name = "autenticacaoController")
-@ViewScoped
+@ApplicationScoped
 public class AutenticacaoController implements Serializable {
 
 	private static final long serialVersionUID = 8338793297349233829L;
@@ -62,6 +62,14 @@ public class AutenticacaoController implements Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Usuario getUsuarioAutenticado() {
+		return usuarioAutenticado;
+	}
+
+	public void setUsuarioAutenticado(Usuario usuarioAutenticado) {
+		this.usuarioAutenticado = usuarioAutenticado;
 	}
 
 }

@@ -1,15 +1,13 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<?xml version="1.0"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html">
-<h:head>
-	<title>página index</title>
-</h:head>
-<h:body>
-	<p>página index</p>
-	<h:form>
-	<h:commandLink action="#{autenticacaoController.encerraSessao}" value="Sair" />
-	</h:form>
-</h:body>
-</html>
+	template="/WEB-INF/templates/templateBase.xhtml">
+	
+	<ui:param name="pageTitle" value="Inicial" />
+	
+	<!-- <ui:define name="pageContent">
+		<h:outputText value="funciona!!!" />	
+	</ui:define> -->
+	
+</ui:composition>
