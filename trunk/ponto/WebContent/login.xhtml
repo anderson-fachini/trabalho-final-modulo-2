@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components">
+<h:head>
+	<title>Página de Login</title>
+</h:head>
+<h:body>
+	<ace:messages />
+	<h:form id="form_login">
+		<ul>
+			<li>
+				<label for="usuario">Usuário</label>
+				<h:inputText id="usuario" value="#{autenticacaoController.usuario.nomeUsuario}" required="true" requiredMessage="Informe o usuário" />
+			</li>
+			<li>
+				<label for="senha">Senha</label>
+				<h:inputSecret id="senha" value="#{autenticacaoController.usuario.senha}" required="true" requiredMessage="Informe a senha" />
+			</li>
+			<li>
+				<h:commandButton value="Entrar" action="#{autenticacaoController.autenticaUsuario}" />
+			</li>
+		</ul>		
+	</h:form>
+</h:body>
+</html>
