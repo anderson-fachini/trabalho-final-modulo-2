@@ -5,6 +5,15 @@ import br.udesc.ads.ponto.entidades.Usuario;
 
 public class ApuracaoService {
 
+	private static ApuracaoService instance;
+
+	public static ApuracaoService get() {
+		if (instance == null) {
+			instance = new ApuracaoService();
+		}
+		return instance;
+	}
+
 	/**
 	 * Realiza a importação das marcações do Dispositivo de Captura de Ponto.<br>
 	 * Esta operação executa os seguintes passos:

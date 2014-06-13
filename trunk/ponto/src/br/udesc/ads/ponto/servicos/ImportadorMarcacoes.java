@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -122,7 +121,8 @@ public class ImportadorMarcacoes {
 			if (apuracao == null) {
 				apuracao = new Apuracao();
 				apuracao.setData(data);
-				apuracao.setColaborador(getColaboradorPorCodigo(codFunc));
+				Colaborador col = ColaboradorService.get().getColaboradorPorCodigo(codFunc, false);
+				apuracao.setColaborador(col);
 				map.put(chave, apuracao);
 			}
 			apuracao.addMarcacao(new Marcacao(hora));
@@ -138,18 +138,6 @@ public class ImportadorMarcacoes {
 
 	private LocalTime getTimeSection(XMLGregorianCalendar hora) {
 		return new LocalTime(hora.getHour(), hora.getMinute(), hora.getSecond());
-	}
-
-	private Colaborador getColaboradorPorCodigo(Long codFunc) {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Colaborador> criteria = builder.createQuery(Colaborador.class);
-		Root<Colaborador> root = criteria.from(Colaborador.class);
-		criteria.select(root).where(builder.equal(root.get("codigo"), codFunc));
-		try {
-			return entityManager.createQuery(criteria).getSingleResult();
-		} catch (NoResultException ex) {
-			throw new RuntimeException(String.format("Nenhum colaborador encontrado com código '%d'.", codFunc));
-		}
 	}
 
 	private void confirmarRegistrosProcessados(List<RegistroMarcacao> registros) {
