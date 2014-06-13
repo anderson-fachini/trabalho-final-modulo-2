@@ -78,4 +78,57 @@ public class Colaborador {
 		this.setor = setor;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((saldoBH == null) ? 0 : saldoBH.hashCode());
+		result = prime * result + ((setor == null) ? 0 : setor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Colaborador)) {
+			return false;
+		}
+		Colaborador other = (Colaborador) obj;
+		if (!equal(id, other.id)) {
+			return false;
+		}
+		if (!equal(codigo, other.codigo)) {
+			return false;
+		}
+		if (!equal(nome, other.nome)) {
+			return false;
+		}
+		if (!equal(cpf, other.cpf)) {
+			return false;
+		}
+		if (!equal(saldoBH, other.saldoBH)) {
+			return false;
+		}
+		if (setor != other.setor) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean equal(Object o1, Object o2) {
+		if (o1 == null) {
+			return o2 == null;
+		}
+		return o1.equals(o2);
+	}
+
 }
