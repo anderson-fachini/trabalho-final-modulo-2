@@ -10,4 +10,11 @@
   <phase-listener>br.udesc.ads.ponto.util.PhaseListenerLoginControl</phase-listener>
  </lifecycle>
 
+<application>
+	<resource-bundle>
+		<base-name>br.udesc.ads.ponto.util.messages</base-name>
+		<var>msg</var>
+	</resource-bundle>
+</application>
+
 </faces-config>
