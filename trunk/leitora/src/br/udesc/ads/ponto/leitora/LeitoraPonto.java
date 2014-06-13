@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class LeitoraPonto {
 		BufferedReader bufReader = new BufferedReader(reader);
 		try {
 			String linha;
-			while ((linha = readLine(bufReader)) != null) {
+			while ((linha = bufReader.readLine()) != null) {
 				long id;
 				try {
 					id = Long.parseLong(linha);
@@ -62,7 +61,7 @@ public class LeitoraPonto {
 		try {
 			boolean primeiraLinha = true;
 			String linha;
-			while ((linha = readLine(bufReader)) != null) {
+			while ((linha = bufReader.readLine()) != null) {
 				String[] tokens = linha.split(";");
 				if (tokens.length != 4) {
 					throw new FormatoInvalidoException(String.format(
@@ -132,22 +131,6 @@ public class LeitoraPonto {
 		return new LocalDateTime(//
 				Integer.parseInt(d[2]), Integer.parseInt(d[1]), Integer.parseInt(d[0]),//
 				Integer.parseInt(h[0]), Integer.parseInt(h[1]), Integer.parseInt(h[2]));
-	}
-
-	private static String readLine(Reader reader) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		int b;
-		while ((b = reader.read()) != -1) {
-			if (b == '\n' || b == '\r') {
-				reader.read();
-				return sb.toString();
-			}
-			sb.append((char) b);
-		}
-		if (sb.length() == 0) {
-			return null;
-		}
-		return sb.toString();
 	}
 
 	private static boolean isLongInteger(String string) {
