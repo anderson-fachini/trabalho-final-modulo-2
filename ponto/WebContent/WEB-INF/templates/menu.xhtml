@@ -36,6 +36,8 @@
 		</ace:submenu>
 	</ace:menuBar>
 	
-	<h:outputText value="#{msg.ola}, #{autenticacaoController.usuarioAutenticado.nomeUsuario}" />
-	<h:commandLink action="#{autenticacaoController.encerraSessao}" value="#{msg.sair}" />
+	<div class="user-info">
+		<h:outputText value="#{msg.ola}, #{autenticacaoController.usuarioAutenticado.nomeUsuario}" />
+		<h:commandLink action="#{autenticacaoController.encerraSessao}" value="#{msg.sair}" />
+	</div>
 </h:form>

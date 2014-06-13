@@ -6,6 +6,15 @@
 	margin-bottom: 15px;
 }
 
+.user-info {
+	position: absolute;
+	right: 10px;
+	top: 20px;
+}
+.user-info a {
+	margin-left: 5px;
+}
+
 .default-form {
 	border: 1px solid #000;
 	border-radius: 5px;
