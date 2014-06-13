@@ -6,23 +6,35 @@
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 <h:head>
 	<title>#{msg.paginaLogin}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="/ponto/css/login.css" />
+	<script type="text/javascript">
+	/*<![CDATA[*/
+		window.onload = function() {
+			document.getElementById('form_login:usuario').focus();
+		};
+		/*]]>*/
+	</script>
 </h:head>
 <h:body>
-	<ace:messages />
 	<h:form id="form_login">
 		<ul>
 			<li>
 				<label for="usuario">#{msg.usuario}</label>
-				<h:inputText id="usuario" value="#{autenticacaoController.usuario.nomeUsuario}" required="true" requiredMessage="#{msg.msgInformeUsuario}" />
+				<h:inputText id="usuario" value="#{autenticacaoController.usuario.nomeUsuario}"
+					required="true" requiredMessage="#{msg.msgInformeUsuario}" />
 			</li>
 			<li>
 				<label for="senha">#{msg.senha}</label>
-				<h:inputSecret id="senha" value="#{autenticacaoController.usuario.senha}" required="true" requiredMessage="#{msg.msgInformeSenha}" />
+				<h:inputSecret id="senha" value="#{autenticacaoController.usuario.senha}" 
+				required="true" requiredMessage="#{msg.msgInformeSenha}" />
 			</li>
 			<li>
-				<h:commandButton value="#{msg.entrar}" action="#{autenticacaoController.autenticaUsuario}" />
+				<h:commandButton id="btnSubmit" value="#{msg.entrar}" action="#{autenticacaoController.autenticaUsuario}" />
 			</li>
-		</ul>		
+		</ul>
+		
+		<ace:messages />		
 	</h:form>
 </h:body>
 </html>
