@@ -1,7 +1,5 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +25,7 @@ public class Colaborador {
 	private String cpf;
 
 	@Column(nullable = false)
-	private BigDecimal saldoBH;
+	private Double saldoBH;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private Setor setor;
@@ -64,11 +62,11 @@ public class Colaborador {
 		this.cpf = cpf;
 	}
 
-	public BigDecimal getSaldoBH() {
+	public Double getSaldoBH() {
 		return saldoBH;
 	}
 
-	public void setSaldoBH(BigDecimal saldoBH) {
+	public void setSaldoBH(Double saldoBH) {
 		this.saldoBH = saldoBH;
 	}
 

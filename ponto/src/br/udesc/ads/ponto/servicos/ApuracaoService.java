@@ -17,7 +17,6 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC01.
 	 */
 	public void importarMarcacoes() {
-
 		ImportadorMarcacoes importador = new ImportadorMarcacoes();
 		importador.importar();
 	}
@@ -34,9 +33,9 @@ public class ApuracaoService {
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
 	 */
-	public void apurarMarcacoes() {
-
-		// TODO Implementar
+	public void apurarMarcacoesPendentes() {
+		ApuradorMarcacoes apurador = new ApuradorMarcacoes();
+		apurador.apurarMarcacoesPendentes();
 	}
 
 	/**
@@ -67,14 +66,15 @@ public class ApuracaoService {
 
 		// TODO Implementar
 	}
-	
-	
+
 	// TODO Remover este método depois e criar um Cenário de teste
 	public static void main(String[] args) {
-		
+
 		// TODO Primeiro deletar todas as apurações.
+//		new ApuracaoService().importarMarcacoes();
 		
-		new ApuracaoService().importarMarcacoes();
+		
+		new ApuracaoService().apurarMarcacoesPendentes();
 	}
 
 }

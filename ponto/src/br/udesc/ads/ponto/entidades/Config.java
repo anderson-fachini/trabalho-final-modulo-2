@@ -14,6 +14,10 @@ public class Config {
 	private Escala escalaPadrao;
 	private Integer margemMarcacoes; // Em minutos
 	private Integer margemHorasFaltas; // Em minutos
+	private Integer intervaloMinimoAlmoco; // Em minutos
+	private Integer intervaloMaximoTrabalho; // Em minutos
+	private Integer intervaloMinimoInterjornadas; // Em minutos
+	private Integer intervaloMinimoIntrajornada; // Em minutos
 
 	public Long getId() {
 		return id;
@@ -45,6 +49,38 @@ public class Config {
 
 	public void setMargemHorasFaltas(Integer margemHorasFaltas) {
 		this.margemHorasFaltas = margemHorasFaltas;
+	}
+
+	public Integer getIntervaloMinimoAlmoco() {
+		return intervaloMinimoAlmoco;
+	}
+
+	public void setIntervaloMinimoAlmoco(Integer intervaloMinimoAlmoco) {
+		this.intervaloMinimoAlmoco = intervaloMinimoAlmoco;
+	}
+
+	public Integer getIntervaloMaximoTrabalho() {
+		return intervaloMaximoTrabalho;
+	}
+
+	public void setIntervaloMaximoTrabalho(Integer intervaloMaximoTrabalho) {
+		this.intervaloMaximoTrabalho = intervaloMaximoTrabalho;
+	}
+
+	public Integer getIntervaloMinimoInterjornadas() {
+		return intervaloMinimoInterjornadas;
+	}
+
+	public void setIntervaloMinimoInterjornadas(Integer intervaloMinimoInterjornadas) {
+		this.intervaloMinimoInterjornadas = intervaloMinimoInterjornadas;
+	}
+
+	public Integer getIntervaloMinimoIntrajornada() {
+		return intervaloMinimoIntrajornada;
+	}
+
+	public void setIntervaloMinimoIntrajornada(Integer intervaloMinimoIntrajornada) {
+		this.intervaloMinimoIntrajornada = intervaloMinimoIntrajornada;
 	}
 
 }

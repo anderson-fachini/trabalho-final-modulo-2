@@ -1,6 +1,7 @@
 package br.udesc.ads.ponto.entidades;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.joda.time.LocalTime;
 
 @Entity
 public class Escala {
@@ -50,4 +53,15 @@ public class Escala {
 		return this.marcacoes.get(index);
 	}
 
+	public List<LocalTime> getSequenciaMarcacoes(DiaSemana diaSemana) {
+		List<LocalTime> result = new ArrayList<>();
+		for (EscalaMarcacao mar : marcacoes) {
+			if (mar.getDiaSemana() == diaSemana) {
+				result.add(mar.getHora());
+			}
+		}
+		Collections.sort(result);
+		return result;
+	}
+	
 }

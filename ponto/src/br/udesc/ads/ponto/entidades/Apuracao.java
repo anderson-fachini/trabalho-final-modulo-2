@@ -1,7 +1,7 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,6 +19,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "colaborador_id", "data" }))
@@ -37,18 +38,22 @@ public class Apuracao {
 
 	private Usuario responsavelAprovacao;
 
-	@Column(columnDefinition = "TIMESTAMP")
+	@Column(columnDefinition = "TIME")
 	private LocalDateTime dataAprovacao;
 
 	private String observacoes;
 
-	private BigDecimal horasTrabalhadas;
+	@Column(columnDefinition = "TIME")
+	private LocalTime horasTrabalhadas;
 
-	private BigDecimal horasFaltantes;
+	@Column(columnDefinition = "TIME")
+	private LocalTime horasFaltantes;
 
-	private BigDecimal horasExcedentes;
+	@Column(columnDefinition = "TIME")
+	private LocalTime horasExcedentes;
 
-	private BigDecimal horasAbonadas;
+	@Column(columnDefinition = "TIME")
+	private LocalTime horasAbonadas;
 
 	private Boolean apurada;
 
@@ -109,35 +114,35 @@ public class Apuracao {
 		this.observacoes = observacoes;
 	}
 
-	public BigDecimal getHorasTrabalhadas() {
+	public LocalTime getHorasTrabalhadas() {
 		return horasTrabalhadas;
 	}
 
-	public void setHorasTrabalhadas(BigDecimal horasTrabalhadas) {
+	public void setHorasTrabalhadas(LocalTime horasTrabalhadas) {
 		this.horasTrabalhadas = horasTrabalhadas;
 	}
 
-	public BigDecimal getHorasFaltantes() {
+	public LocalTime getHorasFaltantes() {
 		return horasFaltantes;
 	}
 
-	public void setHorasFaltantes(BigDecimal horasFaltantes) {
+	public void setHorasFaltantes(LocalTime horasFaltantes) {
 		this.horasFaltantes = horasFaltantes;
 	}
 
-	public BigDecimal getHorasExcedentes() {
+	public LocalTime getHorasExcedentes() {
 		return horasExcedentes;
 	}
 
-	public void setHorasExcedentes(BigDecimal horasExcedentes) {
+	public void setHorasExcedentes(LocalTime horasExcedentes) {
 		this.horasExcedentes = horasExcedentes;
 	}
 
-	public BigDecimal getHorasAbonadas() {
+	public LocalTime getHorasAbonadas() {
 		return horasAbonadas;
 	}
 
-	public void setHorasAbonadas(BigDecimal horasAbonadas) {
+	public void setHorasAbonadas(LocalTime horasAbonadas) {
 		this.horasAbonadas = horasAbonadas;
 	}
 
@@ -198,5 +203,14 @@ public class Apuracao {
 	public Ocorrencia getOcorrencia(int index) {
 		return this.ocorrencias.get(index);
 	}
-
+	
+	public List<LocalTime> getSequenciaMarcacoes() {
+		List<LocalTime> result = new ArrayList<>();
+		for (Marcacao mar : marcacoes) {
+			result.add(mar.getHora());
+		}
+		Collections.sort(result);
+		return result;
+	}
+	
 }

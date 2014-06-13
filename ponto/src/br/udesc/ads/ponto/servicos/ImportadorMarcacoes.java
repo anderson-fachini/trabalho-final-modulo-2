@@ -101,9 +101,10 @@ public class ImportadorMarcacoes {
 	}
 
 	private List<MarcacaoLida> selecionarMarcacoesLidas() {
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<MarcacaoLida> criteria = builder.createQuery(MarcacaoLida.class);
-		criteria.select(criteria.from(MarcacaoLida.class));
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MarcacaoLida> criteria = cb.createQuery(MarcacaoLida.class);
+		Root<MarcacaoLida> root = criteria.from(MarcacaoLida.class);
+		criteria.select(root).orderBy(cb.asc(root.get("data")), cb.asc(root.get("hora")));
 		return entityManager.createQuery(criteria).getResultList();
 	}
 
