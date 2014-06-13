@@ -2,12 +2,24 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	template="/WEB-INF/templates/templateBase.xhtml">
 	
 	<ui:param name="pageTitle" value="#{msg.importarColaboradores}" />
 	
 	<ui:define name="pageContent">
-		<h:outputText value="okok" />
+		<h:form styleClass="default-form text-center">
+			<ace:fileEntry id="file-entry" 
+			fileEntryListener="#{importarColaboradoresController.fileListener}"
+			relativePath="/upload/"			
+			maxFileCount="1" maxFileSize="5242880"
+			required="true" requiredMessage="#{msg.msgSelecionarArquivo}"
+			 />
+			
+			<h:commandButton type="submit" value="#{msg.importar}" />
+		</h:form>
+		
+		<ace:messages id="msgs" />
 	</ui:define>
 	
 </ui:composition>

@@ -53,6 +53,8 @@ public class AutenticacaoController implements Serializable {
 		session = (HttpSession) JsfUtils.getExternalContext().getSession(false);
 		session.setAttribute("usuarioAutenticado", null); //$NON-NLS-1$
 		session.invalidate();
+		
+		init();
 
 		JsfUtils.redirectTo(Constants.PAGINA_LOGIN);
 	}
