@@ -46,9 +46,25 @@ public class ApuradorMarcacoes {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
 		try {
-			for (Apuracao apura : apuracoes) {
-				entityManager.merge(apura);
+			for (Apuracao apuracao : apuracoes) {
+				entityManager.merge(apuracao);
 			}
+			transaction.commit();
+		} catch (Throwable ex) {
+			transaction.rollback();
+			throw ex;
+		}
+	}
+
+	public void apurarMarcacoes(Apuracao apuracao) {
+		// Processa:
+		processarApuracao(apuracao);
+
+		// Persiste:
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+		try {
+			entityManager.merge(apuracao);
 			transaction.commit();
 		} catch (Throwable ex) {
 			transaction.rollback();
@@ -58,13 +74,20 @@ public class ApuradorMarcacoes {
 
 	private void processarApuracao(Apuracao apuracao) {
 		int qtdMarcacoes = apuracao.getMarcacoesSize();
-
 		if (qtdMarcacoes % 2 == 0) {
 			calcularHoras(apuracao);
+		}
+		resolverOcorrencias(apuracao);
+		apuracao.setApurada(true);
+	}
 
+	private void resolverOcorrencias(Apuracao apuracao) {
+		if (apuracao.getHorasExcedentes() != null) {
 			if (apuracao.getHorasExcedentes().getMillisOfDay() > 0) {
 				apuracao.addOcorrencia(Ocorrencia.HORAS_EXCEDENTES);
 			}
+		}
+		if (apuracao.getHorasFaltantes() != null) {
 			if (apuracao.getHorasFaltantes().getMillisOfDay() > 0) {
 				apuracao.addOcorrencia(Ocorrencia.HORAS_FALTANTES);
 			}
@@ -90,7 +113,6 @@ public class ApuradorMarcacoes {
 		if (isIntervaloTrabalhoExcedido(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.INTERVALO_TRABALHO_EXCEDIDO);
 		}
-		apuracao.setApurada(true);
 	}
 
 	private boolean isIntervaloTrabalhoExcedido(Apuracao apuracao) {
@@ -277,12 +299,10 @@ public class ApuradorMarcacoes {
 	}
 
 	private boolean isMarcacoesForaDaEscalaPadrao(Apuracao apuracao) {
-
 		Config config = Manager.get().getConfig();
 		int margem = config.getMargemMarcacoes();
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		List<LocalTime> escala = config.getEscalaPadrao().getSequenciaMarcacoes(diaSemana);
-
 		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		for (LocalTime marcacao : marcacoes) {
 			if (!estaNaEscala(marcacao, escala, margem)) {
@@ -307,7 +327,8 @@ public class ApuradorMarcacoes {
 	}
 
 	private void calcularHoras(Apuracao apuracao) {
-		// Utiliza o mapa para fazer este cálculo uma só vez para cada dia da semana:
+		// Utiliza o mapa para fazer este cálculo uma só vez para cada dia da
+		// semana:
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		Integer tempoPadraoTrab = tempoTrabEscalaPadrao.get(diaSemana);
 		if (tempoPadraoTrab == null) {
@@ -329,6 +350,9 @@ public class ApuradorMarcacoes {
 		if (faltantes < 0) {
 			faltantes = 0;
 		}
+
+		// TODO Calcular as horas abonadas!
+
 		apuracao.setHorasTrabalhadas(LocalTime.fromMillisOfDay(trabalhadas));
 		apuracao.setHorasExcedentes(LocalTime.fromMillisOfDay(excedentes));
 		apuracao.setHorasFaltantes(LocalTime.fromMillisOfDay(faltantes));

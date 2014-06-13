@@ -39,6 +39,23 @@ public class ApuracaoService {
 	}
 
 	/**
+	 * Realiza uma apuração específica.<br>
+	 * Serve para as situações em que uma apuração teve marcações alteradas.<br>
+	 * Esta operação executa os seguintes passos:
+	 * <ul>
+	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
+	 * Ocorrências;</li>
+	 * <li>Marca a apuração como apurada;</li>
+	 * <li>Persiste a Apuracao com os valores apurados;</li>
+	 * </ul>
+	 * Realiza o Caso de Uso: UC01.
+	 */
+	public void apurarMarcacoes(Apuracao apuracao) {
+		ApuradorMarcacoes apurador = new ApuradorMarcacoes();
+		apurador.apurarMarcacoes(apuracao);
+	}
+
+	/**
 	 * Realiza a confirmação/aprovação de uma apuração.<br>
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
@@ -71,9 +88,8 @@ public class ApuracaoService {
 	public static void main(String[] args) {
 
 		// TODO Primeiro deletar todas as apurações.
-//		new ApuracaoService().importarMarcacoes();
-		
-		
+		// new ApuracaoService().importarMarcacoes();
+
 		new ApuracaoService().apurarMarcacoesPendentes();
 	}
 
