@@ -5,22 +5,22 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ace="http://www.icefaces.org/icefaces/components">
 <h:head>
-	<title>Página de Login</title>
+	<title>#{msg.paginaLogin}</title>
 </h:head>
 <h:body>
 	<ace:messages />
 	<h:form id="form_login">
 		<ul>
 			<li>
-				<label for="usuario">Usuário</label>
-				<h:inputText id="usuario" value="#{autenticacaoController.usuario.nomeUsuario}" required="true" requiredMessage="Informe o usuário" />
+				<label for="usuario">#{msg.usuario}</label>
+				<h:inputText id="usuario" value="#{autenticacaoController.usuario.nomeUsuario}" required="true" requiredMessage="#{msg.msgInformeUsuario}" />
 			</li>
 			<li>
-				<label for="senha">Senha</label>
-				<h:inputSecret id="senha" value="#{autenticacaoController.usuario.senha}" required="true" requiredMessage="Informe a senha" />
+				<label for="senha">#{msg.senha}</label>
+				<h:inputSecret id="senha" value="#{autenticacaoController.usuario.senha}" required="true" requiredMessage="#{msg.msgInformeSenha}" />
 			</li>
 			<li>
-				<h:commandButton value="Entrar" action="#{autenticacaoController.autenticaUsuario}" />
+				<h:commandButton value="#{msg.entrar}" action="#{autenticacaoController.autenticaUsuario}" />
 			</li>
 		</ul>		
 	</h:form>

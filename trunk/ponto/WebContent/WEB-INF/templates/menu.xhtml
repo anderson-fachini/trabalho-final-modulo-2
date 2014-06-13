@@ -4,34 +4,34 @@
 	xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ace="http://www.icefaces.org/icefaces/components">
 	<ace:menuBar id="menu" autoSubmenuDisplay="true">
-		<ace:submenu id="importar" label="Importar">
-			<ace:menuItem id="importar_marcacoes" url="importar/marcacoes.jsf" value="Marcações" />
-			<ace:menuItem id="importar_colaboradores" value="Colaboradores" />
-			<ace:menuItem id="importar_feriados" value="Feriados" />
+		<ace:submenu id="importar" label="#{msg.importar}">
+			<ace:menuItem id="importar_marcacoes" url="importar/marcacoes.jsf" value="#{msg.marcacoes}" />
+			<ace:menuItem id="importar_colaboradores" value="#{msg.colaboradores}" />
+			<ace:menuItem id="importar_feriados" value="#{msg.feriados}" />
 		</ace:submenu>
-		<ace:submenu id="ponto" label="Ponto">
-			<ace:menuItem id="ponto_ajuste_ponto" value="Ajuste de Ponto" />
+		<ace:submenu id="ponto" label="#{msg.ponto}">
+			<ace:menuItem id="ponto_ajuste_ponto" value="#{msg.ajustePonto}" />
 		</ace:submenu>
-		<ace:submenu id="banco_horas" label="Banco de Horas">
-			<ace:menuItem id="banco_horas_ajustar_saldo" value="Ajustar Saldo" />
+		<ace:submenu id="banco_horas" label="#{msg.bancoHoras}">
+			<ace:menuItem id="banco_horas_ajustar_saldo" value="#{msg.ajustarSaldo}" />
 		</ace:submenu>
-		<ace:submenu id="cadastros" label="Cadastros">
-			<ace:menuItem id="cadastros_mot_abono" value="Motivos de Abono" />
+		<ace:submenu id="cadastros" label="#{msg.cadastros}">
+			<ace:menuItem id="cadastros_mot_abono" value="#{msg.motivosAbono}" />
 			<ace:menuItem id="cadastros_mot_ajuste_ponto"
-				value="Motivos de Ajuste de Ponto" />
-			<ace:menuItem id="cadastros_usuarios" value="Usuários" />
+				value="#{msg.motivosAjustePonto}" />
+			<ace:menuItem id="cadastros_usuarios" value="#{msg.usuarios}" />
 		</ace:submenu>
-		<ace:submenu id="relatorios" label="Relatorios">
-			<ace:menuItem id="relatorios_saldo_bh" value="Saldo BH" />
+		<ace:submenu id="relatorios" label="#{msg.relatorios}">
+			<ace:menuItem id="relatorios_saldo_bh" value="#{msg.saldoBh}" />
 			<ace:menuItem id="relatorios_saldo_bh_setor"
-				value="Saldo BH por Setor" />
+				value="#{msg.saldoBhSetor}" />
 			<ace:menuItem id="relatorios_resumo_apuracoes_ponto"
-				value="Resumo das Apurações de Ponto" />
+				value="#{msg.resumoApuracoesPonto}" />
 			<ace:menuItem id="relatorios_resumo_horas_trab_e_bh"
-				value="Resumo das Horas Trabalhadas e BH" />
+				value="#{msg.resumoHorasTrabalhadasEBh}" />
 		</ace:submenu>
 	</ace:menuBar>
 	
-	<h:outputText value="Olá, #{autenticacaoController.usuarioAutenticado.nomeUsuario}" />
-	<h:commandLink action="#{autenticacaoController.encerraSessao}" value="Sair" />
+	<h:outputText value="#{msg.ola}, #{autenticacaoController.usuarioAutenticado.nomeUsuario}" />
+	<h:commandLink action="#{autenticacaoController.encerraSessao}" value="#{msg.sair}" />
 </h:form>

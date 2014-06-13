@@ -12,6 +12,7 @@ import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.UsuarioService;
 import br.udesc.ads.ponto.util.Constants;
 import br.udesc.ads.ponto.util.JsfUtils;
+import br.udesc.ads.ponto.util.Messages;
 
 @ManagedBean(name = "autenticacaoController")
 @ApplicationScoped
@@ -38,7 +39,7 @@ public class AutenticacaoController implements Serializable {
 				usuario.getNomeUsuario(), usuario.getSenha());
 
 		if (usuarioAutenticado == null) {
-			JsfUtils.addMensagemErro("Usuário ou senha iválido");
+			JsfUtils.addMensagemErro(Messages.getString("msgUsuarioSenhaInvalido")); //$NON-NLS-1$
 		} else {
 			session = (HttpSession) JsfUtils.getExternalContext().getSession(false);
 			session.setAttribute(Constants.SESSION_USER_ATTR, usuarioAutenticado);
@@ -50,7 +51,7 @@ public class AutenticacaoController implements Serializable {
 
 	public void encerraSessao() {
 		session = (HttpSession) JsfUtils.getExternalContext().getSession(false);
-		session.setAttribute("usuarioAutenticado", null);
+		session.setAttribute("usuarioAutenticado", null); //$NON-NLS-1$
 		session.invalidate();
 
 		JsfUtils.redirectTo(Constants.PAGINA_LOGIN);
