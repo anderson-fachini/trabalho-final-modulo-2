@@ -1,7 +1,5 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.math.BigDecimal;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +20,7 @@ public class TestUsuarioPersistence extends BasePersistenceTest {
 		colaborador.setCodigo(1000L);
 		colaborador.setCpf("789.256.836-01");
 		colaborador.setNome("David Luiz");
-		colaborador.setSaldoBH(BigDecimal.ZERO);
+		colaborador.setSaldoBH(0.0);
 		colaborador.setSetor(setor);
 		entityManager.persist(colaborador);
 		return colaborador;

@@ -1,7 +1,5 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.math.BigDecimal;
-
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Assert;
@@ -29,7 +27,7 @@ public class TestApuracaoPersistence extends BasePersistenceTest {
 		Colaborador gerente = new Colaborador();
 		gerente.setCpf("139.665.696-04");
 		gerente.setNome("Jorge Steinback");
-		gerente.setSaldoBH(BigDecimal.ONE);
+		gerente.setSaldoBH(1.0);
 		gerente.setSetor(setor);
 		entityManager.persist(gerente);
 
@@ -43,7 +41,7 @@ public class TestApuracaoPersistence extends BasePersistenceTest {
 		colaborador.setCodigo(1000L);
 		colaborador.setCpf("789.256.836-01");
 		colaborador.setNome("David Luiz");
-		colaborador.setSaldoBH(BigDecimal.ZERO);
+		colaborador.setSaldoBH(1.0);
 		colaborador.setSetor(setor);
 		entityManager.persist(colaborador);
 		return colaborador;
@@ -64,6 +62,31 @@ public class TestApuracaoPersistence extends BasePersistenceTest {
 		Assert.assertEquals(apuracao.getId(), actual.getId());
 		Assert.assertEquals(new LocalDate(2014, 6, 7), actual.getData());
 		Assert.assertTrue(colaborador == actual.getColaborador());
+	}
+
+	@Test
+	public void testInsereRecuperaApuracao_ComHorasCalculadas() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 6, 7));
+		apuracao.setHorasTrabalhadas(new LocalTime(8, 20));
+		apuracao.setHorasExcedentes(new LocalTime(1, 10));
+		apuracao.setHorasFaltantes(new LocalTime(2, 38));
+		apuracao.setHorasAbonadas(new LocalTime(1, 14));
+
+		Assert.assertNull(apuracao.getId());
+		entityManager.persist(apuracao);
+		Assert.assertNotNull(apuracao.getId());
+
+		Apuracao actual = entityManager.find(Apuracao.class, apuracao.getId());
+
+		Assert.assertEquals(apuracao.getId(), actual.getId());
+		Assert.assertEquals(new LocalDate(2014, 6, 7), actual.getData());
+		Assert.assertTrue(colaborador == actual.getColaborador());
+		Assert.assertEquals(new LocalTime(8, 20), actual.getHorasTrabalhadas());
+		Assert.assertEquals(new LocalTime(1, 10), actual.getHorasExcedentes());
+		Assert.assertEquals(new LocalTime(2, 38), actual.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(1, 14), actual.getHorasAbonadas());
 	}
 
 	@Test
@@ -97,7 +120,7 @@ public class TestApuracaoPersistence extends BasePersistenceTest {
 		Assert.assertTrue(actual == actual.getMarcacao(3).getApuracao());
 		Assert.assertEquals(true, actual.getApurada());
 	}
-	
+
 	@Test
 	public void testInsereRecuperaApuracao_ComOcorrencias() {
 		Apuracao apuracao = new Apuracao();
@@ -122,15 +145,15 @@ public class TestApuracaoPersistence extends BasePersistenceTest {
 
 	@Test
 	public void testInsereRecuperaApuracao_ComAbonos() {
-		
+
 		MotivoAbono motivoConsulta = new MotivoAbono();
 		motivoConsulta.setDescricao("Consulta médica");
 		entityManager.persist(motivoConsulta);
-		
+
 		MotivoAbono motivoCachaca = new MotivoAbono();
 		motivoCachaca.setDescricao("Bebendo cachaça com os amigos");
 		entityManager.persist(motivoCachaca);
-		
+
 		Apuracao apuracao = new Apuracao();
 		apuracao.setColaborador(colaborador);
 		apuracao.setData(new LocalDate(2014, 6, 7));
