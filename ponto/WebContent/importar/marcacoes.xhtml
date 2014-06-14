@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	template="/WEB-INF/templates/templateBase.xhtml">
 	
@@ -8,7 +9,10 @@
 	
 	<ui:define name="pageContent">
 		<h:form styleClass="default-form text-center">
-			<h:commandButton  value="#{msg.importarMarcacoes}" />
+			<h:commandButton  value="#{msg.importarMarcacoes}" style="martin-bottom: 15px;"
+			action="#{importarMarcacoesController.importarMarcacoes}" />
+			
+			<ace:messages id="msgs" />
 		</h:form>	
 	</ui:define>
 	
