@@ -1,10 +1,12 @@
 package br.udesc.ads.ponto.entidades;
 
+import br.udesc.ads.ponto.util.Messages;
+
 public enum PerfilUsuario {
 
-	DONO_EMPRESA("D", "Dono da empresa"), //
-	GERENTE("G", "Gerente"), //
-	FUNCIONARIO_RH("R", "Funcionário do RH");
+	DONO_EMPRESA("D", Messages.getString("donoEmpresa")), //
+	GERENTE("G", Messages.getString("gerente")), //
+	FUNCIONARIO_RH("R", Messages.getString("funcionarioRh"));
 
 	private String id;
 	private String descricao;
