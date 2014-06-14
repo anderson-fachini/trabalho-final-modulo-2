@@ -26,13 +26,12 @@ public class ColaboradorService {
 	}
 
 	/**
-	 * Realiza a importação do arquivo de colaboradores para a base de dados.
+	 * Realiza a importaÃ§Ã£o do arquivo de colaboradores para a base de dados.
 	 * 
 	 * @param arquivo
 	 *            O arquivo a ser importado.
 	 */
 	public void importarColaboradores(File arquivo) {
-		System.out.println("Importando arquivo '" + arquivo.getName() + "'...");
 		ImportadorColaboradores importador = new ImportadorColaboradores();
 		importador.importar(arquivo);
 	}
@@ -49,7 +48,7 @@ public class ColaboradorService {
 			if (nullSeNaoEncontrar) {
 				return null;
 			}
-			throw new RuntimeException(String.format("Nenhum colaborador encontrado com código '%d'.", codCol));
+			throw new RuntimeException(String.format("Nenhum colaborador encontrado com cÃ³digo '%d'.", codCol));
 		}
 	}
 

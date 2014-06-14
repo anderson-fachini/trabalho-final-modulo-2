@@ -122,14 +122,14 @@ public class ImportadorColaboradores {
 		String cpf = tokens[2];
 		cpf = cpf.replaceAll("\\D", "");
 		if (col != null) {
-			// O cara já existe
+			// O cara jÃ¡ existe
 			col.setNome(tokens[1]);
 			col.setCpf(cpf);
 			col.setSetor(setor);
 			col.setSituacao(Situacao.ATIVO);
 			entityManager.merge(col);
 		} else {
-			// O cara é novo
+			// O cara Ã© novo
 			col = new Colaborador();
 			col.setCodigo(codigo);
 			col.setNome(tokens[1]);
@@ -139,7 +139,7 @@ public class ImportadorColaboradores {
 			entityManager.persist(col);
 		}
 		// Seta o cara atual como gerente e atualiza o setor:
-		// Precisa ser feito posteriormente porque são tabelas mutuamente dependentes.
+		// Precisa ser feito posteriormente porque sÃ£o tabelas mutuamente dependentes.
 		if (isGerente && setor.getGerente() != col) {
 			setor.setGerente(col);
 			entityManager.merge(setor);
@@ -153,13 +153,13 @@ public class ImportadorColaboradores {
 		Colaborador gerente = ColaboradorService.get().getColaboradorPorCodigo(longCodGerente, true);
 		Setor setor = getSetorPorNome(nome);
 		if (setor == null) {
-			// O setor é novo
+			// O setor Ã© novo
 			setor = new Setor();
 			setor.setNome(nome);
 			setor.setGerente(gerente);
 			entityManager.persist(setor);
 		} else {
-			// O setor já existe
+			// O setor jÃ¡ existe
 			if (setoresProcessados.contains(setor)) {
 				if (!setor.getGerente().getCodigo().equals(longCodGerente)) {
 					String fmt = "Gerentes diferentes informados para o setor '%s'. Valores: '%d', '%d'.";
@@ -183,7 +183,7 @@ public class ImportadorColaboradores {
 			return null;
 		}
 		if (results.size() > 1) {
-			throw new AssertionError("Não deveria haver mais de um setor com mesmo nome.");
+			throw new AssertionError("NÃ£o deveria haver mais de um setor com mesmo nome.");
 		}
 		return results.get(0);
 	}

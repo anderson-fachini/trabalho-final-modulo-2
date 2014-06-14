@@ -18,12 +18,12 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Realiza a importação das marcações do Dispositivo de Captura de Ponto.<br>
-	 * Esta operação executa os seguintes passos:
+	 * Realiza a importaÃ§Ã£o das marcaÃ§Ãµes do Dispositivo de Captura de Ponto.<br>
+	 * Esta operaÃ§Ã£o executa os seguintes passos:
 	 * <ul>
 	 * <li>Invoca o Webservice do dispositivo e recebe uma lista de registros
-	 * marcação;</li>
-	 * <li>Converte os registros marcação em objetos Marcacao/Apuracao;</li>
+	 * marcaÃ§Ã£o;</li>
+	 * <li>Converte os registros marcaÃ§Ã£o em objetos Marcacao/Apuracao;</li>
 	 * <li>Persiste as Marcacoes/Apuracoes;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
@@ -34,13 +34,13 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Realiza a apuração das marcações importadas.<br>
-	 * Esta operação executa os seguintes passos:
+	 * Realiza a apuraÃ§Ã£o das marcaÃ§Ãµes importadas.<br>
+	 * Esta operaÃ§Ã£o executa os seguintes passos:
 	 * <ul>
-	 * <li>Carrega as marcações/apurações não apuradas do banco de dados;</li>
-	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
-	 * Ocorrências;</li>
-	 * <li>Marca as apurações como apuradas;</li>
+	 * <li>Carrega as marcaÃ§Ãµes/apuraÃ§Ãµes nÃ£o apuradas do banco de dados;</li>
+	 * <li>Realiza os cÃ¡lculos de Horas Trabalhadas, Excedentes, Faltantes e
+	 * OcorrÃªncias;</li>
+	 * <li>Marca as apuraÃ§Ãµes como apuradas;</li>
 	 * <li>Persiste as Marcacoes/Apuracoes/Ocorrencias com os valores apurados;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
@@ -51,13 +51,13 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Realiza uma apuração específica.<br>
-	 * Serve para as situações em que uma apuração teve marcações alteradas.<br>
-	 * Esta operação executa os seguintes passos:
+	 * Realiza uma apuraÃ§Ã£o especÃ­fica.<br>
+	 * Serve para as situaÃ§Ãµes em que uma apuraÃ§Ã£o teve marcaÃ§Ãµes alteradas.<br>
+	 * Esta operaÃ§Ã£o executa os seguintes passos:
 	 * <ul>
-	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
-	 * Ocorrências;</li>
-	 * <li>Marca a apuração como apurada;</li>
+	 * <li>Realiza os cÃ¡lculos de Horas Trabalhadas, Excedentes, Faltantes e
+	 * OcorrÃªncias;</li>
+	 * <li>Marca a apuraÃ§Ã£o como apurada;</li>
 	 * <li>Persiste a Apuracao com os valores apurados;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
@@ -68,16 +68,16 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Realiza a confirmação/aprovação de uma apuração.<br>
-	 * Esta operação executa os seguintes passos:
+	 * Realiza a confirmaÃ§Ã£o/aprovaÃ§Ã£o de uma apuraÃ§Ã£o.<br>
+	 * Esta operaÃ§Ã£o executa os seguintes passos:
 	 * <ul>
-	 * <li>Preenche a data da aprovação com a data/hora atuais;</li>
-	 * <li>Preenche o responsável da aprovação como o usuário informado;</li>
-	 * <li>Persiste o novo estado da apuração;</li>
+	 * <li>Preenche a data da aprovaÃ§Ã£o com a data/hora atuais;</li>
+	 * <li>Preenche o responsï¿½vel da aprovaÃ§Ã£o como o usuÃ¡rio informado;</li>
+	 * <li>Persiste o novo estado da apuraÃ§Ã£o;</li>
 	 * <li>Caso haja horas excedentes ou faltantes:
 	 * <ul>
 	 * <li>Efetua o ajuste no Banco de Horas do colaborador;</li>
-	 * <li>Registra um histórico de ajuste de Banco de Horas;</li>
+	 * <li>Registra um histÃ³rico de ajuste de Banco de Horas;</li>
 	 * <li>Persiste os dados de colaborador e Banco de Horas;</li>
 	 * </ul>
 	 * </li>
@@ -85,21 +85,21 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC04.
 	 * 
 	 * @param apuracao
-	 *            A apuração a ser aprovada/confirmada. Os ajustes de marcações,
-	 *            abonos, motivos e observações devem estar já setados neste
+	 *            A apuraÃ§Ã£o a ser aprovada/confirmada. Os ajustes de marcaÃ§Ãµes,
+	 *            abonos, motivos e observaÃ§Ãµes devem estar jÃ¡ setados neste
 	 *            objeto.
 	 * @param usuario
-	 *            O usuário que está aprovando a apuração.
+	 *            O usuÃ¡rio que estÃ¡ aprovando a apuraÃ§Ã£o.
 	 */
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
 
 		// TODO Implementar
 	}
 
-	// TODO Remover este método depois e criar um Cenário de teste
+	// TODO Remover este mÃ©todo depois e criar um CenÃ¡rio de teste
 	public static void main(String[] args) {
 
-		// TODO Primeiro deletar todas as apurações.
+		// TODO Primeiro deletar todas as apuraÃ§Ãµes.
 		 new ApuracaoService().importarMarcacoes();
 
 //		new ApuracaoService().apurarMarcacoesPendentes();

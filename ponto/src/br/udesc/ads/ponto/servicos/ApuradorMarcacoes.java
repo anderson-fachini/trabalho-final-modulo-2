@@ -124,11 +124,11 @@ public class ApuradorMarcacoes {
 	}
 
 	/**
-	 * É considerado como incompleto se for:
+	 * Ã‰ considerado como incompleto se for:
 	 * <ul>
-	 * <li>menor que o mínimo;</li>
+	 * <li>menor que o mÃ­nimo;</li>
 	 * <li>entre 2 intervalos trabalhados que, somados, ultrapassam o intervalo
-	 * máximo de trabalho contíguo;</li>
+	 * mÃ¡ximo de trabalho contÃ­guo;</li>
 	 * </ul>
 	 */
 	private boolean isIntervaloIntraJornadaIncompleto(Apuracao apuracao) {
@@ -166,23 +166,23 @@ public class ApuradorMarcacoes {
 		min *= 60 * 1000; // Converte em millis
 		List<LocalTime> marcacoesHoje = apuracao.getSequenciaMarcacoes();
 		if (marcacoesHoje.isEmpty()) {
-			// Se o cara nem veio, então já era.
+			// Se o cara nem veio, entÃ£o jÃ¡ era.
 			return false;
 		}
 		LocalTime primeiraHoje = marcacoesHoje.get(0);
 		int descansoHoje = primeiraHoje.getMillisOfDay();
 		if (descansoHoje >= min) {
-			// Se o cara já chegou bem tarde, nem precisa olhar o dia anterior.
+			// Se o cara jÃ¡ chegou bem tarde, nem precisa olhar o dia anterior.
 			return false;
 		}
 		Apuracao ontem = buscarApuracaoDiaAnterior(apuracao);
 		if (ontem == null) {
-			// Não veio trabalhar ontem (normal se for sábado/domingo/feriado).
+			// NÃ£o veio trabalhar ontem (normal se for sÃ¡bado/domingo/feriado).
 			return false;
 		}
 		List<LocalTime> marcacoesOntem = ontem.getSequenciaMarcacoes();
 		if (marcacoesOntem.isEmpty()) {
-			// Não veio ontem.
+			// NÃ£o veio ontem.
 			return false;
 		}
 		LocalTime ultimaOntem = marcacoesOntem.get(marcacoesOntem.size() - 1);
@@ -202,7 +202,7 @@ public class ApuradorMarcacoes {
 			return null;
 		}
 		if (results.size() > 1) {
-			throw new AssertionError("Não poderia haver mais de uma apuração por dia/colaborador.");
+			throw new AssertionError("NÃ£o poderia haver mais de uma apuraÃ§Ã£o por dia/colaborador.");
 		}
 		return results.get(0);
 	}
@@ -218,7 +218,7 @@ public class ApuradorMarcacoes {
 			pausasAlmoco = getIntervalosSobrepostosEm(almocoPadrao, intervalos);
 		}
 		if (pausasAlmoco.isEmpty()) {
-			// Não teve intervalo de almoço
+			// NÃ£o teve intervalo de almoÃ§o
 			return false;
 		}
 		for (Intervalo pausa : pausasAlmoco) {
@@ -259,12 +259,12 @@ public class ApuradorMarcacoes {
 		return result;
 	}
 
-	// TODO A Regra que define o almoço é esta mesma?
+	// TODO A Regra que define o almoÃ§o Ã© esta mesma?
 	private Intervalo getIntervaloAlmocoPadrao(DiaSemana diaSemana) throws AssertionError {
 		Escala escala = Manager.get().getConfig().getEscalaPadrao();
 		List<Intervalo> intervEscala = getIntervalos(escala, diaSemana);
 		if (intervEscala.size() % 2 == 0) {
-			throw new AssertionError("Quantidade de intervalos da escala padrão deveria ser ímpar.");
+			throw new AssertionError("Quantidade de intervalos da escala padrï¿½o deveria ser ï¿½mpar.");
 		}
 		return intervEscala.get(intervEscala.size() / 2);
 	}
@@ -325,10 +325,10 @@ public class ApuradorMarcacoes {
 		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		int qtdMarcacoes = marcacoes.size();
 		if (qtdMarcacoes % 2 != 0) {
-			// Não é possível calcular com marcações ímpares.
+			// NÃ£o Ã© possÃ­vel calcular com marcaÃ§Ãµes Ã­mpares.
 			return;
 		}
-		// Utiliza o mapa para fazer este cálculo uma só vez para cada dia da
+		// Utiliza o mapa para fazer este cÃ¡lculo uma sÃ³ vez para cada dia da
 		// semana:
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		Integer tempoPadraoTrab = tempoTrabEscalaPadrao.get(diaSemana);
@@ -337,10 +337,10 @@ public class ApuradorMarcacoes {
 			tempoTrabEscalaPadrao.put(diaSemana, tempoPadraoTrab);
 		}
 
-		// É possível calcular as horas só se a quantidade de marcações for par.
+		// Ã‰ possÃ³vel calcular as horas se se a quantidade de marcaÃ§Ãµes for par.
 		int trabalhadas = calcularTempoTrabalhado(marcacoes);
 
-		// TODO Confimar: Pode ter hora extra de 1 segundo. É isso mesmo?
+		// TODO Confimar: Pode ter hora extra de 1 segundo. Ã‰ isso mesmo?
 		int excedentes = trabalhadas - tempoPadraoTrab;
 		if (excedentes < 0) {
 			excedentes = 0;
@@ -366,7 +366,7 @@ public class ApuradorMarcacoes {
 		int somaImpares = 0;
 		for (int i = 0; i < marcacoes.size(); i++) {
 			int millis = marcacoes.get(i).getMillisOfDay();
-			// Atenção: i=0 significa marcação 1 (ímpar)
+			// AtenÃ§Ã£o: i=0 significa marcaÃ§Ã£o 1 (Ãmpar)
 			if (i % 2 == 0) {
 				somaImpares += millis;
 			} else {
