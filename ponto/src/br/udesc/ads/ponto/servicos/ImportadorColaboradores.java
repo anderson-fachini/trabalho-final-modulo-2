@@ -194,6 +194,6 @@ public class ImportadorColaboradores {
 
 	}
 
-	// TODO Ordenar os registros [gerentes primeiro] antes de importar
+	// TODO Ordenar os registros [gerentes primeiro] antes de importar (depende de um "CsvDataset").
 
 }
