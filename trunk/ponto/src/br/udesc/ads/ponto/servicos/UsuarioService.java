@@ -13,11 +13,22 @@ public class UsuarioService {
 	
 	private static EntityManager em = EntityManagerUtil.getEntityManager();
 	
+	private static UsuarioService instance;
+	
+	private UsuarioService() {}
+	
+	public static synchronized UsuarioService get() {
+		if (instance == null) {
+			instance = new UsuarioService();
+		}
+		return instance;
+	}
+	
 	/**
-	 * Método que verifica as credenciais do usuário na base de dados
-	 * @param nomeUsuario Nome do usuário
-	 * @param senha Senha do Usuário
-	 * @return Objeto usuário, caso tenha encontradou ou então null
+	 * Mï¿½todo que verifica as credenciais do usuï¿½rio na base de dados
+	 * @param nomeUsuario Nome do usuï¿½rio
+	 * @param senha Senha do Usuï¿½rio
+	 * @return Objeto usuï¿½rio, caso tenha encontradou ou entï¿½o null
 	 */
 	public Usuario buscaUsuarioAutenticado(String nomeUsuario, String senha) {
 		Query query = em.createNamedQuery("checkUserAutentication");

@@ -34,8 +34,7 @@ public class AutenticacaoController implements Serializable {
 	}
 
 	public void autenticaUsuario() {
-		UsuarioService usuarioService = new UsuarioService();
-		usuarioAutenticado = usuarioService.buscaUsuarioAutenticado(
+		usuarioAutenticado = UsuarioService.get().buscaUsuarioAutenticado(
 				usuario.getNomeUsuario(), usuario.getSenha());
 
 		if (usuarioAutenticado == null) {

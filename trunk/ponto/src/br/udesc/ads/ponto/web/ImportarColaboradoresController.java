@@ -26,10 +26,9 @@ public class ImportarColaboradoresController implements Serializable {
 	public void fileListener(FileEntryEvent e) {
 		FileEntry fe = (FileEntry) e.getComponent();
 		FileEntryResults results = fe.getResults();
-		ColaboradorService cs = new ColaboradorService();
 		
 		for (FileEntryResults.FileInfo i : results.getFiles()) {
-			cs.importarColaboradores(i.getFile());
+			ColaboradorService.get().importarColaboradores(i.getFile());
 		}
 		
 		JsfUtils.addMensagemInfo(Messages.getString("msgColaboradoresImportadosSucesso"));
