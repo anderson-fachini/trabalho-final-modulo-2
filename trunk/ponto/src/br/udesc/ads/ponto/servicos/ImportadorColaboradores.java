@@ -149,7 +149,6 @@ public class ImportadorColaboradores {
 	}
 
 	private Setor getSetor(String nome, String codGerente) {
-		// TODO Tratar situação de ter gerentes diferentes por setor
 		long longCodGerente = Long.parseLong(codGerente);
 		Colaborador gerente = ColaboradorService.get().getColaboradorPorCodigo(longCodGerente, true);
 		Setor setor = getSetorPorNome(nome);
@@ -161,6 +160,12 @@ public class ImportadorColaboradores {
 			entityManager.persist(setor);
 		} else {
 			// O setor já existe
+			if (setoresProcessados.contains(setor)) {
+				if (!setor.getGerente().getCodigo().equals(longCodGerente)) {
+					String fmt = "Gerentes diferentes informados para o setor '%s'. Valores: '%d', '%d'.";
+					throw new RuntimeException(String.format(fmt, nome, setor.getGerente().getCodigo(), longCodGerente));
+				}
+			}
 			setor.setGerente(gerente);
 			setor.setSituacao(Situacao.ATIVO);
 			entityManager.merge(setor);
