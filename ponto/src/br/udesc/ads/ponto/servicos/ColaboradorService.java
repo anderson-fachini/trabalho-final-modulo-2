@@ -15,11 +15,14 @@ public class ColaboradorService {
 
 	private static ColaboradorService instance;
 
-	public static ColaboradorService get() {
+	public static synchronized ColaboradorService get() {
 		if (instance == null) {
 			instance = new ColaboradorService();
 		}
 		return instance;
+	}
+	
+	private ColaboradorService() {
 	}
 
 	/**

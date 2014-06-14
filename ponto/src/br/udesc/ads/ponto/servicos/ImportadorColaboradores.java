@@ -2,28 +2,39 @@ package br.udesc.ads.ponto.servicos;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Setor;
+import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.util.FileUtils;
 
 public class ImportadorColaboradores {
 
 	private final EntityManager entityManager;
+	private final Set<Colaborador> colaboradoresProcessados = new HashSet<>();
+	private final Set<Setor> setoresProcessados = new HashSet<>();
 
 	public ImportadorColaboradores() {
 		entityManager = Manager.get().getEntityManager();
 	}
 
 	public void importar(File arquivo) {
+		colaboradoresProcessados.clear();
+		setoresProcessados.clear();
+		
 		List<String> linhas;
 		try {
 			linhas = FileUtils.fileToString(arquivo);
@@ -35,22 +46,62 @@ public class ImportadorColaboradores {
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
 		try {
+			// Importa os colaboradores/setores:
 			boolean primeiraLinha = true;
 			for (String linha : linhas) {
 				String[] tokens = linha.split(";");
-				if (primeiraLinha && !isLongInteger(tokens[0])) {
-					// Pula o header
-					primeiraLinha = false;
-					continue;
+				// Pula o header
+				if (!primeiraLinha || isLongInteger(tokens[0])) {
+					processaColaborador(tokens);
 				}
 				primeiraLinha = false;
-				processaColaborador(tokens);
 			}
+			
+			// Marca os ausentes como Inativos:
+			inativarColaboradoresAusentes();
+			inativarSetoresAusentes();
+			
 			transaction.commit();
 		} catch (Throwable ex) {
 			transaction.rollback();
 			throw ex;
 		}
+	}
+
+	private void inativarColaboradoresAusentes() {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaUpdate<Colaborador> update = cb.createCriteriaUpdate(Colaborador.class);
+		Root<Colaborador> root = update.from(Colaborador.class);
+		update.set(root.get("situacao"), Situacao.INATIVO);
+		Predicate in = root.get("id").in(getIdsColaboradores(colaboradoresProcessados));
+		update.where(cb.not(in));
+		entityManager.createQuery(update).executeUpdate();
+	}
+
+	private void inativarSetoresAusentes() {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaUpdate<Setor> update = cb.createCriteriaUpdate(Setor.class);
+		Root<Setor> root = update.from(Setor.class);
+		update.set(root.get("situacao"), Situacao.INATIVO);
+		Predicate in = root.get("id").in(getIdsSetores(setoresProcessados));
+		update.where(cb.not(in));
+		entityManager.createQuery(update).executeUpdate();
+	}
+	
+	private List<Long> getIdsSetores(Set<Setor> setores) {
+		List<Long> result = new ArrayList<>();
+		for (Setor s : setores) {
+			result.add(s.getId());
+		}
+		return result;
+	}
+	
+	private List<Long> getIdsColaboradores(Set<Colaborador> colaboradores) {
+		List<Long> result = new ArrayList<>();
+		for (Colaborador c : colaboradores) {
+			result.add(c.getId());
+		}
+		return result;
 	}
 
 	private boolean isLongInteger(String string) {
@@ -68,18 +119,21 @@ public class ImportadorColaboradores {
 		String codGerente = isGerente ? String.valueOf(codigo) : tokens[4];
 		Setor setor = getSetor(tokens[3], codGerente);
 		Colaborador col = ColaboradorService.get().getColaboradorPorCodigo(codigo, true);
+		String cpf = tokens[2];
+		cpf = cpf.replaceAll("\\D", "");
 		if (col != null) {
 			// O cara já existe
 			col.setNome(tokens[1]);
-			col.setCpf(tokens[2]);
+			col.setCpf(cpf);
 			col.setSetor(setor);
+			col.setSituacao(Situacao.ATIVO);
 			entityManager.merge(col);
 		} else {
 			// O cara é novo
 			col = new Colaborador();
 			col.setCodigo(codigo);
 			col.setNome(tokens[1]);
-			col.setCpf(tokens[2]);
+			col.setCpf(cpf);
 			col.setSetor(setor);
 			col.setSaldoBH(0.00);
 			entityManager.persist(col);
@@ -90,9 +144,12 @@ public class ImportadorColaboradores {
 			setor.setGerente(col);
 			entityManager.merge(setor);
 		}
+		colaboradoresProcessados.add(col);
+		setoresProcessados.add(col.getSetor());
 	}
 
 	private Setor getSetor(String nome, String codGerente) {
+		// TODO Tratar situação de ter gerentes diferentes por setor
 		long longCodGerente = Long.parseLong(codGerente);
 		Colaborador gerente = ColaboradorService.get().getColaboradorPorCodigo(longCodGerente, true);
 		Setor setor = getSetorPorNome(nome);
@@ -105,6 +162,7 @@ public class ImportadorColaboradores {
 		} else {
 			// O setor já existe
 			setor.setGerente(gerente);
+			setor.setSituacao(Situacao.ATIVO);
 			entityManager.merge(setor);
 		}
 		return setor;
@@ -131,8 +189,6 @@ public class ImportadorColaboradores {
 
 	}
 
-	// TODO Tratar demissões
-
-	// TODO Tratar remoção de setores
+	// TODO Ordenar os registros [gerentes primeiro] antes de importar
 
 }

@@ -7,11 +7,14 @@ public class ApuracaoService {
 
 	private static ApuracaoService instance;
 
-	public static ApuracaoService get() {
+	public static synchronized ApuracaoService get() {
 		if (instance == null) {
 			instance = new ApuracaoService();
 		}
 		return instance;
+	}
+	
+	private ApuracaoService() {
 	}
 
 	/**

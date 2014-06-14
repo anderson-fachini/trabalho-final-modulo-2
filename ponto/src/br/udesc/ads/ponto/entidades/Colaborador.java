@@ -30,6 +30,9 @@ public class Colaborador {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private Setor setor;
 
+	@Column(nullable = false)
+	private Situacao situacao = Situacao.ATIVO;
+
 	public Long getId() {
 		return id;
 	}
@@ -78,6 +81,14 @@ public class Colaborador {
 		this.setor = setor;
 	}
 
+	public Situacao getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(Situacao situacao) {
+		this.situacao = situacao;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,7 +98,8 @@ public class Colaborador {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((saldoBH == null) ? 0 : saldoBH.hashCode());
-		result = prime * result + ((setor == null) ? 0 : setor.hashCode());
+		result = prime * result + System.identityHashCode(setor);
+		result = prime * result + ((situacao == null) ? 0 : situacao.hashCode());
 		return result;
 	}
 
@@ -119,6 +131,9 @@ public class Colaborador {
 			return false;
 		}
 		if (setor != other.setor) {
+			return false;
+		}
+		if (situacao != other.situacao) {
 			return false;
 		}
 		return true;
