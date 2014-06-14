@@ -21,6 +21,9 @@ public class Setor {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private Colaborador gerente;
 
+	@Column(nullable = false)
+	private Situacao situacao = Situacao.ATIVO;
+
 	public Long getId() {
 		return id;
 	}
@@ -43,6 +46,61 @@ public class Setor {
 
 	public void setGerente(Colaborador gerente) {
 		this.gerente = gerente;
+	}
+
+	public Situacao getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(Situacao situacao) {
+		this.situacao = situacao;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + System.identityHashCode(gerente); // Pra não entrar em loop eterno
+		result = prime * result + ((situacao == null) ? 0 : situacao.hashCode());
+		return result;
+	}
+	
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Setor)) {
+			return false;
+		}
+		Setor other = (Setor) obj;
+		if (!equal(id, other.id)) {
+			return false;
+		}
+		if (!equal(nome, other.nome)) {
+			return false;
+		}
+		if (gerente != other.gerente) {
+			return false;
+		}
+		if (situacao != other.situacao) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean equal(Object o1, Object o2) {
+		if (o1 == null) {
+			return o2 == null;
+		}
+		return o1.equals(o2);
 	}
 
 }
