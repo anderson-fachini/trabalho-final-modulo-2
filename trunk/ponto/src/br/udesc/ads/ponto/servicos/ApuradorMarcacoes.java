@@ -35,8 +35,6 @@ public class ApuradorMarcacoes {
 		// Carrega:
 		List<Apuracao> apuracoes = getApuracoesNaoProcessadas();
 
-		// TODO Não podem ser consideradas as marcações removidas!
-
 		// Processa:
 		for (Apuracao apuracao : apuracoes) {
 			processarApuracao(apuracao);
@@ -73,10 +71,7 @@ public class ApuradorMarcacoes {
 	}
 
 	private void processarApuracao(Apuracao apuracao) {
-		int qtdMarcacoes = apuracao.getMarcacoesSize();
-		if (qtdMarcacoes % 2 == 0) {
-			calcularHoras(apuracao);
-		}
+		calcularHoras(apuracao);
 		resolverOcorrencias(apuracao);
 		apuracao.setApurada(true);
 	}
@@ -95,10 +90,10 @@ public class ApuradorMarcacoes {
 		if (isMarcacoesForaDaEscalaPadrao(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FORA_DA_ESCALA);
 		}
-		if (apuracao.getMarcacoesSize() < 4) {
+		if (apuracao.getSequenciaMarcacoes().size() < 4) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FALTANTES);
 
-		} else if (apuracao.getMarcacoesSize() > 4) {
+		} else if (apuracao.getSequenciaMarcacoes().size() > 4) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_EXCEDENTES);
 		}
 		if (isIntervaloAlmocoIncompleto(apuracao)) {
@@ -327,6 +322,12 @@ public class ApuradorMarcacoes {
 	}
 
 	private void calcularHoras(Apuracao apuracao) {
+		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
+		int qtdMarcacoes = marcacoes.size();
+		if (qtdMarcacoes % 2 != 0) {
+			// Não é possível calcular com marcações ímpares.
+			return;
+		}
 		// Utiliza o mapa para fazer este cálculo uma só vez para cada dia da
 		// semana:
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
@@ -337,7 +338,7 @@ public class ApuradorMarcacoes {
 		}
 
 		// É possível calcular as horas só se a quantidade de marcações for par.
-		int trabalhadas = calcularTempoTrabalhado(apuracao.getSequenciaMarcacoes());
+		int trabalhadas = calcularTempoTrabalhado(marcacoes);
 
 		// TODO Confimar: Pode ter hora extra de 1 segundo. É isso mesmo?
 		int excedentes = trabalhadas - tempoPadraoTrab;
@@ -358,6 +359,7 @@ public class ApuradorMarcacoes {
 		apuracao.setHorasFaltantes(LocalTime.fromMillisOfDay(faltantes));
 	}
 
+	// TODO Melhoria: Refatorar para trabalhar com objetos Intervalo.
 	// Retorno em millis
 	private int calcularTempoTrabalhado(List<LocalTime> marcacoes) {
 		int somaPares = 0;

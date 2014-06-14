@@ -207,7 +207,9 @@ public class Apuracao {
 	public List<LocalTime> getSequenciaMarcacoes() {
 		List<LocalTime> result = new ArrayList<>();
 		for (Marcacao mar : marcacoes) {
-			result.add(mar.getHora());
+			if (!mar.isExcluida()) {
+				result.add(mar.getHora());
+			}
 		}
 		Collections.sort(result);
 		return result;

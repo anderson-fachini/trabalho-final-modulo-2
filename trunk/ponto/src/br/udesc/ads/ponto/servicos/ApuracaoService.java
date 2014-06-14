@@ -100,9 +100,9 @@ public class ApuracaoService {
 	public static void main(String[] args) {
 
 		// TODO Primeiro deletar todas as apurações.
-		// new ApuracaoService().importarMarcacoes();
+		 new ApuracaoService().importarMarcacoes();
 
-		new ApuracaoService().apurarMarcacoesPendentes();
+//		new ApuracaoService().apurarMarcacoesPendentes();
 	}
 
 }
