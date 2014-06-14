@@ -1,9 +1,11 @@
 package br.udesc.ads.ponto.entidades;
 
+import br.udesc.ads.ponto.util.Messages;
+
 public enum Situacao {
 
-	ATIVO("A", "Ativo"), //
-	INATIVO("I", "Inativo");
+	ATIVO("A", Messages.getString("ativo")), //
+	INATIVO("I", Messages.getString("inativo"));
 
 	private String id;
 	private String descricao;

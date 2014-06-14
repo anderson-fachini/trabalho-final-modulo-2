@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	template="/WEB-INF/templates/templateBase.xhtml">
+	
+	<ui:param name="pageTitle" value="#{msg.cadastroUsuarios}" />
+	
+	<ui:define name="pageContent">
+		<h:form styleClass="centralized-form">
+			<ace:dataTable value="#{cadastroUsuarios.usuarios}" var="usuario"
+				paginator="true" paginatorPosition="bottom" rows="10">
+				<ace:column headerText="#{msg.usuario}" sortBy="#{usuario.nomeUsuario}"
+					filterBy="#{usuario.nomeUsuario}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.nomeUsuario}" />
+				</ace:column>
+				
+				<ace:column headerText="#{msg.perfil}" sortBy="#{usuario.perfil}"
+					filterBy="#{usuario.perfil}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.perfil.descricao}" />
+				</ace:column>
+				
+				<ace:column headerText="#{msg.status}" sortBy="#{usuario.situacao}"
+					filterBy="#{usuario.situacao}" filterMatchMode="contains">
+					<h:outputText value="#{usuario.situacao.descricao}" />
+				</ace:column>
+				
+				<ace:column headerText="#{msg.acao}">
+					<h:outputText value="#{msg.editar}" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
+		
+	</ui:define>	
+</ui:composition>
