@@ -1,7 +1,5 @@
 package br.udesc.ads.ponto.entidades;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,10 +19,10 @@ public class AjusteBH {
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dataHora;
 	
-	private BigDecimal valorAjuste; // Pode ser positivo ou negativo
+	private Double valorAjuste; // Pode ser positivo ou negativo
 	private String observacoes;
 	private Usuario responsavel;
-	private Apuracao apuracao; // Somente preenchido quando foi um ajuste "automático"
+	private Apuracao apuracao; // Somente preenchido quando foi um ajuste "automï¿½tico"
 
 	public Long getId() {
 		return id;
@@ -50,11 +48,11 @@ public class AjusteBH {
 		this.dataHora = dataHora;
 	}
 
-	public BigDecimal getValorAjuste() {
+	public Double getValorAjuste() {
 		return valorAjuste;
 	}
 
-	public void setValorAjuste(BigDecimal valorAjuste) {
+	public void setValorAjuste(Double valorAjuste) {
 		this.valorAjuste = valorAjuste;
 	}
 

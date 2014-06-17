@@ -25,7 +25,7 @@ public class Colaborador {
 	private String cpf;
 
 	@Column(nullable = false)
-	private Double saldoBH;
+	private Double saldoBH = 0.00;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private Setor setor;

@@ -28,9 +28,9 @@ public class Marcacao {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {})
 	private MotivoMarcacao motivo;
 
-	private Boolean digitada;
+	private Boolean digitada = Boolean.FALSE;
 	
-	private Boolean excluida;
+	private Boolean excluida = Boolean.FALSE;
 	
 	public Marcacao() {
 	}
