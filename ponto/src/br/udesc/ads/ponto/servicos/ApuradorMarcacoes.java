@@ -22,6 +22,7 @@ import br.udesc.ads.ponto.entidades.Escala;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.manager.Manager;
 
+// TODO Refatorar os cálculos para trabalhar com precisão de Minutos e Truncar.
 public class ApuradorMarcacoes {
 
 	private final EntityManager entityManager;
@@ -208,9 +209,12 @@ public class ApuradorMarcacoes {
 	}
 
 	private boolean isIntervaloAlmocoIncompleto(Apuracao apuracao) {
-		int min = Manager.get().getConfig().getIntervaloMinimoAlmoco();
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		Intervalo almocoPadrao = getIntervaloAlmocoPadrao(diaSemana);
+		if (almocoPadrao == null) {
+			return false;
+		}
+		int min = Manager.get().getConfig().getIntervaloMinimoAlmoco();
 		List<Intervalo> intervalos = getIntervalos(apuracao);
 		intervalos = filtrarPorTipo(intervalos, TipoIntervalo.NAO_TRABALHADO);
 		List<Intervalo> pausasAlmoco = getIntervalosContidosEm(almocoPadrao, intervalos);
@@ -259,7 +263,8 @@ public class ApuradorMarcacoes {
 		return result;
 	}
 
-	// TODO A Regra que define o almoço é esta mesma?
+	// TODO A Regra que define o almoço é esta mesma? Resposta: Não
+	// Ajustar para pegar o primeiro intervalo >= 1h da escala padrão.
 	private Intervalo getIntervaloAlmocoPadrao(DiaSemana diaSemana) throws AssertionError {
 		Escala escala = Manager.get().getConfig().getEscalaPadrao();
 		List<Intervalo> intervEscala = getIntervalos(escala, diaSemana);
@@ -328,16 +333,18 @@ public class ApuradorMarcacoes {
 			// Não é possível calcular com marcações ímpares.
 			return;
 		}
-		// Utiliza o mapa para fazer este cálculo uma só vez para cada dia da
-		// semana:
-		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
-		Integer tempoPadraoTrab = tempoTrabEscalaPadrao.get(diaSemana);
-		if (tempoPadraoTrab == null) {
-			tempoPadraoTrab = calcularTempoTrabalhoEscalaPadrao(diaSemana);
-			tempoTrabEscalaPadrao.put(diaSemana, tempoPadraoTrab);
+		int tempoPadraoTrab;
+		if (FeriadoService.get().existeFeriado(apuracao.getData())) {
+			tempoPadraoTrab = 0;
+		} else {
+			DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
+			if (tempoTrabEscalaPadrao.containsKey(diaSemana)) {
+				tempoPadraoTrab = tempoTrabEscalaPadrao.get(diaSemana);
+			} else {
+				tempoPadraoTrab = calcularTempoTrabalhoEscalaPadrao(diaSemana);
+				tempoTrabEscalaPadrao.put(diaSemana, tempoPadraoTrab);
+			}
 		}
-
-		// É possóvel calcular as horas se se a quantidade de marcações for par.
 		int trabalhadas = calcularTempoTrabalhado(marcacoes);
 
 		int margemExcedentes = Manager.get().getConfig().getMargemHorasExcedentes() * 60 * 1000;
