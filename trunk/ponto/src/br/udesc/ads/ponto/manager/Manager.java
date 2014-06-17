@@ -17,7 +17,7 @@ import br.udesc.ads.ponto.entidades.Escala;
 import br.udesc.ads.ponto.entidades.EscalaMarcacao;
 
 /**
- * Classe principal que contém as configurações do ambiente, conexão com o banco
+ * Classe principal que contï¿½m as configuraï¿½ï¿½es do ambiente, conexï¿½o com o banco
  * e etc.
  * 
  * @author Samuel
@@ -27,7 +27,7 @@ public class Manager {
 
 	private static Manager instance;
 
-	public static Manager get() {
+	public static synchronized Manager get() {
 		if (instance == null) {
 			instance = new Manager();
 		}
@@ -71,7 +71,8 @@ public class Manager {
 			result.setIntervaloMinimoAlmoco(60);
 			result.setIntervaloMinimoInterjornadas(60 * 11);
 			result.setIntervaloMinimoIntrajornada(15);
-			result.setMargemHorasFaltas(20);
+			result.setMargemHorasFaltantes(20);
+			result.setMargemHorasExcedentes(20);
 			result.setMargemMarcacoes(5);
 			entityManager.persist(result);
 			transaction.commit();
@@ -103,7 +104,7 @@ public class Manager {
 			return null;
 		}
 		if (results.size() > 1) {
-			throw new AssertionError("Não deveria haver mais de um registro na tabela Config.");
+			throw new AssertionError("Nï¿½o deveria haver mais de um registro na tabela Config.");
 		}
 		return results.get(0);
 	}
