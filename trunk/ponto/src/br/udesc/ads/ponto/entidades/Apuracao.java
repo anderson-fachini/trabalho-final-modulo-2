@@ -38,7 +38,7 @@ public class Apuracao {
 
 	private Usuario responsavelAprovacao;
 
-	@Column(columnDefinition = "TIME")
+	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dataAprovacao;
 
 	private String observacoes;
@@ -129,6 +129,10 @@ public class Apuracao {
 	public void setHorasFaltantes(LocalTime horasFaltantes) {
 		this.horasFaltantes = horasFaltantes;
 	}
+	
+	public boolean temHorasFaltantes() {
+		return this.horasFaltantes != null && this.horasFaltantes.getMillisOfDay() > 0;
+	}
 
 	public LocalTime getHorasExcedentes() {
 		return horasExcedentes;
@@ -136,6 +140,10 @@ public class Apuracao {
 
 	public void setHorasExcedentes(LocalTime horasExcedentes) {
 		this.horasExcedentes = horasExcedentes;
+	}
+	
+	public boolean temHorasExcedentes() {
+		return this.horasExcedentes != null && this.horasExcedentes.getMillisOfDay() > 0;
 	}
 
 	public LocalTime getHorasAbonadas() {

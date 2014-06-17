@@ -13,13 +13,17 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Apuracao;
+import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Config;
 import br.udesc.ads.ponto.entidades.DiaSemana;
 import br.udesc.ads.ponto.entidades.Escala;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
+import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 
 // TODO Refatorar os cálculos para trabalhar com precisão de Minutos e Truncar.
@@ -401,18 +405,46 @@ public class ApuradorMarcacoes {
 		return entityManager.createQuery(query).getResultList();
 	}
 
-	public static void main(String[] args) {
+	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
 
-		// Apuracao apu = new Apuracao();
-		//
-		// apu.addMarcacao(new Marcacao(new LocalTime(8, 10)));
-		// apu.addMarcacao(new Marcacao(new LocalTime(9, 10)));
-		// apu.addMarcacao(new Marcacao(new LocalTime(12, 15)));
-		// apu.addMarcacao(new Marcacao(new LocalTime(13, 13)));
-		//
-		// System.out.println(new
-		// ApuradorMarcacoes().calcularTempoTrabalhado(apu));
+		LocalDateTime agora = LocalDateTime.now();
+		apuracao.setDataAprovacao(agora);
+		apuracao.setResponsavelAprovacao(usuario);
 
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+		try {
+			if (apuracao.temHorasExcedentes() || apuracao.temHorasFaltantes()) {
+				Colaborador colaborador = apuracao.getColaborador();
+				
+				AjusteBH ajusteBH = new AjusteBH();
+				ajusteBH.setApuracao(apuracao);
+				ajusteBH.setColaborador(colaborador);
+				ajusteBH.setDataHora(agora);
+				ajusteBH.setResponsavel(usuario);
+				LocalTime excedentes = apuracao.getHorasExcedentes();
+				LocalTime faltantes = apuracao.getHorasFaltantes();
+				ajusteBH.setValorAjuste(toDoubleHoras(excedentes) - toDoubleHoras(faltantes));
+				ajusteBH.setObservacoes("Processo automático de aprovação de ponto.");
+				entityManager.persist(ajusteBH);
+				
+				colaborador.setSaldoBH(colaborador.getSaldoBH() + ajusteBH.getValorAjuste());
+				entityManager.merge(colaborador);
+			}
+			// Lista de abonos e marcações serão persistidos também em cascata
+			entityManager.merge(apuracao);
+
+			transaction.commit();
+		} catch (Throwable ex) {
+			transaction.rollback();
+			throw ex;
+		}
+	}
+
+	public double toDoubleHoras(LocalTime localTime) {
+		double result = localTime.getMillisOfDay();
+		result /= 1000 * 60 * 60;
+		return result;
 	}
 
 }

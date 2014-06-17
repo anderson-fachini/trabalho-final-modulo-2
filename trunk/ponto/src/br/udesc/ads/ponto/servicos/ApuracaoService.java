@@ -1,7 +1,12 @@
 package br.udesc.ads.ponto.servicos;
 
+import java.io.File;
+
+import javax.persistence.EntityManager;
+
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Usuario;
+import br.udesc.ads.ponto.manager.Manager;
 
 public class ApuracaoService {
 
@@ -13,7 +18,7 @@ public class ApuracaoService {
 		}
 		return instance;
 	}
-	
+
 	private ApuracaoService() {
 	}
 
@@ -29,8 +34,7 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC01.
 	 */
 	public void importarMarcacoes() {
-		ImportadorMarcacoes importador = new ImportadorMarcacoes();
-		importador.importar();
+		new ImportadorMarcacoes().importar();
 	}
 
 	/**
@@ -46,8 +50,7 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC01.
 	 */
 	public void apurarMarcacoesPendentes() {
-		ApuradorMarcacoes apurador = new ApuradorMarcacoes();
-		apurador.apurarMarcacoesPendentes();
+		new ApuradorMarcacoes().apurarMarcacoesPendentes();
 	}
 
 	/**
@@ -63,8 +66,7 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC01.
 	 */
 	public void apurarMarcacoes(Apuracao apuracao) {
-		ApuradorMarcacoes apurador = new ApuradorMarcacoes();
-		apurador.apurarMarcacoes(apuracao);
+		new ApuradorMarcacoes().apurarMarcacoes(apuracao);
 	}
 
 	/**
@@ -72,15 +74,15 @@ public class ApuracaoService {
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
 	 * <li>Preenche a data da aprovação com a data/hora atuais;</li>
-	 * <li>Preenche o respons�vel da aprovação como o usuário informado;</li>
+	 * <li>Preenche o responsável da aprovação como o usuário informado;</li>
 	 * <li>Persiste o novo estado da apuração;</li>
 	 * <li>Caso haja horas excedentes ou faltantes:
 	 * <ul>
 	 * <li>Efetua o ajuste no Banco de Horas do colaborador;</li>
 	 * <li>Registra um histórico de ajuste de Banco de Horas;</li>
-	 * <li>Persiste os dados de colaborador e Banco de Horas;</li>
 	 * </ul>
 	 * </li>
+	 * <li>Persiste os dados de colaborador e Banco de Horas;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC04.
 	 * 
@@ -92,17 +94,31 @@ public class ApuracaoService {
 	 *            O usuário que está aprovando a apuração.
 	 */
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
-
-		// TODO Implementar
+		new ApuradorMarcacoes().aprovarApuracao(apuracao, usuario);
 	}
 
 	// TODO Remover este método depois e criar um Cenário de teste
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
+//		
+////		importarTudo();
+//		
+//		EntityManager entityManager = Manager.get().getEntityManager();
+//		
+//		Apuracao apuracao = entityManager.find(Apuracao.class, 32L);
+//		Usuario usuario = entityManager.find(Usuario.class, 1L);
+//		
+//		ApuracaoService.get().aprovarApuracao(apuracao, usuario);
+//	}
 
-		// TODO Primeiro deletar todas as apurações.
-		 new ApuracaoService().importarMarcacoes();
-
-//		new ApuracaoService().apurarMarcacoesPendentes();
-	}
+//	private static void importarTudo() {
+//		System.out.println("Importando colaboradores...");
+//		ColaboradorService.get().importarColaboradores(new File("C:\\colaboradores.csv"));
+//
+//		// TODO Primeiro deletar todas as apurações.
+//		System.out.println("Importando marcações...");
+//		ApuracaoService.get().importarMarcacoes();
+//		System.out.println("Apurando marcações pendentes...");
+//		ApuracaoService.get().apurarMarcacoesPendentes();
+//	}
 
 }
