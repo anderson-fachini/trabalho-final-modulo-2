@@ -5,11 +5,6 @@ import java.io.IOException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
-import org.joda.time.LocalDate;
 
 import br.udesc.ads.ponto.entidades.Feriado;
 import br.udesc.ads.ponto.manager.Manager;
@@ -29,12 +24,12 @@ public class ImportadorFeriados {
 		try {
 			dataset.loadFromFile(arquivo);
 			dataset.sort("data", FieldType.LOCALDATE, true);
-			
+
 			EntityTransaction transaction = entityManager.getTransaction();
 			transaction.begin();
 			try {
 				while (dataset.next()) {
-					if (existeFeriado(dataset.getAsLocalDate("data"))) {
+					if (FeriadoService.get().existeFeriado(dataset.getAsLocalDate("data"))) {
 						continue;
 					}
 					Feriado feriado = new Feriado();
@@ -51,14 +46,6 @@ public class ImportadorFeriados {
 			e.printStackTrace();
 			throw new RuntimeException("Erro ao carregar arquivo de feriados:\n" + e.getMessage());
 		}
-	}
-
-	private boolean existeFeriado(LocalDate data) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Feriado> query = cb.createQuery(Feriado.class);
-		Root<Feriado> root = query.from(Feriado.class);
-		query.select(root).where(cb.equal(root.get("data"), data));
-		return !entityManager.createQuery(query).getResultList().isEmpty();
 	}
 
 }
