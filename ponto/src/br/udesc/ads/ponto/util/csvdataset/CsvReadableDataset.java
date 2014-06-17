@@ -79,19 +79,19 @@ public class CsvReadableDataset {
 		return fieldIndex;
 	}
 
-	public String getAsString(String fieldName) {
+	public String getString(String fieldName) {
 		return getAsType(fieldName, FieldType.STRING);
 	}
 
-	public Integer getAsInteger(String fieldName) {
+	public Integer getInteger(String fieldName) {
 		return getAsType(fieldName, FieldType.INTEGER);
 	}
 
-	public Long getAsLong(String fieldName) {
+	public Long getLong(String fieldName) {
 		return getAsType(fieldName, FieldType.LONG);
 	}
 
-	public LocalDate getAsLocalDate(String fieldName) {
+	public LocalDate getLocalDate(String fieldName) {
 		return getAsType(fieldName, FieldType.LOCALDATE);
 	}
 
@@ -100,6 +100,10 @@ public class CsvReadableDataset {
 		int fieldIndex = getFieldIndex(fieldName);
 		String value = records.get(currentIndex)[fieldIndex];
 		return (T) convertValue(value, fieldType);
+	}
+	
+	public boolean isNull(String fieldName) {
+		return getString(fieldName) == null;
 	}
 
 	public boolean next() {
