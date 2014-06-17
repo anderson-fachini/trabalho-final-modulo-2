@@ -38,7 +38,7 @@ public class ApuradorMarcacoes {
 
 	public void apurarMarcacoesPendentes() {
 		// Carrega:
-		List<Apuracao> apuracoes = getApuracoesNaoProcessadas();
+		List<Apuracao> apuracoes = getApuracoesPendentes();
 
 		// Processa:
 		for (Apuracao apuracao : apuracoes) {
@@ -75,7 +75,7 @@ public class ApuradorMarcacoes {
 		}
 	}
 
-	private void processarApuracao(Apuracao apuracao) {
+	void processarApuracao(Apuracao apuracao) {
 		calcularHoras(apuracao);
 		resolverOcorrencias(apuracao);
 		apuracao.setApurada(true);
@@ -396,7 +396,7 @@ public class ApuradorMarcacoes {
 		return calcularTempoTrabalhado(marcacoes);
 	}
 
-	private List<Apuracao> getApuracoesNaoProcessadas() {
+	private List<Apuracao> getApuracoesPendentes() {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Apuracao> query = cb.createQuery(Apuracao.class);
 		Root<Apuracao> root = query.from(Apuracao.class);
