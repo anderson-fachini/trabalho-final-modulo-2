@@ -366,6 +366,10 @@ public class ApuradorMarcacoes {
 		} else {
 			faltantes = 0;
 		}
+		
+		if (excedentes == 0 && faltantes == 0) {
+			trabalhadas = tempoPadraoTrab;
+		}
 		// TODO Calcular as horas abonadas!
 
 		apuracao.setHorasTrabalhadas(LocalTime.fromMillisOfDay(trabalhadas));
