@@ -264,7 +264,7 @@ public class ApuradorMarcacoes {
 		Escala escala = Manager.get().getConfig().getEscalaPadrao();
 		List<Intervalo> intervEscala = getIntervalos(escala, diaSemana);
 		if (intervEscala.size() % 2 == 0) {
-			throw new AssertionError("Quantidade de intervalos da escala padr�o deveria ser �mpar.");
+			throw new AssertionError("Quantidade de intervalos da escala padrão deveria ser ímpar.");
 		}
 		return intervEscala.get(intervEscala.size() / 2);
 	}
@@ -340,18 +340,21 @@ public class ApuradorMarcacoes {
 		// É possóvel calcular as horas se se a quantidade de marcações for par.
 		int trabalhadas = calcularTempoTrabalhado(marcacoes);
 
-		// TODO Confimar: Pode ter hora extra de 1 segundo. É isso mesmo?
-		int excedentes = trabalhadas - tempoPadraoTrab;
-		if (excedentes < 0) {
+		int margemExcedentes = Manager.get().getConfig().getMargemHorasExcedentes() * 60 * 1000;
+		int excedentes;
+		if (trabalhadas - tempoPadraoTrab > margemExcedentes) {
+			excedentes = trabalhadas - tempoPadraoTrab;
+		} else {
 			excedentes = 0;
 		}
 
-		int margem = Manager.get().getConfig().getMargemHorasFaltas() * 60 * 1000;
-		int faltantes = tempoPadraoTrab - trabalhadas - margem;
-		if (faltantes < 0) {
+		int margemFaltantes = Manager.get().getConfig().getMargemHorasFaltantes() * 60 * 1000;
+		int faltantes;
+		if (tempoPadraoTrab - trabalhadas > margemFaltantes) {
+			faltantes = tempoPadraoTrab - trabalhadas;
+		} else {
 			faltantes = 0;
 		}
-
 		// TODO Calcular as horas abonadas!
 
 		apuracao.setHorasTrabalhadas(LocalTime.fromMillisOfDay(trabalhadas));

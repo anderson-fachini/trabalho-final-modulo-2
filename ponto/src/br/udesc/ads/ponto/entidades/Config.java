@@ -13,7 +13,8 @@ public class Config {
 	private Long id;
 	private Escala escalaPadrao;
 	private Integer margemMarcacoes; // Em minutos
-	private Integer margemHorasFaltas; // Em minutos
+	private Integer margemHorasFaltantes; // Em minutos
+	private Integer margemHorasExcedentes; // Em minutos
 	private Integer intervaloMinimoAlmoco; // Em minutos
 	private Integer intervaloMaximoTrabalho; // Em minutos
 	private Integer intervaloMinimoInterjornadas; // Em minutos
@@ -43,12 +44,20 @@ public class Config {
 		this.margemMarcacoes = margemMarcacoes;
 	}
 
-	public Integer getMargemHorasFaltas() {
-		return margemHorasFaltas;
+	public Integer getMargemHorasFaltantes() {
+		return margemHorasFaltantes;
 	}
 
-	public void setMargemHorasFaltas(Integer margemHorasFaltas) {
-		this.margemHorasFaltas = margemHorasFaltas;
+	public void setMargemHorasFaltantes(Integer margemHorasFaltas) {
+		this.margemHorasFaltantes = margemHorasFaltas;
+	}
+
+	public Integer getMargemHorasExcedentes() {
+		return margemHorasExcedentes;
+	}
+
+	public void setMargemHorasExcedentes(Integer margemHorasExcedentes) {
+		this.margemHorasExcedentes = margemHorasExcedentes;
 	}
 
 	public Integer getIntervaloMinimoAlmoco() {

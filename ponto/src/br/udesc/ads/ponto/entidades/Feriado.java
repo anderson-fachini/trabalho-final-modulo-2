@@ -17,9 +17,10 @@ public class Feriado {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(columnDefinition = "DATE")
+	@Column(columnDefinition = "DATE", nullable = false, unique = true)
 	private LocalDate data;
 
+	@Column(nullable = false)
 	private String nome;
 
 	public Long getId() {
