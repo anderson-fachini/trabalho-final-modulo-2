@@ -1,36 +1,59 @@
 <?xml version="1.0"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
+	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	template="/WEB-INF/templates/templateBase.xhtml">
-	
+
 	<ui:param name="pageTitle" value="#{msg.cadastroUsuarios}" />
-	
+
 	<ui:define name="pageContent">
 		<h:form styleClass="centralized-form">
+			<ice:panelPopup visible="true" rendered="true" modal="true"
+				autoCentre="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:panelGroup style="float: left;">
+                            titulo janela
+                        </h:panelGroup>
+						<h:panelGroup style="float: right;">
+							<h:commandButton image="/images/popup-close.png" alt="Close"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:panelGroup>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="body">
+                    The panelPopup is a container component that renders a window or panel that hovers on top of a web page.
+                    The popupPanel contains two regions which are defined using facets. The facet names are: header and body.
+                    The panelPopup component can be used to provide a general popup window behavior such as draggable or modal.
+                </f:facet>
+			</ice:panelPopup>
+
 			<ace:dataTable value="#{cadastroUsuarios.usuarios}" var="usuario"
 				paginator="true" paginatorPosition="bottom" rows="10">
-				<ace:column headerText="#{msg.usuario}" sortBy="#{usuario.nomeUsuario}"
-					filterBy="#{usuario.nomeUsuario}" filterMatchMode="contains">
+				<ace:column headerText="#{msg.usuario}"
+					sortBy="#{usuario.nomeUsuario}" filterBy="#{usuario.nomeUsuario}"
+					filterMatchMode="contains">
 					<h:outputText value="#{usuario.nomeUsuario}" />
 				</ace:column>
-				
+
 				<ace:column headerText="#{msg.perfil}" sortBy="#{usuario.perfil}"
 					filterBy="#{usuario.perfil}" filterMatchMode="contains">
 					<h:outputText value="#{usuario.perfil.descricao}" />
 				</ace:column>
-				
+
 				<ace:column headerText="#{msg.status}" sortBy="#{usuario.situacao}"
 					filterBy="#{usuario.situacao}" filterMatchMode="contains">
 					<h:outputText value="#{usuario.situacao.descricao}" />
 				</ace:column>
-				
+
 				<ace:column headerText="#{msg.acao}">
 					<h:outputText value="#{msg.editar}" />
 				</ace:column>
 			</ace:dataTable>
 		</h:form>
-		
-	</ui:define>	
+
+	</ui:define>
 </ui:composition>

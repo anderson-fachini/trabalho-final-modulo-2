@@ -47,6 +47,15 @@
     <param-name>org.icefaces.ace.gmapKey</param-name>
     <param-value>AIzaSyAATyWVqT2qNusNGmcVTyQ0QmymkpU-B5o</param-value>
   </context-param>
+  <servlet>
+    <servlet-name>Resource Servlet</servlet-name>
+    <servlet-class>com.icesoft.faces.webapp.CompatResourceServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Resource Servlet</servlet-name>
+    <url-pattern>/xmlhttp/*</url-pattern>
+  </servlet-mapping>
   <mime-mapping>
     <extension>png</extension>
     <mime-type>image/png</mime-type>
