@@ -29,12 +29,12 @@ public class ImportadorFeriados {
 			transaction.begin();
 			try {
 				while (dataset.next()) {
-					if (FeriadoService.get().existeFeriado(dataset.getAsLocalDate("data"))) {
+					if (FeriadoService.get().existeFeriado(dataset.getLocalDate("data"))) {
 						continue;
 					}
 					Feriado feriado = new Feriado();
-					feriado.setData(dataset.getAsLocalDate("data"));
-					feriado.setNome(dataset.getAsString("nome"));
+					feriado.setData(dataset.getLocalDate("data"));
+					feriado.setNome(dataset.getString("nome"));
 					entityManager.persist(feriado);
 				}
 				transaction.commit();

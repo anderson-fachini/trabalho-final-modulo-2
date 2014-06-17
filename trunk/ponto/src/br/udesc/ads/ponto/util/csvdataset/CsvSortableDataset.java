@@ -33,11 +33,11 @@ public class CsvSortableDataset extends CsvReadableDataset {
 				if (v2 == null) {
 					res = 0;
 				} else {
-					res = 1;
+					res = -1;
 				}
 			} else {
 				if (v2 == null) {
-					res = -1;
+					res = 1;
 				} else {
 					Comparable r1 = convertValue(v1, fieldType);
 					Comparable r2 = convertValue(v2, fieldType);
