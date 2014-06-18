@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import org.joda.time.LocalDateTime;
 
@@ -14,15 +15,22 @@ public class AjusteBH {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@JoinColumn(nullable = false)
 	private Colaborador colaborador;
-	
+
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dataHora;
-	
+
 	private Double valorAjuste; // Pode ser positivo ou negativo
+
+	@Column(length = 500)
 	private String observacoes;
+
 	private Usuario responsavel;
-	private Apuracao apuracao; // Somente preenchido quando foi um ajuste "autom�tico"
+
+	private Apuracao apuracao; // Somente preenchido quando foi um ajuste
+								// "autom�tico"
 
 	public Long getId() {
 		return id;
