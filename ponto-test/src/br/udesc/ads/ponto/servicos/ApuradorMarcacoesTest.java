@@ -180,10 +180,82 @@ public class ApuradorMarcacoesTest {
 
 		Assert.assertEquals(true, apuracao.getApurada());
 		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_EXCEDENTES }, apuracao);
-		// Não deve-se calcular as horas quando existe número ímpar de marcações:
-		Assert.assertEquals(null, apuracao.getHorasTrabalhadas());
-		Assert.assertEquals(null, apuracao.getHorasExcedentes());
-		Assert.assertEquals(null, apuracao.getHorasFaltantes());
+		// Não deve-se calcular as horas quando existe número ímpar de
+		// marcações:
+		Assert.assertNull(apuracao.getHorasTrabalhadas());
+		Assert.assertNull(apuracao.getHorasExcedentes());
+		Assert.assertNull(apuracao.getHorasFaltantes());
+		// Não deve ter ocorrido nenhuma aprovação:
+		Assert.assertNull(apuracao.getHorasAbonadas());
+		Assert.assertNull(apuracao.getDataAprovacao());
+		Assert.assertNull(apuracao.getResponsavelAprovacao());
+	}
+
+	@Test
+	public void testApuracao_7_OcorrenciaMarcacoesFaltantes() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 2, 6));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(8, 11, 0)));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(12, 55, 0)));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(17, 1, 0)));
+
+		apurador.processarApuracao(apuracao);
+
+		Assert.assertEquals(true, apuracao.getApurada());
+		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_FORA_DA_ESCALA, Ocorrencia.MARCACOES_FALTANTES }, apuracao);
+		// Não deve-se calcular as horas quando existe número ímpar de
+		// marcações:
+		Assert.assertNull(apuracao.getHorasTrabalhadas());
+		Assert.assertNull(apuracao.getHorasExcedentes());
+		Assert.assertNull(apuracao.getHorasFaltantes());
+		// Não deve ter ocorrido nenhuma aprovação:
+		Assert.assertNull(apuracao.getHorasAbonadas());
+		Assert.assertNull(apuracao.getDataAprovacao());
+		Assert.assertNull(apuracao.getResponsavelAprovacao());
+	}
+
+	@Test
+	public void testApuracao_8_OcorrenciaMarcacoesFaltantes() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 2, 6));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(8, 2, 0)));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(16, 58, 0)));
+
+		apurador.processarApuracao(apuracao);
+
+		Assert.assertEquals(true, apuracao.getApurada());
+		Ocorrencia[] ocorrencias = new Ocorrencia[] { //
+		Ocorrencia.HORAS_EXCEDENTES, //
+				Ocorrencia.MARCACOES_FALTANTES, //
+				Ocorrencia.INTERVALO_TRABALHO_EXCEDIDO };
+		assertOcorrencias(ocorrencias, apuracao);
+		Assert.assertEquals(new LocalTime(8, 56, 0), apuracao.getHorasTrabalhadas());
+		Assert.assertEquals(new LocalTime(0, 56, 0), apuracao.getHorasExcedentes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		// Não deve ter ocorrido nenhuma aprovação:
+		Assert.assertNull(apuracao.getHorasAbonadas());
+		Assert.assertNull(apuracao.getDataAprovacao());
+		Assert.assertNull(apuracao.getResponsavelAprovacao());
+	}
+
+	@Test
+	public void testApuracao_9_OcorrenciaMarcacoesFaltantes() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 2, 6));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(13, 3, 25)));
+
+		apurador.processarApuracao(apuracao);
+
+		Assert.assertEquals(true, apuracao.getApurada());
+		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_FALTANTES }, apuracao);
+		// Não deve-se calcular as horas quando existe número ímpar de
+		// marcações:
+		Assert.assertNull(apuracao.getHorasTrabalhadas());
+		Assert.assertNull(apuracao.getHorasExcedentes());
+		Assert.assertNull(apuracao.getHorasFaltantes());
 		// Não deve ter ocorrido nenhuma aprovação:
 		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
