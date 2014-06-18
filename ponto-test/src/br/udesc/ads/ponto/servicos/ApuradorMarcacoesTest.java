@@ -65,8 +65,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}
@@ -89,8 +89,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}
@@ -113,8 +113,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}
@@ -136,8 +136,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}
@@ -159,8 +159,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}
@@ -234,8 +234,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(8, 56, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 56, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getHorasAbonadas());
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
 	}

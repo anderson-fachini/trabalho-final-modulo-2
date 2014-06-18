@@ -1,9 +1,8 @@
 package br.udesc.ads.ponto.servicos;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -13,9 +12,11 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
+import br.udesc.ads.ponto.entidades.Abono;
 import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
@@ -30,7 +31,6 @@ import br.udesc.ads.ponto.manager.Manager;
 public class ApuradorMarcacoes {
 
 	private final EntityManager entityManager;
-	private Map<DiaSemana, Integer> tempoTrabEscalaPadrao = new HashMap<>();
 
 	public ApuradorMarcacoes() {
 		this.entityManager = Manager.get().getEntityManager();
@@ -216,6 +216,7 @@ public class ApuradorMarcacoes {
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		Intervalo almocoPadrao = getIntervaloAlmocoPadrao(diaSemana);
 		if (almocoPadrao == null) {
+			// Pode ter algum dia sem almoço na escala padrão (ex: sábado).
 			return false;
 		}
 		int min = Manager.get().getConfig().getIntervaloMinimoAlmoco();
@@ -267,15 +268,33 @@ public class ApuradorMarcacoes {
 		return result;
 	}
 
-	// TODO A Regra que define o almoço é esta mesma? Resposta: Não
-	// Ajustar para pegar o primeiro intervalo >= 1h da escala padrão.
 	private Intervalo getIntervaloAlmocoPadrao(DiaSemana diaSemana) throws AssertionError {
 		Escala escala = Manager.get().getConfig().getEscalaPadrao();
-		List<Intervalo> intervEscala = getIntervalos(escala, diaSemana);
-		if (intervEscala.size() % 2 == 0) {
+		int minAlmoco = Manager.get().getConfig().getIntervaloMinimoAlmoco();
+
+		List<Intervalo> intervalos = getIntervalos(escala, diaSemana);
+		if (intervalos.size() % 2 == 0) {
 			throw new AssertionError("Quantidade de intervalos da escala padrão deveria ser ímpar.");
 		}
-		return intervEscala.get(intervEscala.size() / 2);
+		List<Intervalo> folgas = filtrarPorTipo(intervalos, TipoIntervalo.NAO_TRABALHADO);
+		for (Iterator<Intervalo> it = folgas.iterator(); it.hasNext();) {
+			if (it.next().getMinutos() < minAlmoco) {
+				it.remove();
+			}
+		}
+		if (folgas.isEmpty()) {
+			return null;
+		}
+		LocalTime meioDia = new LocalTime(12, 0, 0);
+		for (Intervalo folga : folgas) {
+			if (!folga.getInicio().isAfter(meioDia) && folga.getFim().isAfter(meioDia)) {
+				return folga;
+			}
+		}
+		if (folgas.size() == 1) {
+			return folgas.get(0);
+		}
+		throw new RuntimeException("Não foi possível determinar o intervalo padrão de almoço de " + diaSemana.getDescricao() + ".");
 	}
 
 	private List<Intervalo> getIntervalos(Apuracao apuracao) {
@@ -337,67 +356,66 @@ public class ApuradorMarcacoes {
 			// Não é possível calcular com marcações ímpares.
 			return;
 		}
-		int tempoPadraoTrab;
-		if (FeriadoService.get().existeFeriado(apuracao.getData())) {
-			tempoPadraoTrab = 0;
-		} else {
-			DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
-			if (tempoTrabEscalaPadrao.containsKey(diaSemana)) {
-				tempoPadraoTrab = tempoTrabEscalaPadrao.get(diaSemana);
-			} else {
-				tempoPadraoTrab = calcularTempoTrabalhoEscalaPadrao(diaSemana);
-				tempoTrabEscalaPadrao.put(diaSemana, tempoPadraoTrab);
-			}
-		}
+		int tempoPadraoTrab = getTempoPadraoTrabalho(apuracao.getData());
 		int trabalhadas = calcularTempoTrabalhado(marcacoes);
 
-		int margemExcedentes = Manager.get().getConfig().getMargemHorasExcedentes() * 60 * 1000;
-		int excedentes;
-		if (trabalhadas - tempoPadraoTrab > margemExcedentes) {
-			excedentes = trabalhadas - tempoPadraoTrab;
-		} else {
-			excedentes = 0;
-		}
-
-		int margemFaltantes = Manager.get().getConfig().getMargemHorasFaltantes() * 60 * 1000;
-		int faltantes;
-		if (tempoPadraoTrab - trabalhadas > margemFaltantes) {
-			faltantes = tempoPadraoTrab - trabalhadas;
-		} else {
-			faltantes = 0;
-		}
-		
+		int abonadas = calcularHorasAbonadas(apuracao);
+		int excedentes = calcularHorasExcedentes(tempoPadraoTrab, trabalhadas + abonadas);
+		int faltantes = calcularHorasFaltantes(tempoPadraoTrab, trabalhadas + abonadas);
 		if (excedentes == 0 && faltantes == 0) {
 			trabalhadas = tempoPadraoTrab;
 		}
-		// TODO Calcular as horas abonadas!
-
 		apuracao.setHorasTrabalhadas(LocalTime.fromMillisOfDay(trabalhadas));
 		apuracao.setHorasExcedentes(LocalTime.fromMillisOfDay(excedentes));
 		apuracao.setHorasFaltantes(LocalTime.fromMillisOfDay(faltantes));
+		apuracao.setHorasAbonadas(LocalTime.fromMillisOfDay(abonadas));
 	}
 
-	// TODO Melhoria: Refatorar para trabalhar com objetos Intervalo.
-	// Retorno em millis
-	private int calcularTempoTrabalhado(List<LocalTime> marcacoes) {
-		int somaPares = 0;
-		int somaImpares = 0;
-		for (int i = 0; i < marcacoes.size(); i++) {
-			int millis = marcacoes.get(i).getMillisOfDay();
-			// Atenção: i=0 significa marcação 1 (Ímpar)
-			if (i % 2 == 0) {
-				somaImpares += millis;
-			} else {
-				somaPares += millis;
-			}
+	private int calcularHorasAbonadas(Apuracao apuracao) {
+		int result = 0;
+		for (int i = 0; i < apuracao.getAbonosSize(); ++i) {
+			Abono abono = apuracao.getAbono(i);
+			LocalTime inicio = abono.getHoraInicio();
+			LocalTime fim = abono.getHoraFim();
+			Intervalo intervalo = new Intervalo(inicio, fim, TipoIntervalo.TRABALHADO);
+			result += intervalo.getMillis();
 		}
-		return somaPares - somaImpares;
+		return result;
 	}
 
-	private int calcularTempoTrabalhoEscalaPadrao(DiaSemana diaSemana) {
+	private int calcularHorasFaltantes(int tempoPadraoTrab, int trabalhadas) {
+		int margem = Manager.get().getConfig().getMargemHorasFaltantes() * 60 * 1000;
+		if (tempoPadraoTrab - trabalhadas <= margem) {
+			return 0;
+		}
+		return tempoPadraoTrab - trabalhadas;
+	}
+
+	private int calcularHorasExcedentes(int tempoPadraoTrab, int trabalhadas) {
+		int margem = Manager.get().getConfig().getMargemHorasExcedentes() * 60 * 1000;
+		if (trabalhadas - tempoPadraoTrab <= margem) {
+			return 0;
+		}
+		return trabalhadas - tempoPadraoTrab;
+	}
+
+	private int getTempoPadraoTrabalho(LocalDate data) {
+		if (FeriadoService.get().existeFeriado(data)) {
+			return 0;
+		}
+		DiaSemana diaSemana = DiaSemana.fromLocalDate(data);
 		Config config = Manager.get().getConfig();
 		List<LocalTime> marcacoes = config.getEscalaPadrao().getSequenciaMarcacoes(diaSemana);
 		return calcularTempoTrabalhado(marcacoes);
+	}
+
+	private int calcularTempoTrabalhado(List<LocalTime> marcacoes) {
+		List<Intervalo> intervalos = filtrarPorTipo(getIntervalos(marcacoes), TipoIntervalo.TRABALHADO);
+		int result = 0;
+		for (Intervalo intervalo : intervalos) {
+			result += intervalo.getMillis();
+		}
+		return result;
 	}
 
 	private List<Apuracao> getApuracoesPendentes() {
@@ -420,7 +438,7 @@ public class ApuradorMarcacoes {
 		try {
 			if (apuracao.temHorasExcedentes() || apuracao.temHorasFaltantes()) {
 				Colaborador colaborador = apuracao.getColaborador();
-				
+
 				AjusteBH ajusteBH = new AjusteBH();
 				ajusteBH.setApuracao(apuracao);
 				ajusteBH.setColaborador(colaborador);
@@ -431,7 +449,7 @@ public class ApuradorMarcacoes {
 				ajusteBH.setValorAjuste(toDoubleHoras(excedentes) - toDoubleHoras(faltantes));
 				ajusteBH.setObservacoes("Processo automático de aprovação de ponto.");
 				entityManager.persist(ajusteBH);
-				
+
 				colaborador.setSaldoBH(colaborador.getSaldoBH() + ajusteBH.getValorAjuste());
 				entityManager.merge(colaborador);
 			}
