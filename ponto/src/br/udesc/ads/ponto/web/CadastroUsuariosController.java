@@ -1,40 +1,121 @@
 package br.udesc.ads.ponto.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import br.udesc.ads.ponto.entidades.PerfilUsuario;
+import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.entidades.Usuario;
+import br.udesc.ads.ponto.servicos.SetorService;
+import br.udesc.ads.ponto.servicos.UsuarioService;
+import br.udesc.ads.ponto.util.JsfUtils;
+import br.udesc.ads.ponto.util.Messages;
 
 @ManagedBean(name = "cadastroUsuarios")
 @SessionScoped
-public class CadastroUsuariosController {
+public class CadastroUsuariosController implements Serializable {
 	
+	private static final long serialVersionUID = 5613229720100801008L;
+
 	private Usuario usuarioSelecionado;
 	
+	private boolean popupOpened = false;
+	
+	private String popupTitle;	
+	private String confirmarSenha;
+	private String perfilUsuario;
+	private String situacaoUsuario;
+	
+	private List<SelectItem> perfisUsuario;
+	private List<SelectItem> situacoesUsuario;	
 	private List<Usuario> usuarios;
+	private List<Setor> setores;
 	
 	public CadastroUsuariosController() {
+		resetaCampos();
+		
 		usuarioSelecionado = new Usuario();
-		usuarios = new ArrayList<Usuario>();
+		usuarios = UsuarioService.get().getTodosUsuarios();
+		setores = SetorService.get().getSetores();
 		
-		Usuario usr = new Usuario();
-		usr.setNomeUsuario("anderson");
-		usr.setPerfil(PerfilUsuario.GERENTE);
-		usr.setSituacao(Situacao.ATIVO);
+		carregaPerfisUsuario();
+		carregaSituacoesUsuario();
+	}
+	
+	private void resetaCampos() {
+		confirmarSenha = "";
+		popupTitle = Messages.getString("novoUsuario");
+		perfilUsuario = PerfilUsuario.GERENTE.getId();
+		situacaoUsuario = Situacao.ATIVO.getId();
+	}
+	
+	public void salvarUsuario() {
+		//TODO verificar questão da senha na hora de salvar
+		boolean temErros = validaFormCadastroUsuario();
 		
-		usuarios.add(usr);
 		
-		usr = new Usuario();
-		usr.setNomeUsuario("fachini");
-		usr.setPerfil(PerfilUsuario.FUNCIONARIO_RH);
-		usr.setSituacao(Situacao.INATIVO);
+		if (!temErros) {
+			resetaCampos();			
+		}
+	}
+	
+	private boolean validaFormCadastroUsuario() {
+		boolean temErros = false;
 		
-		usuarios.add(usr);
+		if (UsuarioService.get().checaUsuarioExistePorNome(usuarioSelecionado.getNomeUsuario())) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgUsuarioJaExiste"));
+		}
+		if (usuarioSelecionado.getId() == null && usuarioSelecionado.getSenha().length() == 0) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgInformeSenha"));
+		}
+		if (!usuarioSelecionado.getSenha().equals(confirmarSenha)) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgSenhasNaoConferem"));
+		}
+		
+		return temErros;
+	}
+	
+	public void editarUsuario(Usuario usuario) {
+		popupTitle = Messages.getString("editarUsuario");
+		
+		usuarioSelecionado = usuario;
+		usuarioSelecionado.setSenha("");
+		perfilUsuario = usuarioSelecionado.getPerfil().getId();
+		situacaoUsuario = usuarioSelecionado.getSituacao().getId();
+		popupOpened = true;
+	}
+	
+	public void togglePopupOpened() {
+		popupOpened = !popupOpened;
+	}
+	
+	private void carregaPerfisUsuario() {
+		perfisUsuario = new ArrayList<SelectItem>();
+		
+		for (PerfilUsuario p : PerfilUsuario.values()) {
+			perfisUsuario.add(new SelectItem(p.getId(), p.getDescricao()));
+		}
+	}
+	
+	private void carregaSituacoesUsuario() {
+		situacoesUsuario = new ArrayList<SelectItem>();
+		
+		for (Situacao s : Situacao.values()) {
+			situacoesUsuario.add(new SelectItem(s.getId(), s.getDescricao()));
+		}
+	}
+	
+	public List<SelectItem> getPerfisUsuario() {
+		return perfisUsuario;
 	}
 
 	public Usuario getUsuarioSelecionado() {
@@ -51,6 +132,62 @@ public class CadastroUsuariosController {
 
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
+	}
+
+	public boolean isPopupOpened() {
+		return popupOpened;
+	}
+
+	public void setPopupOpened(boolean popupOpened) {
+		this.popupOpened = popupOpened;
+	}
+
+	public String getPopupTitle() {
+		return popupTitle;
+	}
+
+	public void setPopupTitle(String popupTitle) {
+		this.popupTitle = popupTitle;
+	}
+
+	public String getConfirmarSenha() {
+		return confirmarSenha;
+	}
+
+	public void setConfirmarSenha(String confirmarSenha) {
+		this.confirmarSenha = confirmarSenha;
+	}
+
+	public String getPerfilUsuario() {
+		return perfilUsuario;
+	}
+
+	public void setPerfilUsuario(String perfilUsuario) {
+		this.perfilUsuario = perfilUsuario;
+	}
+
+	public List<SelectItem> getSituacoesUsuario() {
+		return situacoesUsuario;
+	}
+
+	public void setSituacoesUsuario(List<SelectItem> situacoesUsuario) {
+		this.situacoesUsuario = situacoesUsuario;
+	}
+
+	public String getSituacaoUsuario() {
+		return situacaoUsuario;
+	}
+
+	public void setSituacaoUsuario(String situacaoUsuario) {
+		this.situacaoUsuario = situacaoUsuario;
+	}
+
+	public List<Setor> getSetores() {
+		return setores;
+	}
+
+	public void setSetores(List<Setor> setores) {
+		this.setores = setores;
 	}
 
 }

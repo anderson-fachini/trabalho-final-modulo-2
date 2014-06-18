@@ -1,5 +1,7 @@
 package br.udesc.ads.ponto.entidades;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Setor {
+public class Setor implements Serializable {
+
+	private static final long serialVersionUID = -1644142322894470542L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,7 +66,7 @@ public class Setor {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + System.identityHashCode(gerente); // Pra não entrar em loop eterno
+		result = prime * result + System.identityHashCode(gerente); // Pra nï¿½o entrar em loop eterno
 		result = prime * result + ((situacao == null) ? 0 : situacao.hashCode());
 		return result;
 	}

@@ -27,6 +27,23 @@ public class JsfUtils {
 	}
 	
 	/**
+	 * Adiciona uma mensagem de warning na tela
+	 * @param msg Mensagem
+	 */
+	public static void addMensagemWarning(String msg) {
+		addMensagemWarning(null, msg);
+	}
+	
+	/**
+	 * Adiciona uma mensagem de warning na tela
+	 * @param idComponente Id do componente
+	 * @param msg Mensagem
+	 */
+	public static void addMensagemWarning(String idComponente, String msg) {
+		addMensagem(null, msg, FacesMessage.SEVERITY_WARN);
+	}
+	
+	/**
 	 * Adiciona uma mensagem de erro na tela
 	 * @param msg Mensagem
 	 */
