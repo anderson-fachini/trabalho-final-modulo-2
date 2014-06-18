@@ -3,12 +3,17 @@ package br.udesc.ads.ponto.servicos;
 import java.io.File;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.joda.time.LocalDateTime;
+
+import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Colaborador;
+import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 
 public class ColaboradorService {
@@ -21,7 +26,7 @@ public class ColaboradorService {
 		}
 		return instance;
 	}
-	
+
 	private ColaboradorService() {
 	}
 
@@ -34,6 +39,50 @@ public class ColaboradorService {
 	public void importarColaboradores(File arquivo) {
 		ImportadorColaboradores importador = new ImportadorColaboradores();
 		importador.importar(arquivo);
+	}
+
+	/**
+	 * Realiza um ajuste no saldo do Banco de Horas de um colaborador.
+	 * 
+	 * @param colaborador
+	 *            O colaborador que terá o Banco de Horas ajustado.
+	 * @param valorAjuste
+	 *            O valor do incremento (positivo) ou decremento (negativo) a
+	 *            ser feito.
+	 * @param responsavel
+	 *            O usuário responsável por este ajuste.
+	 * @param observacoes
+	 *            As observações/justificativas do ajuste (obrigatório).
+	 */
+	public void ajustarBancoHoras(Colaborador colaborador, double valorAjuste, Usuario responsavel, String observacoes) {
+		if (responsavel == null) {
+			throw new IllegalArgumentException("É obrigatório informar um usuário responsável pelo ajuste.");
+		}
+		if (observacoes == null || observacoes.trim().isEmpty()) {
+			throw new IllegalArgumentException("A observação do ajuste é obrigatória e não pode estar vazia.");
+		}
+
+		EntityManager entityManager = Manager.get().getEntityManager();
+
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+		try {
+			AjusteBH ajusteBH = new AjusteBH();
+			ajusteBH.setColaborador(colaborador);
+			ajusteBH.setDataHora(LocalDateTime.now());
+			ajusteBH.setResponsavel(responsavel);
+			ajusteBH.setValorAjuste(valorAjuste);
+			ajusteBH.setObservacoes(observacoes);
+			entityManager.persist(ajusteBH);
+
+			colaborador.setSaldoBH(colaborador.getSaldoBH() + valorAjuste);
+			entityManager.merge(colaborador);
+
+			transaction.commit();
+		} catch (Throwable ex) {
+			transaction.rollback();
+			throw ex;
+		}
 	}
 
 	public Colaborador getColaboradorPorCodigo(Long codCol, boolean nullSeNaoEncontrar) {
