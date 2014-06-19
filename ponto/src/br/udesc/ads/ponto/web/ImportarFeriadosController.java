@@ -31,6 +31,6 @@ public class ImportarFeriadosController implements Serializable {
 			FeriadoService.get().importarFeriados(i.getFile());
 		}
 		
-		JsfUtils.addMensagemInfo(Messages.getString("msgColaboradoresImportadosSucesso"));
+		JsfUtils.addMensagemInfo(Messages.getString("msgFeriadosImportadosSucesso"));
 	}
 }
