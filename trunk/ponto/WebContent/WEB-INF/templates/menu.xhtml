@@ -14,24 +14,24 @@
 			<ace:menuItem  id="importar_marcacoes" url="#{appUrl}/importar/marcacoes.jsf" value="#{msg.marcacoes}" />
 		</ace:submenu>
 		<ace:submenu id="ponto" label="#{msg.ponto}">
-			<ace:menuItem id="ponto_ajuste_ponto" value="#{msg.ajustePonto}" />
+			<ace:menuItem id="ponto_ajuste_ponto" url="#{appUrl}/ponto/ajuste_ponto.jsf" value="#{msg.ajustePonto}" />
 		</ace:submenu>
 		<ace:submenu id="banco_horas" label="#{msg.bancoHoras}">
-			<ace:menuItem id="banco_horas_ajustar_saldo" value="#{msg.ajustarSaldo}" />
+			<ace:menuItem id="banco_horas_ajustar_saldo" url="#{appUrl}/banco_horas/ajustar_saldo.jsf" value="#{msg.ajustarSaldo}" />
 		</ace:submenu>
 		<ace:submenu id="cadastros" label="#{msg.cadastros}">
-			<ace:menuItem id="cadastros_mot_abono" value="#{msg.motivosAbono}" />
-			<ace:menuItem id="cadastros_mot_ajuste_ponto"
+			<ace:menuItem id="cadastros_mot_abono" value="#{msg.motivosAbono}" url="#{appUrl}/cadastros/motivos_abono.jsf" />
+			<ace:menuItem id="cadastros_mot_ajuste_ponto" url="#{appUrl}/cadastros/motivos_ajuste_ponto.jsf"
 				value="#{msg.motivosAjustePonto}" />
 			<ace:menuItem id="cadastros_usuarios" url="#{appUrl}/cadastros/usuarios.jsf" value="#{msg.usuarios}" />
 		</ace:submenu>
 		<ace:submenu id="relatorios" label="#{msg.relatorios}">
-			<ace:menuItem id="relatorios_saldo_bh" value="#{msg.saldoBh}" />
-			<ace:menuItem id="relatorios_saldo_bh_setor"
+			<ace:menuItem id="relatorios_saldo_bh" url="#{appUrl}/relatorios/saldo_bh.jsf" value="#{msg.saldoBh}" />
+			<ace:menuItem id="relatorios_saldo_bh_setor" url="#{appUrl}/relatorios/saldo_bh_setor.jsf"
 				value="#{msg.saldoBhSetor}" />
-			<ace:menuItem id="relatorios_resumo_apuracoes_ponto"
+			<ace:menuItem id="relatorios_resumo_apuracoes_ponto" url="#{appUrl}/relatorios/resumo_apuracoes_ponto.jsf"
 				value="#{msg.resumoApuracoesPonto}" />
-			<ace:menuItem id="relatorios_resumo_horas_trab_e_bh"
+			<ace:menuItem id="relatorios_resumo_horas_trab_e_bh" url="#{appUrl}/relatorios/resumo_horas_trabalhadas_e_bh.jsf"
 				value="#{msg.resumoHorasTrabalhadasEBh}" />
 		</ace:submenu>
 	</ace:menuBar>
