@@ -1,7 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -210,17 +209,6 @@ public class Apuracao {
 
 	public Ocorrencia getOcorrencia(int index) {
 		return this.ocorrencias.get(index);
-	}
-	
-	public List<LocalTime> getSequenciaMarcacoes() {
-		List<LocalTime> result = new ArrayList<>();
-		for (Marcacao mar : marcacoes) {
-			if (!mar.isExcluida()) {
-				result.add(mar.getHora());
-			}
-		}
-		Collections.sort(result);
-		return result;
 	}
 	
 }
