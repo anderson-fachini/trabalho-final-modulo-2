@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<h:form id="form" styleClass="app-menu"
+<h:form id="form" styleClass="app-menu #{menuController.classePerfil}"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ace="http://www.icefaces.org/icefaces/components"
@@ -8,36 +8,41 @@
     <ui:param name="appUrl" value="http://localhost:8080/ponto" />
     
 	<ace:menuBar id="menu" autoSubmenuDisplay="true">
-		<ace:submenu id="importar" label="#{msg.importar}">
+		<ace:submenu id="importar" label="#{msg.importar}" rendered="#{!menuController.usuarioAutenticadoGerente}">
 			<ace:menuItem id="importar_colaboradores" url="#{appUrl}/importar/colaboradores.jsf" value="#{msg.colaboradores}" />
 			<ace:menuItem id="importar_feriados" url="#{appUrl}/importar/feriados.jsf" value="#{msg.feriados}" />
 			<ace:menuItem  id="importar_marcacoes" url="#{appUrl}/importar/marcacoes.jsf" value="#{msg.marcacoes}" />
 		</ace:submenu>
-		<ace:submenu id="ponto" label="#{msg.ponto}">
+		
+		<ace:submenu id="ponto" label="#{msg.ponto}" rendered="#{!menuController.usuarioAutenticadoFuncionarioRH}">
 			<ace:menuItem id="ponto_ajuste_ponto" url="#{appUrl}/ponto/ajuste_ponto.jsf" value="#{msg.ajustePonto}" />
 		</ace:submenu>
-		<ace:submenu id="banco_horas" label="#{msg.bancoHoras}">
+		
+		<ace:submenu id="banco_horas" label="#{msg.bancoHoras}" rendered="#{!menuController.usuarioAutenticadoFuncionarioRH}">
 			<ace:menuItem id="banco_horas_ajustar_saldo" url="#{appUrl}/banco_horas/ajustar_saldo.jsf" value="#{msg.ajustarSaldo}" />
 		</ace:submenu>
-		<ace:submenu id="cadastros" label="#{msg.cadastros}">
+		
+		<ace:submenu id="cadastros" label="#{msg.cadastros}" rendered="#{!menuController.usuarioAutenticadoGerente}">
 			<ace:menuItem id="cadastros_mot_abono" value="#{msg.motivosAbono}" url="#{appUrl}/cadastros/motivos_abono.jsf" />
 			<ace:menuItem id="cadastros_mot_ajuste_ponto" url="#{appUrl}/cadastros/motivos_ajuste_ponto.jsf"
 				value="#{msg.motivosAjustePonto}" />
 			<ace:menuItem id="cadastros_usuarios" url="#{appUrl}/cadastros/usuarios.jsf" value="#{msg.usuarios}" />
 		</ace:submenu>
+		
 		<ace:submenu id="relatorios" label="#{msg.relatorios}">
-			<ace:menuItem id="relatorios_saldo_bh" url="#{appUrl}/relatorios/saldo_bh.jsf" value="#{msg.saldoBh}" />
-			<ace:menuItem id="relatorios_saldo_bh_setor" url="#{appUrl}/relatorios/saldo_bh_setor.jsf"
-				value="#{msg.saldoBhSetor}" />
 			<ace:menuItem id="relatorios_resumo_apuracoes_ponto" url="#{appUrl}/relatorios/resumo_apuracoes_ponto.jsf"
 				value="#{msg.resumoApuracoesPonto}" />
 			<ace:menuItem id="relatorios_resumo_horas_trab_e_bh" url="#{appUrl}/relatorios/resumo_horas_trabalhadas_e_bh.jsf"
-				value="#{msg.resumoHorasTrabalhadasEBh}" />
+				value="#{msg.resumoHorasTrabalhadasEBh}" rendered="#{!menuController.usuarioAutenticadoFuncionarioRH}" />
+			<ace:menuItem id="relatorios_saldo_bh" url="#{appUrl}/relatorios/saldo_bh.jsf" value="#{msg.saldoBh}"
+				rendered="#{menuController.usuarioAutenticadoDono}" />
+			<ace:menuItem id="relatorios_saldo_bh_setor" url="#{appUrl}/relatorios/saldo_bh_setor.jsf"
+				value="#{msg.saldoBhSetor}" rendered="#{!menuController.usuarioAutenticadoFuncionarioRH}" />
 		</ace:submenu>
 	</ace:menuBar>
 	
 	<div class="user-info">
-		<h:outputText value="#{msg.ola}, #{autenticacaoController.usuarioAutenticado.nomeUsuario}" />
+		<h:outputText value="#{msg.ola}, #{menuController.nomeUsuarioAutenticado}" />
 		<h:commandLink action="#{autenticacaoController.encerraSessao}" value="#{msg.sair}" />
 	</div>
 </h:form>

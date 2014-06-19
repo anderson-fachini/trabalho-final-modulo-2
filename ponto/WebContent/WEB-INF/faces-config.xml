@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<faces-config
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
-    version="2.1">
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+	version="2.1">
 
- <lifecycle>
-  <phase-listener>br.udesc.ads.ponto.util.PhaseListenerLoginControl</phase-listener>
- </lifecycle>
+	<lifecycle>
+		<phase-listener>br.udesc.ads.ponto.util.PhaseListenerLoginControl</phase-listener>
+	</lifecycle>
+	<lifecycle>
+		<phase-listener>br.udesc.ads.ponto.util.PhaseListenerControlAccess</phase-listener>
+	</lifecycle>
 
-<application>
-	<resource-bundle>
-		<base-name>br.udesc.ads.ponto.util.messages</base-name>
-		<var>msg</var>
-	</resource-bundle>
-	
-	<message-bundle>br.udesc.ads.ponto.util.ICEfacesMessages</message-bundle>
-</application>
+	<application>
+		<resource-bundle>
+			<base-name>br.udesc.ads.ponto.util.messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+
+		<message-bundle>br.udesc.ads.ponto.util.ICEfacesMessages</message-bundle>
+	</application>
 
 </faces-config>
