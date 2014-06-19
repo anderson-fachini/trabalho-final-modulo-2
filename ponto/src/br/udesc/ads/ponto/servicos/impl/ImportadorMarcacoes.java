@@ -1,4 +1,4 @@
-package br.udesc.ads.ponto.servicos;
+package br.udesc.ads.ponto.servicos.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +25,7 @@ import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService;
 import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService_Service;
 import br.udesc.ads.ponto.services.leitoraponto.RegistroMarcacao;
+import br.udesc.ads.ponto.servicos.ColaboradorService;
 
 public class ImportadorMarcacoes {
 
@@ -79,8 +80,8 @@ public class ImportadorMarcacoes {
 					lida.setData(getDateSection(reg.getMarcacao()));
 					lida.setHora(getTimeSection(reg.getMarcacao()));
 
-					// Caso a marcação já esteja na base, ignora.
-					// (Isto pode acontecer se ficou uma operação incompleta)
+					// Caso a marcaï¿½ï¿½o jï¿½ esteja na base, ignora.
+					// (Isto pode acontecer se ficou uma operaï¿½ï¿½o incompleta)
 					MarcacaoLida existente = entityManager.find(MarcacaoLida.class, reg.getId());
 					if (!lida.equals(existente)) {
 						entityManager.persist(lida);
@@ -142,7 +143,7 @@ public class ImportadorMarcacoes {
 
 	private void confirmarRegistrosProcessados(List<RegistroMarcacao> registros) {
 
-		// Gera uma cópia da lista para não avacalhar com a original
+		// Gera uma cï¿½pia da lista para nï¿½o avacalhar com a original
 		registros = new ArrayList<>(registros);
 
 		// Ordena os registros por ID (para o caso de terem vindo fora de ordem)
@@ -154,7 +155,7 @@ public class ImportadorMarcacoes {
 			}
 		});
 
-		// Envia as confirmações de leitura, em intervalos contíguos
+		// Envia as confirmaï¿½ï¿½es de leitura, em intervalos contï¿½guos
 		if (registros.isEmpty()) {
 			return;
 		}

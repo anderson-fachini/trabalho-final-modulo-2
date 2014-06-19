@@ -15,6 +15,7 @@ import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.impl.ImportadorColaboradores;
 
 public class ColaboradorService {
 

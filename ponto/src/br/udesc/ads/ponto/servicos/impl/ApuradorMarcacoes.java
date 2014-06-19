@@ -1,4 +1,4 @@
-package br.udesc.ads.ponto.servicos;
+package br.udesc.ads.ponto.servicos.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import br.udesc.ads.ponto.entidades.Marcacao;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.FeriadoService;
 
 public class ApuradorMarcacoes {
 

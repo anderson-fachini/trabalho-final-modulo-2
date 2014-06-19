@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 
 import br.udesc.ads.ponto.entidades.Feriado;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.impl.ImportadorFeriados;
 
 public class FeriadoService {
 

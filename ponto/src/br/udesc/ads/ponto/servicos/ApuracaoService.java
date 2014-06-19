@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.impl.ApuradorMarcacoes;
+import br.udesc.ads.ponto.servicos.impl.ImportadorMarcacoes;
 
 public class ApuracaoService {
 
