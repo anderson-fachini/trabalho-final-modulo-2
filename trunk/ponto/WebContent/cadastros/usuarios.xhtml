@@ -12,7 +12,7 @@
 	<ui:define name="pageContent">
 
 		<ice:panelPopup visible="#{cadastroUsuarios.popupOpened}" rendered="#{cadastroUsuarios.popupOpened}" 
-		    modal="true" autoCentre="true" style="width: 300px;">
+		    modal="true" autoCentre="true" style="width: 335px;">
 			<f:facet name="header">
 				<h:panelGroup>
 					<h:panelGroup style="float: left;">
@@ -86,7 +86,7 @@
 					<h:outputText value="#{usuario.situacao.descricao}" />
 				</ace:column>
 
-				<ace:column headerText="#{msg.acao}">
+				<ace:column headerText="#{msg.acao}" style="width: 70px;">
 					<h:commandButton value="#{msg.editar}" action="#{cadastroUsuarios.editarUsuario(usuario)}" />
 				</ace:column>
 			</ace:dataTable>

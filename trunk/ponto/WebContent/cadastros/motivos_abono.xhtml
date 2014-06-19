@@ -48,7 +48,7 @@
 		
 		<h:form styleClass="centralized-form">
 			<h:commandButton action="#{motivosAbono.togglePopupOpened}" 
-			value="#{msg.novoMotivoAbono}" style="margin-bottom: 10px;" />
+			value="#{msg.novoMotivo}" style="margin-bottom: 10px;" />
 
 			<ace:dataTable value="#{motivosAbono.motivosAbono}" var="motivo" 
 				paginator="true" paginatorPosition="bottom" rows="10">
@@ -63,7 +63,7 @@
 					<h:outputText value="#{motivo.situacao.descricao}" />
 				</ace:column>
 
-				<ace:column headerText="#{msg.acao}">
+				<ace:column headerText="#{msg.acao}" style="width: 70px;">
 					<h:commandButton value="#{msg.editar}" action="#{motivosAbono.editarMotivoAbono(motivo)}" />
 				</ace:column>
 			</ace:dataTable>
