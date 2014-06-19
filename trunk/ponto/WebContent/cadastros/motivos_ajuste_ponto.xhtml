@@ -11,5 +11,62 @@
 
 	<ui:define name="pageContent">
 	
+		<ice:panelPopup visible="#{motivosMarcacao.popupOpened}" rendered="#{motivosMarcacao.popupOpened}"
+			modal="true" autoCentre="true" style="width: 335px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                           #{motivosMarcacao.popupTitle}
+                       </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
+							<h:commandButton action="#{motivosMarcacao.togglePopupOpened}" 
+								image="/images/popup-close.png" alt="Close" type="button"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:facet>			
+			<f:facet name="body">
+				<h:form>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="#{msg.descricao}" />
+						<h:inputText value="#{motivosMarcacao.motivoMarcacaoSelecionado.descricao}" required="true"
+							requiredMessage="#{msg.msgInformeDescricao}" />
+						
+						<h:outputLabel value="#{msg.status}" />
+						<h:selectOneRadio value="#{motivosMarcacao.situacao}">
+                   			<f:selectItems value="#{motivosMarcacao.situacoes}" />
+                   		</h:selectOneRadio>
+                   	
+                   		<h:commandButton action="#{motivosMarcacao.salvarMotivoMarcacao}" value="${msg.salvar}" />
+                 	</h:panelGrid>
+            		<ace:messages />
+				</h:form>
+			</f:facet>			
+		</ice:panelPopup>
+		
+		<h:form styleClass="centralized-form">
+			<h:commandButton action="#{motivosMarcacao.togglePopupOpened}" 
+			value="#{msg.novoMotivo}" style="margin-bottom: 10px;" />
+
+			<ace:dataTable value="#{motivosMarcacao.motivosMarcacao}" var="motivo" 
+				paginator="true" paginatorPosition="bottom" rows="10">
+				<ace:column headerText="#{msg.descricao}"
+					sortBy="#{motivo.descricao}" filterBy="#{motivo.descricao}"
+					filterMatchMode="contains">
+					<h:outputText value="#{motivo.descricao}" />
+				</ace:column>
+
+				<ace:column headerText="#{msg.status}" sortBy="#{motivo.situacao}"
+					filterBy="#{motivo.situacao}" filterMatchMode="contains">
+					<h:outputText value="#{motivo.situacao.descricao}" />
+				</ace:column>
+
+				<ace:column headerText="#{msg.acao}">
+					<h:commandButton value="#{msg.editar}" action="#{motivosMarcacao.editarMotivoMarcacao(motivo)}" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>
