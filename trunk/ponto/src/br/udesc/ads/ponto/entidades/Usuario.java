@@ -7,13 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(
-		name = "checkUserAutentication",
-		query = "SELECT u FROM Usuario u WHERE u.nomeUsuario = :nomeUsuario AND u.senha = :senha AND u.situacao = br.udesc.ads.ponto.entidades.Situacao.ATIVO"
-)
 public class Usuario implements Serializable {
 
 	private static final long serialVersionUID = -2662436587358574695L;
