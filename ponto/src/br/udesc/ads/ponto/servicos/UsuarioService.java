@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.util.CriptografaSenha;
-import br.udesc.ads.ponto.util.EntityManagerUtil;
 
 public class UsuarioService {
-	
-	private static EntityManager em = EntityManagerUtil.getEntityManager();
 	
 	private static UsuarioService instance;
 	
@@ -35,17 +34,27 @@ public class UsuarioService {
 	 * @param senha Senha do Usuário
 	 * @return Objeto usuário, caso tenha encontradou ou então null
 	 */
-	public Usuario buscaUsuarioAutenticado(String nomeUsuario, String senha) {
-		Query query = em.createNamedQuery("checkUserAutentication");
-		query.setParameter("nomeUsuario", nomeUsuario);
-		query.setParameter("senha", CriptografaSenha.criptografa(senha));
-		List<Usuario> usuarios = (List<Usuario>) query.getResultList();
+	public Usuario buscaUsuarioAutenticado(String nomeUsuario, String senha) {		
+		EntityManager entity = Manager.get().getEntityManager();
+		CriteriaBuilder builder = entity.getCriteriaBuilder();
+		CriteriaQuery<Usuario> criteria = builder.createQuery(Usuario.class);
+		Root<Usuario> root = criteria.from(Usuario.class);
 		
-		if (usuarios != null && usuarios.size() > 0) {
-			return usuarios.get(0);
+		Predicate[] filtros = {
+			builder.like(builder.upper(root.<String>get("nomeUsuario")), nomeUsuario.toUpperCase()),
+			builder.equal(root.get("senha"), CriptografaSenha.criptografa(senha)),
+			builder.equal(root.get("situacao"), Situacao.ATIVO)
+		};
+		
+		criteria
+			.select(root)
+			.where(filtros);
+		
+		try {
+			return entity.createQuery(criteria).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
 		}
-		
-		return null;
 	}
 	
 	/**
@@ -82,11 +91,20 @@ public class UsuarioService {
 		Root<Usuario> root = criteria.from(Usuario.class);
 		criteria
 			.select(root)
-			.where(builder.equal(root.get("nomeUsuario"), nomeUsuario));
+			.where(builder.like(builder.upper(root.<String>get("nomeUsuario")), nomeUsuario.toUpperCase()));
 		
 		usuarios = entity.createQuery(criteria).getResultList();
 		
 		return !usuarios.isEmpty();
+	}
+	
+	/**
+	 * Método que persiste um usuário na base de dados
+	 * @param usuario
+	 */
+	public void persisteUsuario(Usuario usuario) {
+		EntityManager entity = Manager.get().getEntityManager();
+		entity.persist(usuario);
 	}
 	
 }
