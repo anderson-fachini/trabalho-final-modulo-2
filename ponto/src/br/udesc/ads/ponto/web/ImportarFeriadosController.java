@@ -9,6 +9,7 @@ import org.icefaces.ace.component.fileentry.FileEntry;
 import org.icefaces.ace.component.fileentry.FileEntryEvent;
 import org.icefaces.ace.component.fileentry.FileEntryResults;
 
+import br.udesc.ads.ponto.servicos.FeriadoService;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
 
@@ -27,8 +28,7 @@ public class ImportarFeriadosController implements Serializable {
 		FileEntryResults results = fe.getResults();
 		
 		for (FileEntryResults.FileInfo i : results.getFiles()) {
-//			TODO ColaboradorService.get().importarColaboradores(i.getFile());
-			System.out.println(i.getFileName());
+			FeriadoService.get().importarFeriados(i.getFile());
 		}
 		
 		JsfUtils.addMensagemInfo(Messages.getString("msgColaboradoresImportadosSucesso"));
