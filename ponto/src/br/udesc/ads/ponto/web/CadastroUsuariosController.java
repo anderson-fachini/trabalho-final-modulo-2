@@ -33,6 +33,9 @@ public class CadastroUsuariosController implements Serializable {
 	private String perfilUsuario;
 	private String situacaoUsuario;
 	private String senhaOriginal;
+	private String nomeUsuarioOriginal;
+	
+	private long codigoSetor;
 	
 	private List<SelectItem> perfisUsuario;
 	private List<SelectItem> situacoesUsuario;	
@@ -42,7 +45,6 @@ public class CadastroUsuariosController implements Serializable {
 	public CadastroUsuariosController() {
 		resetaDados();
 		
-		usuarioSelecionado = new Usuario();
 		buscaTodosUsuarios();
 		setores = SetorService.get().getSetores();
 		
@@ -51,11 +53,18 @@ public class CadastroUsuariosController implements Serializable {
 	}
 	
 	private void resetaDados() {
+		senhaOriginal = "";
 		confirmarSenha = "";
+		codigoSetor = 0;
+		
 		popupTitle = Messages.getString("novoUsuario");
+		
 		perfilUsuario = PerfilUsuario.GERENTE.getId();
 		situacaoUsuario = Situacao.ATIVO.getId();
-		senhaOriginal = "";
+		
+		usuarioSelecionado = new Usuario();
+		usuarioSelecionado.setPerfil(PerfilUsuario.GERENTE);
+		usuarioSelecionado.setSituacao(Situacao.ATIVO);
 	}
 	
 	public void salvarUsuario() {
@@ -65,6 +74,8 @@ public class CadastroUsuariosController implements Serializable {
 			verificaAlterouAtributosUsuario();
 			UsuarioService.get().persisteUsuario(usuarioSelecionado);
 			
+			JsfUtils.addMensagemInfo(Messages.getString("msgUsuarioSalvoSucesso"));
+			
 			buscaTodosUsuarios();
 		}
 	}
@@ -72,17 +83,32 @@ public class CadastroUsuariosController implements Serializable {
 	private boolean validaFormCadastroUsuario() {
 		boolean temErros = false;
 		
-		if (UsuarioService.get().checaUsuarioExistePorNome(usuarioSelecionado.getNomeUsuario())) {
-			temErros = true;
-			JsfUtils.addMensagemWarning(Messages.getString("msgUsuarioJaExiste"));
+		if (!usuarioSelecionado.getNomeUsuario().equals(nomeUsuarioOriginal)) {
+			if (UsuarioService.get().checaUsuarioExistePorNome(usuarioSelecionado.getNomeUsuario())) {
+				JsfUtils.addMensagemWarning(Messages.getString("msgUsuarioJaExiste"));
+				
+				return true;
+			}
 		}
-		if (usuarioSelecionado.getId() == null && usuarioSelecionado.getSenha().length() == 0) {
+		if (usuarioSelecionado.getId() == null && usuarioSelecionado.getSenha().isEmpty()) {
 			temErros = true;
 			JsfUtils.addMensagemWarning(Messages.getString("msgInformeSenha"));
 		}
+		
+		if (!temErros && !usuarioSelecionado.getSenha().isEmpty() && 
+				usuarioSelecionado.getSenha().length() < 5) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgSenhaPequena"));
+		}
+		
 		if (!usuarioSelecionado.getSenha().equals(confirmarSenha)) {
 			temErros = true;
 			JsfUtils.addMensagemWarning(Messages.getString("msgSenhasNaoConferem"));
+		}
+		
+		if (perfilUsuario.equals(PerfilUsuario.GERENTE.getId()) && codigoSetor == 0) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgSelecionarSetor"));
 		}
 		
 		return temErros;
@@ -95,6 +121,8 @@ public class CadastroUsuariosController implements Serializable {
 			if (senhaCriptografada != senhaOriginal) {
 				usuarioSelecionado.setSenha(senhaCriptografada);
 			}
+		} else {
+			usuarioSelecionado.setSenha(senhaOriginal);
 		}
 		
 		if (usuarioSelecionado.getPerfil().getId() != perfilUsuario) {
@@ -104,17 +132,33 @@ public class CadastroUsuariosController implements Serializable {
 		if (usuarioSelecionado.getSituacao().getId() != situacaoUsuario) {
 			usuarioSelecionado.setSituacao(Situacao.fromId(situacaoUsuario));
 		}
+		
+		if (usuarioSelecionado.getPerfil() == PerfilUsuario.GERENTE) {
+			if (usuarioSelecionado.getColaborador() == null || 
+					codigoSetor != usuarioSelecionado.getColaborador().getSetor().getId()) {
+				Setor setor = SetorService.get().getById(codigoSetor);
+				usuarioSelecionado.setColaborador(setor.getGerente());
+			}
+		} else {
+			usuarioSelecionado.setColaborador(null);
+		}
 	}
 	
 	public void editarUsuario(Usuario usuario) {
 		popupTitle = Messages.getString("editarUsuario");
 		
 		usuarioSelecionado = usuario;
-		senhaOriginal = usuarioSelecionado.getSenha();		
+		senhaOriginal = usuarioSelecionado.getSenha();	
+		nomeUsuarioOriginal = usuarioSelecionado.getNomeUsuario();
 		usuarioSelecionado.setSenha("");
 		
 		perfilUsuario = usuarioSelecionado.getPerfil().getId();
 		situacaoUsuario = usuarioSelecionado.getSituacao().getId();
+		
+		if (usuario.getPerfil() == PerfilUsuario.GERENTE) {
+			codigoSetor = usuario.getColaborador().getSetor().getId();
+		}
+		
 		popupOpened = true;
 	}
 	
@@ -217,6 +261,14 @@ public class CadastroUsuariosController implements Serializable {
 
 	public void setSetores(List<Setor> setores) {
 		this.setores = setores;
+	}
+
+	public long getCodigoSetor() {
+		return codigoSetor;
+	}
+
+	public void setCodigoSetor(long setor) {
+		this.codigoSetor = setor;
 	}
 
 }
