@@ -10,57 +10,59 @@
 	<ui:param name="pageTitle" value="#{msg.cadastroUsuarios}" />
 
 	<ui:define name="pageContent">
-		<h:form id="formEditarUsuario">
-			<ice:panelPopup visible="#{cadastroUsuarios.popupOpened}" rendered="#{cadastroUsuarios.popupOpened}" 
-			    modal="true" autoCentre="true" style="width: 300px;">
-				<f:facet name="header">
-					<h:panelGroup>
-						<h:panelGroup style="float: left;">
-                            #{cadastroUsuarios.popupTitle}
-                        </h:panelGroup>
-						<h:panelGroup style="float: right;">
+
+		<ice:panelPopup visible="#{cadastroUsuarios.popupOpened}" rendered="#{cadastroUsuarios.popupOpened}" 
+		    modal="true" autoCentre="true" style="width: 300px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                           #{cadastroUsuarios.popupTitle}
+                       </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
 							<h:commandButton action="#{cadastroUsuarios.togglePopupOpened}" 
-								image="/images/popup-close.png" alt="Close"
+								image="/images/popup-close.png" alt="Close" type="button"
 								title="Close" style="height: 11px; width: 11px; border: 0;" />
-						</h:panelGroup>
+						</h:form>
 					</h:panelGroup>
-				</f:facet>
-				<f:facet name="body">
-                    <h:panelGrid columns="2">
-                    	<h:outputLabel value="#{msg.usuario}" />
-                    	<h:inputText value="#{cadastroUsuarios.usuarioSelecionado.nomeUsuario}"
-                    		required="true" requiredMessage="#{msg.msgInformeUsuario}" />
-                    	
-                    	<h:outputLabel value="#{msg.senha}" />
-                    	<h:inputSecret value="#{cadastroUsuarios.usuarioSelecionado.senha}" />
-                    	
-                    	<h:outputLabel value="#{msg.confirmarSenha}" />
-                    	<h:inputSecret value="#{cadastroUsuarios.confirmarSenha}" />
-                    	
-                    	<h:outputLabel value="#{msg.perfil}" />
-                    	<h:selectOneMenu value="#{cadastroUsuarios.perfilUsuario}">
-                    		<f:selectItems value="#{cadastroUsuarios.perfisUsuario}" />
-                    	</h:selectOneMenu>
-                    	
-                    	<h:outputLabel value="#{msg.setor}" />
-                    	<h:selectOneMenu>
-                    		<f:selectItem />
-                    		<f:selectItems value="#{cadastroUsuarios.setores}" var="setor"
-                    			itemValue="#{setor.id}" itemLabel="#{setor.nome}" />
-                    	</h:selectOneMenu>
-                    	
-                    	<h:outputLabel value="#{msg.status}" />
-                    	<h:selectOneRadio value="#{cadastroUsuarios.situacaoUsuario}">
-                    		<f:selectItems value="#{cadastroUsuarios.situacoesUsuario}" />
-                    	</h:selectOneRadio>
-                    	
-                    	<h:commandButton action="#{cadastroUsuarios.salvarUsuario}" value="${msg.salvar}" />
-                    </h:panelGrid>
-                </f:facet>
-			</ice:panelPopup>
-			
-			<ice:messages />
-		</h:form>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="body">
+				<h:form>
+					<h:panelGrid columns="2">
+                   		<h:outputLabel value="#{msg.usuario}" />
+                   		<h:inputText value="#{cadastroUsuarios.usuarioSelecionado.nomeUsuario}"
+                   			required="true" requiredMessage="#{msg.msgInformeUsuario}" />
+                   	
+                   		<h:outputLabel value="#{msg.senha}" />
+                   		<h:inputSecret value="#{cadastroUsuarios.usuarioSelecionado.senha}" />
+                   	
+                   		<h:outputLabel value="#{msg.confirmarSenha}" />
+                   		<h:inputSecret value="#{cadastroUsuarios.confirmarSenha}" />
+		                   	
+                   		<h:outputLabel value="#{msg.perfil}" />
+                   		<h:selectOneMenu value="#{cadastroUsuarios.perfilUsuario}">
+                   			<f:selectItems value="#{cadastroUsuarios.perfisUsuario}" />
+                   		</h:selectOneMenu>
+                   	
+                   		<h:outputLabel value="#{msg.setor}" />
+                   		<h:selectOneMenu value="#{cadastroUsuarios.codigoSetor}">
+                   			<f:selectItem itemValue="0" itemLabel="" />
+                   			<f:selectItems value="#{cadastroUsuarios.setores}" var="setor"
+                   				itemValue="#{setor.id}" itemLabel="#{setor.nome}" />
+                   		</h:selectOneMenu>
+                   	
+                   		<h:outputLabel value="#{msg.status}" />
+                   		<h:selectOneRadio value="#{cadastroUsuarios.situacaoUsuario}">
+                   			<f:selectItems value="#{cadastroUsuarios.situacoesUsuario}" />
+                   		</h:selectOneRadio>
+                   	
+                   		<h:commandButton action="#{cadastroUsuarios.salvarUsuario}" value="${msg.salvar}" />
+                 	</h:panelGrid>
+            		<ace:messages />
+           		</h:form>
+       		</f:facet>
+	</ice:panelPopup>
 		
 		<h:form id="formLisarUsuarios" styleClass="centralized-form">
 			<h:commandButton action="#{cadastroUsuarios.togglePopupOpened}" 

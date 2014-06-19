@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
 import br.udesc.ads.ponto.entidades.Setor;
@@ -51,5 +51,26 @@ public class SetorService {
 		setores = entity.createQuery(criteria).getResultList();
 		
 		return setores;
+	}
+	
+	/**
+	 * Obtem um setor pelo seu id
+	 * @param id
+	 * @return Setor caso seja encontrado ou então null
+	 */
+	public Setor getById(long id) {		
+		EntityManager entity = Manager.get().getEntityManager();
+		CriteriaBuilder builder = entity.getCriteriaBuilder();
+		CriteriaQuery<Setor> criteria = builder.createQuery(Setor.class);
+		Root<Setor> root = criteria.from(Setor.class);
+		criteria
+			.select(root)
+			.where(builder.equal(root.get("id"), id));
+		
+		try {
+			return entity.createQuery(criteria).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }

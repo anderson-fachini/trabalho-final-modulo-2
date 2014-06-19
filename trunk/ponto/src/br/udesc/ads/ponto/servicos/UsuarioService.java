@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -104,7 +105,11 @@ public class UsuarioService {
 	 */
 	public void persisteUsuario(Usuario usuario) {
 		EntityManager entity = Manager.get().getEntityManager();
+		EntityTransaction transaction = entity.getTransaction();
+		
+		transaction.begin();
 		entity.persist(usuario);
+		transaction.commit();
 	}
 	
 }
