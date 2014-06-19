@@ -10,6 +10,63 @@
 	<ui:param name="pageTitle" value="#{msg.motivosAbono}" />
 
 	<ui:define name="pageContent">
+	
+		<ice:panelPopup visible="#{motivosAbono.popupOpened}" rendered="#{motivosAbono.popupOpened}"
+			modal="true" autoCentre="true" style="width: 335px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                           #{motivosAbono.popupTitle}
+                       </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
+							<h:commandButton action="#{motivosAbono.togglePopupOpened}" 
+								image="/images/popup-close.png" alt="Close" type="button"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:facet>			
+			<f:facet name="body">
+				<h:form>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="#{msg.descricao}" />
+						<h:inputText value="#{motivosAbono.motivoAbonoSelecionado.descricao}" required="true"
+							requiredMessage="#{msg.msgInformeDescricao}" />
+						
+						<h:outputLabel value="#{msg.status}" />
+						<h:selectOneRadio value="#{motivosAbono.situacao}">
+                   			<f:selectItems value="#{motivosAbono.situacoes}" />
+                   		</h:selectOneRadio>
+                   	
+                   		<h:commandButton action="#{motivosAbono.salvarMotivoAbono}" value="${msg.salvar}" />
+                 	</h:panelGrid>
+            		<ace:messages />
+				</h:form>
+			</f:facet>			
+		</ice:panelPopup>
+		
+		<h:form styleClass="centralized-form">
+			<h:commandButton action="#{motivosAbono.togglePopupOpened}" 
+			value="#{msg.novoMotivoAbono}" style="margin-bottom: 10px;" />
 
+			<ace:dataTable value="#{motivosAbono.motivosAbono}" var="motivo" 
+				paginator="true" paginatorPosition="bottom" rows="10">
+				<ace:column headerText="#{msg.descricao}"
+					sortBy="#{motivo.descricao}" filterBy="#{motivo.descricao}"
+					filterMatchMode="contains">
+					<h:outputText value="#{motivo.descricao}" />
+				</ace:column>
+
+				<ace:column headerText="#{msg.status}" sortBy="#{motivo.situacao}"
+					filterBy="#{motivo.situacao}" filterMatchMode="contains">
+					<h:outputText value="#{motivo.situacao.descricao}" />
+				</ace:column>
+
+				<ace:column headerText="#{msg.acao}">
+					<h:commandButton value="#{msg.editar}" action="#{motivosAbono.editarMotivoAbono(motivo)}" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>
