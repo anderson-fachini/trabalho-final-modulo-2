@@ -53,6 +53,7 @@ public class CadastroUsuariosController implements Serializable {
 	}
 	
 	private void resetaDados() {
+		nomeUsuarioOriginal = "";
 		senhaOriginal = "";
 		confirmarSenha = "";
 		codigoSetor = 0;
