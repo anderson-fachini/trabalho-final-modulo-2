@@ -77,7 +77,7 @@ public class ApuradorMarcacoes {
 		}
 	}
 
-	void processarApuracao(Apuracao apuracao) {
+	public void processarApuracao(Apuracao apuracao) {
 		calcularHoras(apuracao);
 		resolverOcorrencias(apuracao);
 		apuracao.setApurada(true);
