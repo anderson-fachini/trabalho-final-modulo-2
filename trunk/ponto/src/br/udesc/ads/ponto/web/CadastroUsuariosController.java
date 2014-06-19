@@ -14,6 +14,7 @@ import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.SetorService;
 import br.udesc.ads.ponto.servicos.UsuarioService;
+import br.udesc.ads.ponto.util.CriptografaSenha;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
 
@@ -31,6 +32,7 @@ public class CadastroUsuariosController implements Serializable {
 	private String confirmarSenha;
 	private String perfilUsuario;
 	private String situacaoUsuario;
+	private String senhaOriginal;
 	
 	private List<SelectItem> perfisUsuario;
 	private List<SelectItem> situacoesUsuario;	
@@ -38,30 +40,32 @@ public class CadastroUsuariosController implements Serializable {
 	private List<Setor> setores;
 	
 	public CadastroUsuariosController() {
-		resetaCampos();
+		resetaDados();
 		
 		usuarioSelecionado = new Usuario();
-		usuarios = UsuarioService.get().getTodosUsuarios();
+		buscaTodosUsuarios();
 		setores = SetorService.get().getSetores();
 		
 		carregaPerfisUsuario();
 		carregaSituacoesUsuario();
 	}
 	
-	private void resetaCampos() {
+	private void resetaDados() {
 		confirmarSenha = "";
 		popupTitle = Messages.getString("novoUsuario");
 		perfilUsuario = PerfilUsuario.GERENTE.getId();
 		situacaoUsuario = Situacao.ATIVO.getId();
+		senhaOriginal = "";
 	}
 	
 	public void salvarUsuario() {
-		//TODO verificar questão da senha na hora de salvar
 		boolean temErros = validaFormCadastroUsuario();
 		
-		
 		if (!temErros) {
-			resetaCampos();			
+			verificaAlterouAtributosUsuario();
+			UsuarioService.get().persisteUsuario(usuarioSelecionado);
+			
+			buscaTodosUsuarios();
 		}
 	}
 	
@@ -84,11 +88,31 @@ public class CadastroUsuariosController implements Serializable {
 		return temErros;
 	}
 	
+	private void verificaAlterouAtributosUsuario() {		
+		if (!confirmarSenha.isEmpty()) {			
+			String senhaCriptografada = CriptografaSenha.criptografa(confirmarSenha);
+			
+			if (senhaCriptografada != senhaOriginal) {
+				usuarioSelecionado.setSenha(senhaCriptografada);
+			}
+		}
+		
+		if (usuarioSelecionado.getPerfil().getId() != perfilUsuario) {
+			usuarioSelecionado.setPerfil(PerfilUsuario.fromId(perfilUsuario));
+		}
+		
+		if (usuarioSelecionado.getSituacao().getId() != situacaoUsuario) {
+			usuarioSelecionado.setSituacao(Situacao.fromId(situacaoUsuario));
+		}
+	}
+	
 	public void editarUsuario(Usuario usuario) {
 		popupTitle = Messages.getString("editarUsuario");
 		
 		usuarioSelecionado = usuario;
+		senhaOriginal = usuarioSelecionado.getSenha();		
 		usuarioSelecionado.setSenha("");
+		
 		perfilUsuario = usuarioSelecionado.getPerfil().getId();
 		situacaoUsuario = usuarioSelecionado.getSituacao().getId();
 		popupOpened = true;
@@ -96,6 +120,7 @@ public class CadastroUsuariosController implements Serializable {
 	
 	public void togglePopupOpened() {
 		popupOpened = !popupOpened;
+		resetaDados();
 	}
 	
 	private void carregaPerfisUsuario() {
@@ -112,6 +137,10 @@ public class CadastroUsuariosController implements Serializable {
 		for (Situacao s : Situacao.values()) {
 			situacoesUsuario.add(new SelectItem(s.getId(), s.getDescricao()));
 		}
+	}
+	
+	private void buscaTodosUsuarios() {
+		usuarios = UsuarioService.get().getTodosUsuarios();
 	}
 	
 	public List<SelectItem> getPerfisUsuario() {
