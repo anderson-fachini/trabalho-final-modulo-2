@@ -17,7 +17,7 @@ import br.udesc.ads.ponto.entidades.Escala;
 import br.udesc.ads.ponto.entidades.EscalaMarcacao;
 
 /**
- * Classe principal que cont�m as configura��es do ambiente, conex�o com o banco
+ * Classe principal que contém as configuraçõees do ambiente, conexão com o banco
  * e etc.
  * 
  * @author Samuel
@@ -104,7 +104,7 @@ public class Manager {
 			return null;
 		}
 		if (results.size() > 1) {
-			throw new AssertionError("N�o deveria haver mais de um registro na tabela Config.");
+			throw new AssertionError("Não deveria haver mais de um registro na tabela Config.");
 		}
 		return results.get(0);
 	}

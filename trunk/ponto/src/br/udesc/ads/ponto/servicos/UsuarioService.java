@@ -79,7 +79,7 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Métod que verifica se um usuário existe pelo nome
+	 * Método que verifica se um usuário existe pelo nome
 	 * @param nomeUsuario Nome de usuário
 	 * @return true caso o usuário exista
 	 */
