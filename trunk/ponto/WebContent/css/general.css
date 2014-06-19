@@ -1,9 +1,20 @@
 @CHARSET "ISO-8859-1";
 
 .app-menu {
-	width: 650px;
 	margin: 0px auto;
 	margin-bottom: 15px;
+}
+
+.app-menu.perfil-dono {
+	width: 595px;
+}
+
+.app-menu.perfil-gerente {
+	width: 375px;
+}
+
+.app-menu.perfil-func-rh {
+	width: 350px;
 }
 
 .user-info {
