@@ -555,6 +555,7 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(null, apuracao.getHorasExcedentes());
 		Assert.assertEquals(null, apuracao.getHorasFaltantes());
 		Assert.assertEquals(null, apuracao.getHorasAbonadas());
+		Assert.assertEquals(true, apuracao.getInconsistente());
 		// Não deve ter ocorrido nenhuma aprovação:
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
@@ -578,6 +579,7 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(null, apuracao.getHorasExcedentes());
 		Assert.assertEquals(null, apuracao.getHorasFaltantes());
 		Assert.assertEquals(null, apuracao.getHorasAbonadas());
+		Assert.assertEquals(true, apuracao.getInconsistente());
 		// Não deve ter ocorrido nenhuma aprovação:
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
