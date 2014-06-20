@@ -29,6 +29,7 @@ import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.FeriadoService;
+import br.udesc.ads.ponto.util.TimeUtils;
 
 public class ApuradorMarcacoes {
 
@@ -453,7 +454,7 @@ public class ApuradorMarcacoes {
 				ajusteBH.setSaldoAnterior(colaborador.getSaldoBH());
 				LocalTime excedentes = apuracao.getHorasExcedentes();
 				LocalTime faltantes = apuracao.getHorasFaltantes();
-				ajusteBH.setValorAjuste(toDoubleHoras(excedentes) - toDoubleHoras(faltantes));
+				ajusteBH.setValorAjuste(TimeUtils.toDoubleHoras(excedentes) - TimeUtils.toDoubleHoras(faltantes));
 				ajusteBH.setObservacoes("Processo automático de aprovação de ponto.");
 				entityManager.persist(ajusteBH);
 
@@ -468,12 +469,6 @@ public class ApuradorMarcacoes {
 			transaction.rollback();
 			throw ex;
 		}
-	}
-
-	private double toDoubleHoras(LocalTime localTime) {
-		double result = localTime.getMillisOfDay();
-		result /= 1000 * 60 * 60;
-		return result;
 	}
 
 	private List<LocalTime> getSequenciaMarcacoes(Apuracao apuracao) {
