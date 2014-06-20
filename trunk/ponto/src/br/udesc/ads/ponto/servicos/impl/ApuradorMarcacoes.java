@@ -78,7 +78,8 @@ public class ApuradorMarcacoes {
 	}
 
 	public void processarApuracao(Apuracao apuracao) {
-		calcularHoras(apuracao);
+		boolean calculou = calcularHoras(apuracao);
+		apuracao.setInconsistente(!calculou);
 		resolverOcorrencias(apuracao);
 		apuracao.setApurada(true);
 	}
@@ -353,12 +354,12 @@ public class ApuradorMarcacoes {
 		return false;
 	}
 
-	private void calcularHoras(Apuracao apuracao) {
+	private boolean calcularHoras(Apuracao apuracao) {
 		List<LocalTime> marcacoes = getSequenciaMarcacoes(apuracao);
 		int qtdMarcacoes = marcacoes.size();
 		if (qtdMarcacoes % 2 != 0) {
 			// Não é possível calcular com marcações ímpares.
-			return;
+			return false;
 		}
 		int tempoPadraoTrab = getTempoPadraoTrabalho(apuracao.getData());
 		int trabalhadas = calcularTempoTrabalhado(marcacoes);
@@ -373,6 +374,7 @@ public class ApuradorMarcacoes {
 		apuracao.setHorasExcedentes(LocalTime.fromMillisOfDay(excedentes));
 		apuracao.setHorasFaltantes(LocalTime.fromMillisOfDay(faltantes));
 		apuracao.setHorasAbonadas(LocalTime.fromMillisOfDay(abonadas));
+		return true;
 	}
 
 	private int calcularHorasAbonadas(Apuracao apuracao) {
@@ -473,7 +475,7 @@ public class ApuradorMarcacoes {
 		return result;
 	}
 
-	public List<LocalTime> getSequenciaMarcacoes(Apuracao apuracao) {
+	private List<LocalTime> getSequenciaMarcacoes(Apuracao apuracao) {
 		List<LocalTime> result = new ArrayList<>();
 		for (int i = 0; i < apuracao.getMarcacoesSize(); ++i) {
 			Marcacao mar = apuracao.getMarcacao(i);

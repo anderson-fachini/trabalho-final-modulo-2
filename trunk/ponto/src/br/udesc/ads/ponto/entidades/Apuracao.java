@@ -54,6 +54,8 @@ public class Apuracao {
 	@Column(columnDefinition = "TIME")
 	private LocalTime horasAbonadas;
 
+	private Boolean inconsistente;
+
 	private Boolean apurada;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
@@ -128,7 +130,7 @@ public class Apuracao {
 	public void setHorasFaltantes(LocalTime horasFaltantes) {
 		this.horasFaltantes = horasFaltantes;
 	}
-	
+
 	public boolean temHorasFaltantes() {
 		return this.horasFaltantes != null && this.horasFaltantes.getMillisOfDay() > 0;
 	}
@@ -140,7 +142,7 @@ public class Apuracao {
 	public void setHorasExcedentes(LocalTime horasExcedentes) {
 		this.horasExcedentes = horasExcedentes;
 	}
-	
+
 	public boolean temHorasExcedentes() {
 		return this.horasExcedentes != null && this.horasExcedentes.getMillisOfDay() > 0;
 	}
@@ -151,6 +153,14 @@ public class Apuracao {
 
 	public void setHorasAbonadas(LocalTime horasAbonadas) {
 		this.horasAbonadas = horasAbonadas;
+	}
+
+	public Boolean getInconsistente() {
+		return inconsistente;
+	}
+
+	public void setInconsistente(Boolean inconsistente) {
+		this.inconsistente = inconsistente;
 	}
 
 	public Boolean getApurada() {
@@ -210,5 +220,5 @@ public class Apuracao {
 	public Ocorrencia getOcorrencia(int index) {
 		return this.ocorrencias.get(index);
 	}
-	
+
 }
