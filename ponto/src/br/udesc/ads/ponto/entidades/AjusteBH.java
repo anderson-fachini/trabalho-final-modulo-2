@@ -22,6 +22,8 @@ public class AjusteBH {
 	@Column(columnDefinition = "TIMESTAMP")
 	private LocalDateTime dataHora;
 
+	private Double saldoAnterior; // Pode ser positivo ou negativo
+
 	private Double valorAjuste; // Pode ser positivo ou negativo
 
 	@Column(length = 500)
@@ -54,6 +56,14 @@ public class AjusteBH {
 
 	public void setDataHora(LocalDateTime dataHora) {
 		this.dataHora = dataHora;
+	}
+
+	public Double getSaldoAnterior() {
+		return saldoAnterior;
+	}
+
+	public void setSaldoAnterior(Double saldoAnterior) {
+		this.saldoAnterior = saldoAnterior;
 	}
 
 	public Double getValorAjuste() {

@@ -450,6 +450,7 @@ public class ApuradorMarcacoes {
 				ajusteBH.setColaborador(colaborador);
 				ajusteBH.setDataHora(agora);
 				ajusteBH.setResponsavel(usuario);
+				ajusteBH.setSaldoAnterior(colaborador.getSaldoBH());
 				LocalTime excedentes = apuracao.getHorasExcedentes();
 				LocalTime faltantes = apuracao.getHorasFaltantes();
 				ajusteBH.setValorAjuste(toDoubleHoras(excedentes) - toDoubleHoras(faltantes));
