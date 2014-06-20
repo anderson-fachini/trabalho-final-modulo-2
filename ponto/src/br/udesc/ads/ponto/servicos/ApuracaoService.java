@@ -107,30 +107,6 @@ public class ApuracaoService {
 		new ApuradorMarcacoes().aprovarApuracao(apuracao, usuario);
 	}
 
-	// TODO Remover este método depois e criar um Cenário de teste
-//	public static void main(String[] args) {
-//		
-////		importarTudo();
-//		
-//		EntityManager entityManager = Manager.get().getEntityManager();
-//		
-//		Apuracao apuracao = entityManager.find(Apuracao.class, 32L);
-//		Usuario usuario = entityManager.find(Usuario.class, 1L);
-//		
-//		ApuracaoService.get().aprovarApuracao(apuracao, usuario);
-//	}
-
-//	private static void importarTudo() {
-//		System.out.println("Importando colaboradores...");
-//		ColaboradorService.get().importarColaboradores(new File("C:\\colaboradores.csv"));
-//
-//		// TODO Primeiro deletar todas as apurações.
-//		System.out.println("Importando marcações...");
-//		ApuracaoService.get().importarMarcacoes();
-//		System.out.println("Apurando marcações pendentes...");
-//		ApuracaoService.get().apurarMarcacoesPendentes();
-//	}
-	
 	/**
 	 * Método que busca as apurações de um colaborador de um determinado período
 	 * @param dataInicial
