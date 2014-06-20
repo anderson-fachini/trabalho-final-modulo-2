@@ -106,8 +106,12 @@ public class ColaboradorService {
 	}
 	
 	public List<Colaborador> getColaboradoresPorSetor(Setor setor) {
-		return null;
-		// TODO
+		EntityManager entityManager = Manager.get().getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Colaborador> query = cb.createQuery(Colaborador.class);
+		Root<Colaborador> root = query.from(Colaborador.class);
+		query.select(root).where(cb.equal(root.get("setor"), setor));
+		return entityManager.createQuery(query).getResultList();
 	}
 	
 }
