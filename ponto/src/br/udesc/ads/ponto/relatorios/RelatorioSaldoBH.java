@@ -1,6 +1,5 @@
 package br.udesc.ads.ponto.relatorios;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,11 +13,8 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 
 import br.udesc.ads.ponto.entidades.AjusteBH;
-import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
-import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
-import br.udesc.ads.ponto.servicos.ApuracaoService;
 
 public class RelatorioSaldoBH {
 
@@ -111,20 +107,20 @@ public class RelatorioSaldoBH {
 		return em.createQuery(query).getResultList();
 	}
 
-	public static void main(String[] args) {
-
-		EntityManager em = Manager.get().getEntityManager();
-		Usuario usuario = em.find(Usuario.class, 151L);
-
-		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 251L), usuario);
-		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 256L), usuario);
-
-		List<Colaborador> colaboradores = new ArrayList<>();
-		colaboradores.add(em.find(Colaborador.class, 226L));
-		colaboradores.add(em.find(Colaborador.class, 228L));
-		colaboradores.add(em.find(Colaborador.class, 214L));
-		SaldoBHResult data = RelatorioSaldoBH.get().consultar(new LocalDate(2014, 6, 1), new LocalDate(2014, 6, 30), colaboradores);
-		System.out.println(data);
-	}
+//	public static void main(String[] args) {
+//
+//		EntityManager em = Manager.get().getEntityManager();
+//		Usuario usuario = em.find(Usuario.class, 151L);
+//
+//		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 251L), usuario);
+//		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 256L), usuario);
+//
+//		List<Colaborador> colaboradores = new ArrayList<>();
+//		colaboradores.add(em.find(Colaborador.class, 226L));
+//		colaboradores.add(em.find(Colaborador.class, 228L));
+//		colaboradores.add(em.find(Colaborador.class, 214L));
+//		SaldoBHResult data = RelatorioSaldoBH.get().consultar(new LocalDate(2014, 6, 1), new LocalDate(2014, 6, 30), colaboradores);
+//		System.out.println(data);
+//	}
 
 }
