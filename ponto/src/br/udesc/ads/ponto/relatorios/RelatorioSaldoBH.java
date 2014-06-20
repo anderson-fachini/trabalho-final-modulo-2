@@ -1,5 +1,6 @@
 package br.udesc.ads.ponto.relatorios;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -41,11 +42,11 @@ public class RelatorioSaldoBH {
 	 * @param colaboradores
 	 *            A lista de colaboradores a serem consultados (obrigatória).
 	 */
-	public SaldoBHResult consultar(LocalDate dataInicial, LocalDate dataFinal, List<Colaborador> colaboradores) {
-		SaldoBHResult result = new SaldoBHResult();
+	public List<SaldoBHResult> consultar(LocalDate dataInicial, LocalDate dataFinal, List<Colaborador> colaboradores) {
+		List<SaldoBHResult> result = new ArrayList<>();
 		for (Colaborador colaborador : colaboradores) {
 			List<AjusteBH> ajustes = getAjustesBHPorPeriodo(dataInicial, dataFinal, colaborador);
-			SaldoBHResultItem item = new SaldoBHResultItem();
+			SaldoBHResult item = new SaldoBHResult();
 			item.setColaborador(colaborador);
 			if (ajustes.isEmpty()) {
 				item.setSaldoInicialPeriodo(getSaldoBHColaboradorNaData(dataInicial, colaborador));
@@ -66,7 +67,7 @@ public class RelatorioSaldoBH {
 				}
 			}
 			item.setSaldoFinalPeriodo(item.getSaldoInicialPeriodo() + item.getEntradasBH() - item.getSaidasBH());
-			result.addItem(item);
+			result.add(item);
 		}
 		return result;
 	}

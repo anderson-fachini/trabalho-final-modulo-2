@@ -1,22 +1,22 @@
 package br.udesc.ads.ponto.relatorios;
 
-import br.udesc.ads.ponto.entidades.Colaborador;
+import br.udesc.ads.ponto.entidades.Setor;
 
-public class SaldoBHResultItem {
+public class SaldoBHSetorResult {
 
-	private Colaborador colaborador;
+	private Setor setor;
 	private double entradasBH;
 	private double saidasBH;
 	private double ajustesManuaisBH;
 	private double saldoInicialPeriodo;
 	private double saldoFinalPeriodo;
 
-	public Colaborador getColaborador() {
-		return colaborador;
+	public Setor getSetor() {
+		return setor;
 	}
 
-	public void setColaborador(Colaborador colaborador) {
-		this.colaborador = colaborador;
+	public void setSetor(Setor setor) {
+		this.setor = setor;
 	}
 
 	public double getEntradasBH() {
