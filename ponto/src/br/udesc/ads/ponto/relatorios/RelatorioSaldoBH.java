@@ -108,20 +108,4 @@ public class RelatorioSaldoBH {
 		return em.createQuery(query).getResultList();
 	}
 
-//	public static void main(String[] args) {
-//
-//		EntityManager em = Manager.get().getEntityManager();
-//		Usuario usuario = em.find(Usuario.class, 151L);
-//
-//		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 251L), usuario);
-//		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 256L), usuario);
-//
-//		List<Colaborador> colaboradores = new ArrayList<>();
-//		colaboradores.add(em.find(Colaborador.class, 226L));
-//		colaboradores.add(em.find(Colaborador.class, 228L));
-//		colaboradores.add(em.find(Colaborador.class, 214L));
-//		SaldoBHResult data = RelatorioSaldoBH.get().consultar(new LocalDate(2014, 6, 1), new LocalDate(2014, 6, 30), colaboradores);
-//		System.out.println(data);
-//	}
-
 }
