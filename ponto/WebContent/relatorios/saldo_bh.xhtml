@@ -10,6 +10,37 @@
 	<ui:param name="pageTitle" value="#{msg.relatorioSaldoBh}" />
 
 	<ui:define name="pageContent">
-
+		
+		<h:form id="filtrosRelatorio">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{msg.colaborador}" />
+				<h:selectOneMenu>
+					<f:selectItems />
+				</h:selectOneMenu>
+				
+				<h:outputLabel value="#{msg.dataInicial}" />
+				<ace:dateTimeEntry timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+					renderAsPopup="true" navigator="true" maxdate="" />
+					
+				<h:outputLabel value="#{msg.dataFinal}" />
+				<ace:dateTimeEntry timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+					renderAsPopup="true" navigator="true" maxdate="" />
+					
+				<h:commandButton value="#{msg.gerar}" />
+			</h:panelGrid>
+		</h:form>
+		
+		<h:form id="dadosRelatorio">
+			<h:outputText value="#{msg.tituloRelatorioSaldoBh}" style="text-align: center; margin-bottom: 15px;" />
+			<h:outputText value="#{msg.colaborador}:" />
+			<h:outputText value="#{msg.periodo} #{msg.ate}" />
+			
+			<ace:dataTable var="saldoBh">
+				<ace:column headerText="#{msg.totalizador}">
+					<h:outputText value="" />
+				</ace:column>
+			</ace:dataTable>
+		</h:form>
+		
 	</ui:define>
 </ui:composition>
