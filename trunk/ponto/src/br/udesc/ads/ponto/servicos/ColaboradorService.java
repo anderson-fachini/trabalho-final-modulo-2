@@ -1,6 +1,7 @@
 package br.udesc.ads.ponto.servicos;
 
 import java.io.File;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -13,6 +14,7 @@ import org.joda.time.LocalDateTime;
 
 import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Colaborador;
+import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.impl.ImportadorColaboradores;
@@ -102,5 +104,10 @@ public class ColaboradorService {
 			throw new RuntimeException(String.format("Nenhum colaborador encontrado com código '%d'.", codCol));
 		}
 	}
-
+	
+	public List<Colaborador> getColaboradoresPorSetor(Setor setor) {
+		return null;
+		// TODO
+	}
+	
 }
