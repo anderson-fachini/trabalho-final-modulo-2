@@ -72,6 +72,7 @@ public class ColaboradorService {
 			ajusteBH.setColaborador(colaborador);
 			ajusteBH.setDataHora(LocalDateTime.now());
 			ajusteBH.setResponsavel(responsavel);
+			ajusteBH.setSaldoAnterior(colaborador.getSaldoBH());
 			ajusteBH.setValorAjuste(valorAjuste);
 			ajusteBH.setObservacoes(observacoes);
 			entityManager.persist(ajusteBH);
