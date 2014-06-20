@@ -8,10 +8,10 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 /**
- * Representa um registro de marcação importado da leitora de ponto.<br>
- * Este objeto é intermediário: nasce e morre durante a operação de importação.
- * Seu objetivo é garantir que as informações não sejam perdidas em caso de
- * interrupção abrupta ou erro na importação.
+ * Representa um registro de marcaÃ§Ã£o importado da leitora de ponto.<br>
+ * Este objeto Ã© intermediÃ¡rio: nasce e morre durante a operaÃ§Ã£o de importaÃ§Ã£o.
+ * Seu objetivo Ã© garantir que as informaÃ§Ãµes nÃ£o sejam perdidas em caso de
+ * interrupÃ§Ã£o abrupta ou erro na importaÃ§Ã£o.
  * 
  * @author Samuel
  * 
