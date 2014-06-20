@@ -21,16 +21,16 @@ import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.ApuracaoService;
 
 public class RelatorioSaldoBH {
-	
+
 	private static RelatorioSaldoBH instance;
-	
+
 	public synchronized static RelatorioSaldoBH get() {
 		if (instance == null) {
 			instance = new RelatorioSaldoBH();
 		}
 		return instance;
 	}
-	
+
 	private RelatorioSaldoBH() {
 	}
 
@@ -58,19 +58,25 @@ public class RelatorioSaldoBH {
 			}
 			for (AjusteBH ajuste : ajustes) {
 				double valorAjuste = ajuste.getValorAjuste();
-				if (valorAjuste < 0) {
-					item.setSaidasBH(item.getSaidasBH() + (-valorAjuste));
+				if (ajuste.getApuracao() == null) {
+					// Quando não tem apuração é porque foi um ajuste manual
+					item.setAjustesManuaisBH(item.getAjustesManuaisBH() + valorAjuste);
 				} else {
-					item.setEntradasBH(item.getEntradasBH() + valorAjuste);
+					if (valorAjuste < 0) {
+						item.setSaidasBH(item.getSaidasBH() + (-valorAjuste));
+					} else {
+						item.setEntradasBH(item.getEntradasBH() + valorAjuste);
+					}
 				}
 			}
+			item.setSaldoFinalPeriodo(item.getSaldoInicialPeriodo() + item.getEntradasBH() - item.getSaidasBH());
 			result.addItem(item);
 		}
 		return result;
 	}
 
 	private double getSaldoBHColaboradorNaData(LocalDate data, Colaborador colaborador) {
-		
+
 		LocalDateTime dataHora = data.toLocalDateTime(new LocalTime(0, 0, 0));
 
 		EntityManager em = Manager.get().getEntityManager();
@@ -82,7 +88,8 @@ public class RelatorioSaldoBH {
 		query.select(root).where(cb.and(colabEqual, dataGT)).orderBy(cb.asc(root.get("dataHora")));
 		List<AjusteBH> list = em.createQuery(query).getResultList();
 		if (list.isEmpty()) {
-			// Se não houve nenhum ajuste depois dessa data, então o saldo atual é o saldo dessa data.
+			// Se não houve nenhum ajuste depois dessa data, então o saldo atual
+			// é o saldo dessa data.
 			return colaborador.getSaldoBH();
 		} else {
 			return list.get(0).getSaldoAnterior();
@@ -103,15 +110,15 @@ public class RelatorioSaldoBH {
 		query.select(root).where(cb.and(colabEqual, dataBetween)).orderBy(cb.asc(root.get("dataHora")));
 		return em.createQuery(query).getResultList();
 	}
-	
+
 	public static void main(String[] args) {
-		
+
 		EntityManager em = Manager.get().getEntityManager();
 		Usuario usuario = em.find(Usuario.class, 151L);
-		
+
 		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 251L), usuario);
 		ApuracaoService.get().aprovarApuracao(em.find(Apuracao.class, 256L), usuario);
-		
+
 		List<Colaborador> colaboradores = new ArrayList<>();
 		colaboradores.add(em.find(Colaborador.class, 226L));
 		colaboradores.add(em.find(Colaborador.class, 228L));

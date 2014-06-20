@@ -7,7 +7,9 @@ public class SaldoBHResultItem {
 	private Colaborador colaborador;
 	private double entradasBH;
 	private double saidasBH;
+	private double ajustesManuaisBH;
 	private double saldoInicialPeriodo;
+	private double saldoFinalPeriodo;
 
 	public Colaborador getColaborador() {
 		return colaborador;
@@ -33,6 +35,14 @@ public class SaldoBHResultItem {
 		this.saidasBH = saidasBH;
 	}
 
+	public double getAjustesManuaisBH() {
+		return ajustesManuaisBH;
+	}
+
+	public void setAjustesManuaisBH(double ajustesManuaisBH) {
+		this.ajustesManuaisBH = ajustesManuaisBH;
+	}
+
 	public double getSaldoInicialPeriodo() {
 		return saldoInicialPeriodo;
 	}
@@ -42,7 +52,11 @@ public class SaldoBHResultItem {
 	}
 
 	public double getSaldoFinalPeriodo() {
-		return saldoInicialPeriodo + entradasBH - saidasBH;
+		return saldoFinalPeriodo;
+	}
+
+	public void setSaldoFinalPeriodo(double saldoFinalPeriodo) {
+		this.saldoFinalPeriodo = saldoFinalPeriodo;
 	}
 
 }
