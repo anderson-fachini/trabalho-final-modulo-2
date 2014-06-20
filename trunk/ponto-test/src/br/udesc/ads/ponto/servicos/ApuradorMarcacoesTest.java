@@ -551,10 +551,10 @@ public class ApuradorMarcacoesTest {
 
 		Assert.assertEquals(true, apuracao.getApurada());
 		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_FORA_DA_ESCALA, Ocorrencia.MARCACOES_EXCEDENTES }, apuracao);
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasTrabalhadas());
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
-		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasFaltantes());
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
+		Assert.assertEquals(null, apuracao.getHorasTrabalhadas());
+		Assert.assertEquals(null, apuracao.getHorasExcedentes());
+		Assert.assertEquals(null, apuracao.getHorasFaltantes());
+		Assert.assertEquals(null, apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
@@ -574,10 +574,10 @@ public class ApuradorMarcacoesTest {
 
 		Assert.assertEquals(true, apuracao.getApurada());
 		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_FALTANTES }, apuracao);
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasTrabalhadas());
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
-		Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasFaltantes());
-		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
+		Assert.assertEquals(null, apuracao.getHorasTrabalhadas());
+		Assert.assertEquals(null, apuracao.getHorasExcedentes());
+		Assert.assertEquals(null, apuracao.getHorasFaltantes());
+		Assert.assertEquals(null, apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
 		Assert.assertNull(apuracao.getDataAprovacao());
 		Assert.assertNull(apuracao.getResponsavelAprovacao());
@@ -990,8 +990,8 @@ public class ApuradorMarcacoesTest {
 		apuracao.setColaborador(colaborador);
 		apuracao.setData(new LocalDate(2014, 2, 6));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(8, 0, 0)));
-		apuracao.addMarcacao(new Marcacao(new LocalTime(12, 0, 0)));
-		apuracao.addMarcacao(new Marcacao(new LocalTime(13, 0, 0)));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(10, 0, 0)));
+		apuracao.addMarcacao(new Marcacao(new LocalTime(11, 0, 0)));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(17, 0, 0)));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(17, 10, 0)));
 		apuracao.addMarcacao(new Marcacao(new LocalTime(18, 0, 0)));
@@ -999,7 +999,7 @@ public class ApuradorMarcacoesTest {
 		apurador.processarApuracao(apuracao);
 
 		Assert.assertEquals(true, apuracao.getApurada());
-		assertOcorrencias(new Ocorrencia[] { Ocorrencia.HORAS_EXCEDENTES, Ocorrencia.MARCACOES_FORA_DA_ESCALA, Ocorrencia.INTERVALO_INTRAJORNADA_INCOMPLETO, Ocorrencia.MARCACOES_EXCEDENTES }, apuracao);
+		assertOcorrencias(new Ocorrencia[] { Ocorrencia.HORAS_EXCEDENTES, Ocorrencia.MARCACOES_FORA_DA_ESCALA, Ocorrencia.MARCACOES_EXCEDENTES, Ocorrencia.INTERVALO_INTRAJORNADA_INCOMPLETO }, apuracao);
 		Assert.assertEquals(new LocalTime(8, 50, 0), apuracao.getHorasTrabalhadas());
 		Assert.assertEquals(new LocalTime(0, 50, 0), apuracao.getHorasExcedentes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
