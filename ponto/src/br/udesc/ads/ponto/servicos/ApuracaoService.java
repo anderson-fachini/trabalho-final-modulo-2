@@ -1,10 +1,18 @@
 package br.udesc.ads.ponto.servicos;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.joda.time.LocalDate;
 
 import br.udesc.ads.ponto.entidades.Apuracao;
+import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.impl.ApuradorMarcacoes;
@@ -122,5 +130,35 @@ public class ApuracaoService {
 //		System.out.println("Apurando marcações pendentes...");
 //		ApuracaoService.get().apurarMarcacoesPendentes();
 //	}
+	
+	/**
+	 * Método que busca as apurações de um colaborador de um determinado período
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @param colaborador
+	 * @return Lista de apurações do colaborador dentro do período especificado.
+	 * Se não encontrar nada retorna a lista vazia.
+	 */
+	public List<Apuracao> getApuracoesPorPeriodo(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador) {
+		List<Apuracao> apuracoes = new ArrayList<Apuracao>();
+		
+		EntityManager entity = Manager.get().getEntityManager();
+		CriteriaBuilder builder = entity.getCriteriaBuilder();
+		CriteriaQuery<Apuracao> criteria = builder.createQuery(Apuracao.class);
+		Root<Apuracao> root = criteria.from(Apuracao.class);
+		
+		Predicate[] filtros = {
+			builder.equal(root.get("colaborador"), colaborador),
+			builder.between(root.<LocalDate>get("data"), dataInicial, dataFinal)
+		};
+		
+		criteria
+			.select(root)
+			.where(filtros);
+		
+		apuracoes = entity.createQuery(criteria).getResultList();
+		
+		return apuracoes;
+	}
 
 }
