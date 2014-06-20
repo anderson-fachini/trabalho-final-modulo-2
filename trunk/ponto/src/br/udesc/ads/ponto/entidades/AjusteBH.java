@@ -31,8 +31,7 @@ public class AjusteBH {
 
 	private Usuario responsavel;
 
-	private Apuracao apuracao; // Somente preenchido quando foi um ajuste
-								// "autom�tico"
+	private Apuracao apuracao; // Somente preenchido quando foi um ajuste "automático"
 
 	public Long getId() {
 		return id;
