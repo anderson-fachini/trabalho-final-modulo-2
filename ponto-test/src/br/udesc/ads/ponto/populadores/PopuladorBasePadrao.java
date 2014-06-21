@@ -15,6 +15,7 @@ import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.UsuarioService;
 import br.udesc.ads.ponto.util.CriptografaSenha;
+import br.udesc.ads.ponto.util.StringUtils;
 
 public class PopuladorBasePadrao {
 
@@ -44,7 +45,8 @@ public class PopuladorBasePadrao {
 		List<Setor> setores = em.createQuery(query.select(root)).getResultList();
 		for (Setor setor : setores) {
 			Colaborador gerente = setor.getGerente();
-			criarUsuario(gerente.getNome(), gerente.getNome(), PerfilUsuario.GERENTE, gerente);
+			String nomeUsuario = StringUtils.toUserName(gerente.getNome());
+			criarUsuario(nomeUsuario, nomeUsuario, PerfilUsuario.GERENTE, gerente);
 		}
 	}
 
