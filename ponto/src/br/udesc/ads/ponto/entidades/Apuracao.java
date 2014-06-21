@@ -2,6 +2,7 @@ package br.udesc.ads.ponto.entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -39,10 +40,10 @@ public class Apuracao implements Serializable {
 	@Column(columnDefinition = "DATE")
 	private LocalDate data;
 
-	private Usuario responsavelAprovacao;
+	private Usuario responsavelConfirmacao;
 
 	@Column(columnDefinition = "TIMESTAMP")
-	private LocalDateTime dataAprovacao;
+	private LocalDateTime dataConfirmacao;
 
 	private String observacoes;
 
@@ -96,20 +97,20 @@ public class Apuracao implements Serializable {
 		this.data = data;
 	}
 
-	public Usuario getResponsavelAprovacao() {
-		return responsavelAprovacao;
+	public Usuario getResponsavelConfirmacao() {
+		return responsavelConfirmacao;
 	}
 
-	public void setResponsavelAprovacao(Usuario responsavelAprovacao) {
-		this.responsavelAprovacao = responsavelAprovacao;
+	public void setResponsavelConfirmacao(Usuario responsavelConfirmacao) {
+		this.responsavelConfirmacao = responsavelConfirmacao;
 	}
 
-	public LocalDateTime getDataAprovacao() {
-		return dataAprovacao;
+	public LocalDateTime getDataConfirmacao() {
+		return dataConfirmacao;
 	}
 
-	public void setDataAprovacao(LocalDateTime dataAprovacao) {
-		this.dataAprovacao = dataAprovacao;
+	public void setDataConfirmacao(LocalDateTime dataConfirmacao) {
+		this.dataConfirmacao = dataConfirmacao;
 	}
 
 	public String getObservacoes() {
@@ -185,6 +186,18 @@ public class Apuracao implements Serializable {
 
 	public int getMarcacoesSize() {
 		return this.marcacoes.size();
+	}
+	
+	public List<LocalTime> getSequenciaMarcacoes() {
+		List<LocalTime> result = new ArrayList<>();
+		for (int i = 0; i < this.getMarcacoesSize(); ++i) {
+			Marcacao mar = this.getMarcacao(i);
+			if (!mar.isExcluida()) {
+				result.add(mar.getHora());
+			}
+		}
+		Collections.sort(result);
+		return result;
 	}
 
 	public Marcacao getMarcacao(int index) {

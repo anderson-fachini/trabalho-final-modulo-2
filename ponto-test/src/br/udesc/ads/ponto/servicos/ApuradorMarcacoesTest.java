@@ -69,8 +69,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 2: Nenhuma ocorrência com tolerância de 1 minuto antes em todas as marcações
@@ -93,8 +93,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 3: Nenhuma ocorrência com tolerância de 1 minuto depois em todas as marcações
@@ -117,8 +117,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 4: Nenhuma ocorrência com tolerância de 1 minuto antes nas marcações da manhã e 1 minuto depois nas marcações da tarde
@@ -141,8 +141,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 5: Ocorrência de intervalo de almoço menor que 1h sem gerar extras ou faltas com tolerância de 1 minuto depois marcações da manhã e 1 minuto antes nas marcações da tarde
@@ -165,8 +165,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 6: Ocorrência de marcações fora da escala padrão com 6 minutos antes em todas as marcações
@@ -189,8 +189,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 7: Ocorrência de marcações fora da escala padrão com 6 minutos depois em todas as marcações
@@ -213,8 +213,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 8: Ocorrência de marcações fora da escala padrão com 10 minutos depois na primeira marcação e 10 minutos antes na última marcação
@@ -237,8 +237,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 9: Ocorrência de marcações fora da escala padrão com 10 minutos antes na primeira marcação e 10 minutos depois na última marcação
@@ -261,8 +261,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 10: Ocorrência de marcações fora da escala padrão com 10 minutos antes na segunda marcação e 10 minutos depois na terceira marcação
@@ -285,8 +285,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 11: Ocorrência de almoço incompleto e marcações fora da escala padrão com 10 minutos depois na segunda marcação e 10 minutos antes na terceira marcação
@@ -309,8 +309,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 12: Ocorrência de marcações fora da escala padrão com 4 marcações padrão, 2 marcações de intervalo de 1h e 2 marcações de recuperação de hora; Ocorrência de marcações excedentes com 8 marcações
@@ -337,8 +337,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 13: Ocorrência de horas faltantes com 11 minutos depois na primeira marcação e 10 minutos antes na última marcação
@@ -361,8 +361,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 21, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 14: Ocorrência de horas faltantes com 10 minutos depois na primeira marcação e 11 minutos antes na última marcação
@@ -385,8 +385,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 21, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 15: Ocorrência de horas faltantes com 11 minutos depois na primeira marcação e 11 minutos antes na última marcação
@@ -409,8 +409,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 22, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 16: Ocorrência de horas faltantes com 10 minutos antes na segunda marcação e 11 minutos depois na terceira marcação
@@ -433,8 +433,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 21, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 17: Ocorrência de horas faltantes com 11 minutos antes na segunda marcação e 10 minutos depois na terceira marcação
@@ -457,8 +457,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 21, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 18: Ocorrência de horas faltantes com 11 minutos antes na segunda marcação e 11 minutos depois na terceira marcação
@@ -481,8 +481,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 22, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 		
 	//TC1 - Cenário 19: Ocorrência de horas faltantes com 6 minutos depois da primeira marcação, 6 minutos antes na segunda marcação, 6 minutos depois da terceira marcação e 6 minutos antes da ultima marcação
@@ -505,8 +505,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 24, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}	
 	
 	//TC1 - Cenário 20: Ocorrência de horas faltantes com 4 marcações padrão e duas de intervalo de 1h; Ocorrência de marcações excedentes com 6 marcações
@@ -531,8 +531,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(1, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 21: Ocorrência de marcações excedentes com 5 marcações
@@ -557,8 +557,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(null, apuracao.getHorasAbonadas());
 		Assert.assertEquals(true, apuracao.getInconsistente());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}	
 	
 	//TC1 - Cenário 22: Ocorrência de marcações faltantes com 3 marcações
@@ -581,8 +581,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(null, apuracao.getHorasAbonadas());
 		Assert.assertEquals(true, apuracao.getInconsistente());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 23: Ocorrência de marcações faltantes com 2 marcações; Ocorrência de horas ininterruptas maior que 6h
@@ -603,8 +603,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 24: Ocorrência de marcações faltantes com 2 marcações; Ocorrência de horas faltantes
@@ -625,8 +625,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(4, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}	
 	
 	//TC1 - Cenário 25: Ocorrência de marcações faltantes com 1 marcação
@@ -647,8 +647,8 @@ public class ApuradorMarcacoesTest {
 		//Assert.assertEquals(new LocalTime(8, 0, 0), apuracao.getHorasFaltantes());
 		//Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 
 	//TC1 - Cenário 26: Ocorrência de horas excedentes com 11 minutos antes na primeira marcação e 10 minutos depois na última marcação
@@ -671,8 +671,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 27: Ocorrência de horas excedentes com 10 minutos antes na primeira marcação e 11 minutos depois na última marcação
@@ -695,8 +695,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 28: Ocorrência de horas excedentes com 11 minutos antes na primeira marcação e 11 minutos depois na última marcação
@@ -719,8 +719,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 29: Ocorrência de horas excedentes com 10 minutos depois na segunda marcação e 11 minutos antes na terceira marcação; Ocorrência de intervalo de almoço menor que 1h
@@ -743,8 +743,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 30: Ocorrência de horas excedentes com 11 minutos depois na segunda marcação e 10 antes depois na terceira marcação; Ocorrência de intervalo de almoço menor que 1h
@@ -767,8 +767,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 
 	//TC1 - Cenário 31: Ocorrência de horas excedentes com 11 minutos depois na segunda marcação e 11 minutos antes na terceira marcação; Ocorrência de intervalo de almoço menor que 1h
@@ -791,8 +791,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 32: Ocorrência de intervalo de almoço menor que 1h com 1 minuto depois na segunda marcação e 0 minuto antes na terceira marcação
@@ -815,8 +815,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 33: Ocorrência de intervalo de almoço menor que 1h com 0 minuto depois na segunda marcação e 1 minuto antes na terceira marcação
@@ -839,8 +839,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 34: Ocorrência de interjornada menor que 11h com início do trabalho às 8h do dia 1 e nova jornada às 3:59 do dia seguinte; Ocorrência de marcações fora da escala padrão
@@ -957,8 +957,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 37: Ocorrência de horas ininterruptas maior que 6h com intervalo no meio da tarde
@@ -981,8 +981,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 38: Ocorrência de intervalo menor que 15min entre período de 6h após o almoço e 1h extra à noite
@@ -1007,8 +1007,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 	//TC1 - Cenário 39: Ocorrência de horas excedentes por trabalho no Feriado
@@ -1031,8 +1031,8 @@ public class ApuradorMarcacoesTest {
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
 		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
 		// Não deve ter ocorrido nenhuma aprovação:
-		Assert.assertNull(apuracao.getDataAprovacao());
-		Assert.assertNull(apuracao.getResponsavelAprovacao());
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
 }

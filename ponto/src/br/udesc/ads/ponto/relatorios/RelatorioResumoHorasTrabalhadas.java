@@ -38,7 +38,7 @@ public class RelatorioResumoHorasTrabalhadas {
 	public List<ResumoHorasTrabalhadasResult> consultar(LocalDate dataInicial, LocalDate dataFinal, List<Colaborador> colaboradores) {
 		List<ResumoHorasTrabalhadasResult> result = new ArrayList<>();
 		for (Colaborador colaborador : colaboradores) {
-			List<Apuracao> apuracoes = ApuracaoService.get().getApuracoesAprovadas(dataInicial, dataFinal, colaborador);
+			List<Apuracao> apuracoes = ApuracaoService.get().getApuracoesConfirmadas(dataInicial, dataFinal, colaborador, true);
 			ResumoHorasTrabalhadasResult item = new ResumoHorasTrabalhadasResult();
 			item.setColaborador(colaborador);
 			for (Apuracao apuracao : apuracoes) {

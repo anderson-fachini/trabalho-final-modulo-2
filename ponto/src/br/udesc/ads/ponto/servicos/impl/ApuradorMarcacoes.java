@@ -1,7 +1,6 @@
 package br.udesc.ads.ponto.servicos.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Config;
 import br.udesc.ads.ponto.entidades.DiaSemana;
 import br.udesc.ads.ponto.entidades.Escala;
-import br.udesc.ads.ponto.entidades.Marcacao;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
@@ -47,6 +45,16 @@ public class ApuradorMarcacoes {
 		for (Apuracao apuracao : apuracoes) {
 			processarApuracao(apuracao);
 		}
+
+		// TODO Descobrir os dias trabalhados que não tem nenhuma marcação e
+		// criar apurações para eles.
+		/*
+		 * No momento que estou importando da leitora, eu vejo qual é a data da
+		 * última apuração que tinha na base, e qual é a data da última apuração
+		 * que está sendo recebida aí faço uma varredura entre essas duas datas,
+		 * ignorando os feriados e finais de semana. O que não tiver marcação,
+		 * eu crio uma apuração nova com as devidas ocorrências.
+		 */
 
 		// Persiste:
 		EntityTransaction transaction = entityManager.getTransaction();
@@ -99,14 +107,14 @@ public class ApuradorMarcacoes {
 		if (isMarcacoesForaDaEscalaPadrao(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FORA_DA_ESCALA);
 		}
-		
-		List<LocalTime> marcacoes = getSequenciaMarcacoes(apuracao);
+
+		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		if (marcacoes.size() < 4) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FALTANTES);
 		} else if (marcacoes.size() > 4) {
 			apuracao.addOcorrencia(Ocorrencia.MARCACOES_EXCEDENTES);
 		}
-		
+
 		if (isIntervaloAlmocoIncompleto(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.INTERVALO_ALMOCO_INCOMPLETO);
 		}
@@ -175,7 +183,7 @@ public class ApuradorMarcacoes {
 	private boolean isIntervaloInterJornadasIncompleto(Apuracao apuracao) {
 		int min = Manager.get().getConfig().getIntervaloMinimoInterjornadas();
 		min *= 60 * 1000; // Converte em millis
-		List<LocalTime> marcacoesHoje = getSequenciaMarcacoes(apuracao);
+		List<LocalTime> marcacoesHoje = apuracao.getSequenciaMarcacoes();
 		if (marcacoesHoje.isEmpty()) {
 			// Se o cara nem veio, então já era.
 			return false;
@@ -191,7 +199,7 @@ public class ApuradorMarcacoes {
 			// Não veio trabalhar ontem (normal se for sábado/domingo/feriado).
 			return false;
 		}
-		List<LocalTime> marcacoesOntem = getSequenciaMarcacoes(ontem);
+		List<LocalTime> marcacoesOntem = apuracao.getSequenciaMarcacoes();
 		if (marcacoesOntem.isEmpty()) {
 			// Não veio ontem.
 			return false;
@@ -304,7 +312,7 @@ public class ApuradorMarcacoes {
 	}
 
 	private List<Intervalo> getIntervalos(Apuracao apuracao) {
-		return getIntervalos(getSequenciaMarcacoes(apuracao));
+		return getIntervalos(apuracao.getSequenciaMarcacoes());
 	}
 
 	private List<Intervalo> getIntervalos(Escala escala, DiaSemana diaSemana) {
@@ -332,7 +340,7 @@ public class ApuradorMarcacoes {
 		int margem = config.getMargemMarcacoes();
 		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
 		List<LocalTime> escala = config.getEscalaPadrao().getSequenciaMarcacoes(diaSemana);
-		List<LocalTime> marcacoes = getSequenciaMarcacoes(apuracao);
+		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		for (LocalTime marcacao : marcacoes) {
 			if (!estaNaEscala(marcacao, escala, margem)) {
 				return true;
@@ -356,7 +364,7 @@ public class ApuradorMarcacoes {
 	}
 
 	private boolean calcularHoras(Apuracao apuracao) {
-		List<LocalTime> marcacoes = getSequenciaMarcacoes(apuracao);
+		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		int qtdMarcacoes = marcacoes.size();
 		if (qtdMarcacoes % 2 != 0) {
 			// Não é possível calcular com marcações ímpares.
@@ -382,8 +390,8 @@ public class ApuradorMarcacoes {
 		int result = 0;
 		for (int i = 0; i < apuracao.getAbonosSize(); ++i) {
 			Abono abono = apuracao.getAbono(i);
-			LocalTime inicio = ajustarPrecisao(abono.getHoraInicio());
-			LocalTime fim = ajustarPrecisao(abono.getHoraFim());
+			LocalTime inicio = TimeUtils.ajustarPrecisao(abono.getHoraInicio());
+			LocalTime fim = TimeUtils.ajustarPrecisao(abono.getHoraFim());
 			Intervalo intervalo = new Intervalo(inicio, fim, TipoIntervalo.TRABALHADO);
 			result += intervalo.getMillis();
 		}
@@ -437,8 +445,8 @@ public class ApuradorMarcacoes {
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
 
 		LocalDateTime agora = LocalDateTime.now();
-		apuracao.setDataAprovacao(agora);
-		apuracao.setResponsavelAprovacao(usuario);
+		apuracao.setDataConfirmacao(agora);
+		apuracao.setResponsavelConfirmacao(usuario);
 
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
@@ -469,25 +477,6 @@ public class ApuradorMarcacoes {
 			transaction.rollback();
 			throw ex;
 		}
-	}
-
-	private List<LocalTime> getSequenciaMarcacoes(Apuracao apuracao) {
-		List<LocalTime> result = new ArrayList<>();
-		for (int i = 0; i < apuracao.getMarcacoesSize(); ++i) {
-			Marcacao mar = apuracao.getMarcacao(i);
-			if (!mar.isExcluida()) {
-				result.add(ajustarPrecisao(mar.getHora()));
-			}
-		}
-		Collections.sort(result);
-		return result;
-	}
-	
-	// Trunca em minutos. Ignora segundos e millis.
-	private LocalTime ajustarPrecisao(LocalTime localTime) {
-		int hours = localTime.getHourOfDay();
-		int minutes = localTime.getMinuteOfHour();
-		return new LocalTime(hours, minutes, 0);
 	}
 
 }

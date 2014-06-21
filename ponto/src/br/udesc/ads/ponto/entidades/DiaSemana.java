@@ -52,6 +52,10 @@ public enum DiaSemana {
 				SEXTA_FEIRA };
 	}
 
+	public boolean isFinalDeSemana() {
+		return this == SABADO || this == DOMINGO;
+	}
+
 	public static DiaSemana fromLocalDate(LocalDate date) {
 		switch (date.getDayOfWeek()) {
 		case DateTimeConstants.SUNDAY:

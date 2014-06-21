@@ -26,6 +26,7 @@ import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService;
 import br.udesc.ads.ponto.services.leitoraponto.LeitoraPontoService_Service;
 import br.udesc.ads.ponto.services.leitoraponto.RegistroMarcacao;
 import br.udesc.ads.ponto.servicos.ColaboradorService;
+import br.udesc.ads.ponto.util.TimeUtils;
 
 public class ImportadorMarcacoes {
 
@@ -116,6 +117,7 @@ public class ImportadorMarcacoes {
 			Long codFunc = lida.getCodFuncionario();
 			LocalDate data = lida.getData();
 			LocalTime hora = lida.getHora();
+			hora = TimeUtils.ajustarPrecisao(hora);
 			ApuracaoChave chave = new ApuracaoChave(codFunc, data);
 
 			Apuracao apuracao = map.get(chave);

@@ -9,5 +9,12 @@ public class TimeUtils {
 		result /= 1000 * 60 * 60;
 		return result;
 	}
+	
+	// Trunca em minutos. Ignora segundos e millis.
+	public static LocalTime ajustarPrecisao(LocalTime localTime) {
+		int hours = localTime.getHourOfDay();
+		int minutes = localTime.getMinuteOfHour();
+		return new LocalTime(hours, minutes, 0);
+	}
 
 }
