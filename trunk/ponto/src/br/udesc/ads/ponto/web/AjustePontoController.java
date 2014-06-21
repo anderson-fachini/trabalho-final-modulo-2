@@ -1,30 +1,60 @@
 package br.udesc.ads.ponto.web;
 
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.joda.time.LocalDate;
+import javax.faces.model.SelectItem;
 
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
+import br.udesc.ads.ponto.entidades.Setor;
+import br.udesc.ads.ponto.entidades.Usuario;
+import br.udesc.ads.ponto.servicos.ColaboradorService;
 
 @ManagedBean(name = "ajustePonto")
 @SessionScoped
-public class AjustePontoController {
+public class AjustePontoController implements Serializable {
+	
+	private static final long serialVersionUID = 6585193392870549078L;
 	
 	private List<Apuracao> apuracoes;
-	private Colaborador colaboradorSelecionado;
-	private LocalDate dataInicio;
-	private LocalDate dataFim;
+	private List<SelectItem> colaboradores;
+	private Map<Long, Colaborador> colaboradoresMapa;
+	
+	private Long codColabSelecionado;
+	private Date dataInicial;
+	private Date dataFinal;
+	private Date maxDate = new Date(System.currentTimeMillis());
+	
+	private boolean apenasExcecoes = true;
 		
 	public AjustePontoController() {
-		
+		buscaListaColaboradores();
 	}
 	
 	private void buscaApuracoes() {
 		//TODO
+	}
+	
+	private void buscaListaColaboradores() {
+		Usuario usuarioAutenticado = new MenuController().getUsuarioAutenticado();
+		Setor setor = usuarioAutenticado.getColaborador().getSetor();
+		
+		colaboradores = new ArrayList<SelectItem>();
+		colaboradores.add(new SelectItem(0L, "-- Selecione --"));
+		
+		colaboradoresMapa = new HashMap<Long, Colaborador>();
+		
+		for (Colaborador c : ColaboradorService.get().getColaboradoresPorSetor(setor)) {
+			colaboradores.add(new SelectItem(c.getId(), c.getNome()));
+			colaboradoresMapa.put(c.getId(), c);
+		}
 	}
 
 	public List<Apuracao> getApuracoes() {
@@ -35,28 +65,52 @@ public class AjustePontoController {
 		this.apuracoes = apuracoes;
 	}
 
-	public Colaborador getColaboradorSelecionado() {
-		return colaboradorSelecionado;
+	public Date getDataInicial() {
+		return dataInicial;
 	}
 
-	public void setColaboradorSelecionado(Colaborador colaboradorSelecionado) {
-		this.colaboradorSelecionado = colaboradorSelecionado;
+	public void setDataInicial(Date dataInicio) {
+		this.dataInicial = dataInicio;
 	}
 
-	public LocalDate getDataInicio() {
-		return dataInicio;
+	public Date getDataFinal() {
+		return dataFinal;
 	}
 
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
+	public void setDataFinal(Date dataFim) {
+		this.dataFinal = dataFim;
 	}
 
-	public LocalDate getDataFim() {
-		return dataFim;
+	public List<SelectItem> getColaboradores() {
+		return colaboradores;
 	}
 
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
+	public void setColaboradores(List<SelectItem> colaboradores) {
+		this.colaboradores = colaboradores;
+	}
+
+	public Long getCodColabSelecionado() {
+		return codColabSelecionado;
+	}
+
+	public void setCodColabSelecionado(Long codColabSelecionado) {
+		this.codColabSelecionado = codColabSelecionado;
+	}
+
+	public boolean isApenasExcecoes() {
+		return apenasExcecoes;
+	}
+
+	public void setApenasExcecoes(boolean apenasExcecoes) {
+		this.apenasExcecoes = apenasExcecoes;
+	}
+
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
 	}
 	
 }
