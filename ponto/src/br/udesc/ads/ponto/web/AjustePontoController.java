@@ -1,7 +1,7 @@
 package br.udesc.ads.ponto.web;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +11,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
+import br.udesc.ads.ponto.entidades.Marcacao;
 import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
+import br.udesc.ads.ponto.servicos.ApuracaoService;
 import br.udesc.ads.ponto.servicos.ColaboradorService;
+import br.udesc.ads.ponto.util.DataConverter;
+import br.udesc.ads.ponto.util.JsfUtils;
+import br.udesc.ads.ponto.util.Messages;
 
 @ManagedBean(name = "ajustePonto")
 @SessionScoped
@@ -33,13 +41,37 @@ public class AjustePontoController implements Serializable {
 	private Date maxDate = new Date(System.currentTimeMillis());
 	
 	private boolean apenasExcecoes = true;
+	private boolean buscouApuracoes = false;
 		
 	public AjustePontoController() {
 		buscaListaColaboradores();
 	}
 	
-	private void buscaApuracoes() {
-		//TODO
+	public void buscaApuracoes() {
+		boolean temErros = validaBusca();
+		
+		if (!temErros) {
+			apuracoes = ApuracaoService.get().getApuracoesPorPeriodo(LocalDate.fromDateFields(dataInicial), 
+																	 LocalDate.fromDateFields(dataFinal), 
+																	 colaboradoresMapa.get(codColabSelecionado));
+			buscouApuracoes = true;
+		}
+	}
+	
+	private boolean validaBusca() {
+		boolean temErros = false;
+		
+		if (codColabSelecionado == 0) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgSelecionarColaborador"));
+		}
+		
+		if (dataInicial.after(dataFinal)) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgDataInicialMaiorIgual"));
+		}
+		
+		return temErros;
 	}
 	
 	private void buscaListaColaboradores() {
@@ -111,6 +143,26 @@ public class AjustePontoController implements Serializable {
 
 	public void setMaxDate(Date maxDate) {
 		this.maxDate = maxDate;
+	}
+	
+	public boolean isBuscouApuracoes() {
+		return buscouApuracoes;
+	}
+
+	public void setBuscouApuracoes(boolean buscouApuracoes) {
+		this.buscouApuracoes = buscouApuracoes;
+	}
+
+	public String getDataFormatadaDiaMes(LocalDate data) {
+		return DataConverter.formataData(data.toDate(), DataConverter.formatoDDMM);
+	}
+	
+	public String getDiaSemanaData(LocalDate data) {
+		return DataConverter.formataData(data.toDate(), DataConverter.formatoDiaSemanaExtenso);
+	}
+	
+	public String getHoraFormatada(LocalTime hora) {
+		return DataConverter.formataData(hora.toDateTimeToday().toDate(), DataConverter.formatoHHMM);
 	}
 	
 }
