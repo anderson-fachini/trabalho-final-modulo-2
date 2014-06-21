@@ -1,5 +1,6 @@
 package br.udesc.ads.ponto.entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,9 @@ import org.joda.time.LocalTime;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "colaborador_id", "data" }))
-public class Apuracao {
+public class Apuracao implements Serializable {
+
+	private static final long serialVersionUID = -9070252170202962578L;
 
 	@Id
 	@GeneratedValue
@@ -221,6 +224,10 @@ public class Apuracao {
 
 	public Ocorrencia getOcorrencia(int index) {
 		return this.ocorrencias.get(index);
+	}
+
+	public List<Marcacao> getMarcacoes() {
+		return marcacoes;
 	}
 
 }
