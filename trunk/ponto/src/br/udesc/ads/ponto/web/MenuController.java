@@ -18,6 +18,10 @@ public class MenuController {
 		usuarioAutenticado = (Usuario) session.getAttribute(Constants.SESSION_USER_ATTR);
 	}
 	
+	public Usuario getUsuarioAutenticado() {
+		return usuarioAutenticado;
+	}
+	
 	public String getNomeUsuarioAutenticado() {
 		return usuarioAutenticado.getNomeUsuario();
 	}

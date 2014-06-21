@@ -40,3 +40,37 @@
 .text-center {
 	text-align: center;
 }
+
+#filtrosRelatorio fieldset {
+	border: 1px solid #000;
+	border-radius: 5px;
+}
+
+#dadosRelatorio {
+	width: 610px;
+}
+
+.titulo-relatorio {
+	text-align: center;
+	font-size: 18px;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.table-report {
+    margin-bottom: 20px !important;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-report tbody th {
+    text-align: left;
+}
+
+.table-report th, .table-report td {
+    margin: 0px;
+    padding: 5px;
+    border: 1px solid #aaa;
+}
