@@ -40,7 +40,13 @@
 				<p class="text-center"><h:outputText value="#{msg.msgNaoHaDadosListar}" /></p>
 			</h:panelGroup>
 			
-			<h:panelGrid rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
+			<h:commandLink styleClass="link-imprimir">
+				<h:graphicImage value="/images/printerIcon.png" />
+				<h:outputText value="#{msg.imprimir}" />
+				<ace:printer for="conteudoRelatorio" />
+			</h:commandLink>
+			
+			<h:panelGrid id="conteudoRelatorio" rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
 				<h1 class="titulo-relatorio">#{msg.tituloRelatorioSaldoBh}</h1>
 				<h:outputText value="#{msg.periodo}: #{relSaldoBh.dataInicialFormatada} #{msg.ate} #{relSaldoBh.dataFinalFormatada}" style="margin-bottom: 15px;" />
 				
