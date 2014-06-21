@@ -1035,4 +1035,24 @@ public class ApuradorMarcacoesTest {
 		Assert.assertNull(apuracao.getResponsavelConfirmacao());
 	}
 	
+	//TC1 - Cenário 40: Ocorrência de todas marcações faltantes
+	@Test
+	public void testApuracao_40__MarcacoesFaltantes_6() {
+		Apuracao apuracao = new Apuracao();
+		apuracao.setColaborador(colaborador);
+		apuracao.setData(new LocalDate(2014, 1, 1));
+
+		apurador.processarApuracao(apuracao);
+
+		Assert.assertEquals(true, apuracao.getApurada());
+		assertOcorrencias(new Ocorrencia[] { Ocorrencia.MARCACOES_FALTANTES }, apuracao);
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasTrabalhadas());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasExcedentes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasFaltantes());
+		Assert.assertEquals(new LocalTime(0, 0, 0), apuracao.getHorasAbonadas());
+		// Não deve ter ocorrido nenhuma aprovação:
+		Assert.assertNull(apuracao.getDataConfirmacao());
+		Assert.assertNull(apuracao.getResponsavelConfirmacao());
+	}
+	
 }
