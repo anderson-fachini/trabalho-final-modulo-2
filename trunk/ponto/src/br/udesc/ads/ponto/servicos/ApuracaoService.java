@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -132,7 +133,7 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Busca as apurações aprovadas de um colaborador em um determinado período.
+	 * Busca as apurações confirmadas/não confirmadas de um colaborador em um determinado período.
 	 * 
 	 * @param dataInicial
 	 *            A data inicial de pesquisa
@@ -140,17 +141,21 @@ public class ApuracaoService {
 	 *            A data final de pesquisa
 	 * @param colaborador
 	 *            O colaborador a ser filtrado
-	 * @return Lista de apurações aprovadas do colaborador dentro do período
+	 * @param confirmadas
+	 *            True para filtrar somente as confirmadas. False para filtrar
+	 *            somente as não confirmadas.
+	 * @return Lista de apurações do colaborador dentro do período
 	 *         especificado. Se não encontrar nada retorna a lista vazia.
 	 */
-	public List<Apuracao> getApuracoesAprovadas(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador) {
+	public List<Apuracao> getApuracoesConfirmadas(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador, boolean confirmadas) {
 		EntityManager em = Manager.get().getEntityManager();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Apuracao> query = cb.createQuery(Apuracao.class);
 		Root<Apuracao> root = query.from(Apuracao.class);
+		Path<Object> dataConfirmacao = root.get("dataConfirmacao");
 		Predicate[] filtros = { //
 		cb.equal(root.get("colaborador"), colaborador), //
-				cb.isNotNull(root.get("dataAprovacao")), //
+				confirmadas ? cb.isNotNull(dataConfirmacao) : cb.isNull(dataConfirmacao), //
 				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
 		};
 		query.select(root).where(filtros).orderBy(cb.asc(root.get("data")));
