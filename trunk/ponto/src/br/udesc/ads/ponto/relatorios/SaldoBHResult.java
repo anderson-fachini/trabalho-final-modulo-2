@@ -1,9 +1,13 @@
 package br.udesc.ads.ponto.relatorios;
 
+import java.io.Serializable;
+
 import br.udesc.ads.ponto.entidades.Colaborador;
 
-public class SaldoBHResult {
+public class SaldoBHResult implements Serializable {
 
+	private static final long serialVersionUID = 6325962788420839259L;
+	
 	private Colaborador colaborador;
 	private double entradasBH;
 	private double saidasBH;
