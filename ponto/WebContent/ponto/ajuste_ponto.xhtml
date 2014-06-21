@@ -10,6 +10,27 @@
 	<ui:param name="pageTitle" value="#{msg.ajustePonto}" />
 
 	<ui:define name="pageContent">
-
+		<ice:outputStyle href="/ponto/css/ajustePonto.css" />
+		
+		<h:form styleClass="bordered-form main-form">
+			<h:outputLabel value="#{msg.colaborador}" />
+			<h:selectOneMenu value="#{ajustePonto.codColabSelecionado}" styleClass="side-margin select-colabs">
+				<f:selectItems value="#{ajustePonto.colaboradores}" />
+			</h:selectOneMenu>
+			
+			<h:outputLabel value="#{msg.periodo}" />
+			<ace:dateTimeEntry value="#{ajustePonto.dataInicial}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true" maxdate="#{ajustePonto.maxDate}" styleClass="side-margin" />
+			<h:outputLabel value="#{msg.ate}" />
+			<ace:dateTimeEntry value="#{ajustePonto.dataFinal}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true" maxdate="#{ajustePonto.maxDate}" styleClass="side-margin" />
+						
+			<h:outputLabel value="#{msg.apenasExcecoes}">
+			<h:selectBooleanCheckbox value="#{ajustePonto.apenasExcecoes}" />
+			</h:outputLabel>
+			
+			<h:commandButton value="#{msg.buscar}" />
+		</h:form>
+		
 	</ui:define>
 </ui:composition>

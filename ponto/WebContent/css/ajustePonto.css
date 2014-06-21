@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+
+.main-form {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+.side-margin {
+	margin: 0 5px;
+}
+
+.select-colabs {
+	width: 380px;
+}
