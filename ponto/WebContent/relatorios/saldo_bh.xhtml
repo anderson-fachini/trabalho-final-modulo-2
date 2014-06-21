@@ -11,35 +11,60 @@
 
 	<ui:define name="pageContent">
 		
-		<h:form id="filtrosRelatorio">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{msg.colaborador}" />
-				<h:selectOneMenu>
-					<f:selectItems />
-				</h:selectOneMenu>
+		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
+			<fieldset>
+				<legend>#{msg.filtros}</legend>
+				<h:panelGrid columns="2" style="margin-left: 50px;">
+					<h:outputLabel value="#{msg.colaborador}" />
+					<h:selectOneMenu value="#{relSaldoBh.colaboradorSelecionado}">
+						<f:selectItems value="#{relSaldoBh.colaboradores}" />
+					</h:selectOneMenu>
+					
+					<h:outputLabel value="#{msg.dataInicial}" />
+					<ace:dateTimeEntry value="#{relSaldoBh.dataInicial}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}" />
+						
+					<h:outputLabel value="#{msg.dataFinal}" />
+					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}" />
+						
+					<h:commandButton value="#{msg.gerar}" action="#{relSaldoBh.gerarRelatorio}" />
+				</h:panelGrid>
 				
-				<h:outputLabel value="#{msg.dataInicial}" />
-				<ace:dateTimeEntry timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-					renderAsPopup="true" navigator="true" maxdate="" />
-					
-				<h:outputLabel value="#{msg.dataFinal}" />
-				<ace:dateTimeEntry timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-					renderAsPopup="true" navigator="true" maxdate="" />
-					
-				<h:commandButton value="#{msg.gerar}" />
-			</h:panelGrid>
+				<ace:messages />
+			</fieldset>
 		</h:form>
 		
-		<h:form id="dadosRelatorio">
-			<h:outputText value="#{msg.tituloRelatorioSaldoBh}" style="text-align: center; margin-bottom: 15px;" />
-			<h:outputText value="#{msg.colaborador}:" />
-			<h:outputText value="#{msg.periodo} #{msg.ate}" />
+		<h:form id="dadosRelatorio" rendered="#{relSaldoBh.listouRelatorio}" styleClass="centralized-form bordered-form">
+			<h:panelGroup rendered="#{!relSaldoBh.existemDadosListar}">
+				<p class="text-center"><h:outputText value="#{msg.msgNaoHaDadosListar}" /></p>
+			</h:panelGroup>
 			
-			<ace:dataTable var="saldoBh">
-				<ace:column headerText="#{msg.totalizador}">
-					<h:outputText value="" />
-				</ace:column>
-			</ace:dataTable>
+			<h:panelGrid rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
+				<h1 class="titulo-relatorio">#{msg.tituloRelatorioSaldoBh}</h1>
+				<h:outputText value="#{msg.periodo}: #{relSaldoBh.dataInicialFormatada} #{msg.ate} #{relSaldoBh.dataFinalFormatada}" style="margin-bottom: 15px;" />
+				
+				<ui:repeat var="saldo" value="#{relSaldoBh.saldosBh}">
+				<p style="margin-bottom: 5px;"><strong>#{msg.colaborador}:</strong> #{saldo.colaborador.nome}</p>
+				<table class="table-report" style="margin-bottom: 15px;">
+					<thead>
+						<tr>
+							<th class="ui-widget-header">#{msg.totalizador}</th>
+							<th class="ui-widget-header">#{msg.valor}</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+							<tr><th>#{msg.bancoHoras} (+)</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.entradasBH)}</td></tr>
+							<tr><th>#{msg.bancoHoras} (-)</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saidasBH)}</td></tr>
+							<tr><th>#{msg.ajustesManuaisBH}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.ajustesManuaisBH)}</td></tr>
+							<tr><th>#{msg.saldoInicialPeriodo}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saldoInicialPeriodo)}</td></tr>
+							<tr><th>#{msg.saldoFinalPeriodo}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saldoFinalPeriodo)}</td></tr>
+						
+					</tbody>
+				</table>
+				</ui:repeat>
+			</h:panelGrid>
 		</h:form>
 		
 	</ui:define>
