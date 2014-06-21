@@ -1,6 +1,5 @@
 package br.udesc.ads.ponto.servicos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -108,33 +107,54 @@ public class ApuracaoService {
 	}
 
 	/**
-	 * Método que busca as apurações de um colaborador de um determinado período
+	 * Busca as apurações de um colaborador em um determinado período.
+	 * 
 	 * @param dataInicial
+	 *            A data inicial de pesquisa
 	 * @param dataFinal
+	 *            A data final de pesquisa
 	 * @param colaborador
+	 *            O colaborador a ser filtrado
 	 * @return Lista de apurações do colaborador dentro do período especificado.
-	 * Se não encontrar nada retorna a lista vazia.
+	 *         Se não encontrar nada retorna a lista vazia.
 	 */
 	public List<Apuracao> getApuracoesPorPeriodo(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador) {
-		List<Apuracao> apuracoes = new ArrayList<Apuracao>();
-		
-		EntityManager entity = Manager.get().getEntityManager();
-		CriteriaBuilder builder = entity.getCriteriaBuilder();
-		CriteriaQuery<Apuracao> criteria = builder.createQuery(Apuracao.class);
+		EntityManager em = Manager.get().getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Apuracao> criteria = cb.createQuery(Apuracao.class);
 		Root<Apuracao> root = criteria.from(Apuracao.class);
-		
-		Predicate[] filtros = {
-			builder.equal(root.get("colaborador"), colaborador),
-			builder.between(root.<LocalDate>get("data"), dataInicial, dataFinal)
+		Predicate[] filtros = {//
+		cb.equal(root.get("colaborador"), colaborador),//
+				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
 		};
-		
-		criteria
-			.select(root)
-			.where(filtros);
-		
-		apuracoes = entity.createQuery(criteria).getResultList();
-		
-		return apuracoes;
+		criteria.select(root).where(filtros).orderBy(cb.asc(root.get("data")));
+		return em.createQuery(criteria).getResultList();
+	}
+
+	/**
+	 * Busca as apurações aprovadas de um colaborador em um determinado período.
+	 * 
+	 * @param dataInicial
+	 *            A data inicial de pesquisa
+	 * @param dataFinal
+	 *            A data final de pesquisa
+	 * @param colaborador
+	 *            O colaborador a ser filtrado
+	 * @return Lista de apurações aprovadas do colaborador dentro do período
+	 *         especificado. Se não encontrar nada retorna a lista vazia.
+	 */
+	public List<Apuracao> getApuracoesAprovadas(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador) {
+		EntityManager em = Manager.get().getEntityManager();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Apuracao> query = cb.createQuery(Apuracao.class);
+		Root<Apuracao> root = query.from(Apuracao.class);
+		Predicate[] filtros = { //
+		cb.equal(root.get("colaborador"), colaborador), //
+				cb.isNotNull(root.get("dataAprovacao")), //
+				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
+		};
+		query.select(root).where(filtros).orderBy(cb.asc(root.get("data")));
+		return em.createQuery(query).getResultList();
 	}
 
 }
