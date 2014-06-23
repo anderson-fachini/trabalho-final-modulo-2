@@ -18,6 +18,7 @@ public class PhaseListenerControlAccess implements PhaseListener {
 	public static final String PREFIXO_PAGINA_BH = "/banco_horas";
 	public static final String PREFIXO_PAGINA_REL_APURACAO_PONTO = "/relatorios/resumo_apuracoes";
 	public static final String PREFIXO_PAGINA_REL_HORAS_TRAB = "/relatorios/resumo_horas";
+	public static final String PREFIXO_PAGINA_REL_SALDO_BH = "/relatorios/saldo_bh";
 	
 	@Override
 	public void afterPhase(PhaseEvent arg0) {
@@ -72,7 +73,8 @@ public class PhaseListenerControlAccess implements PhaseListener {
 		if (viewId.startsWith(PREFIXO_PAGINA_AJUSTE_PONTO) ||
 				viewId.startsWith(PREFIXO_PAGINA_REL_APURACAO_PONTO) ||
 				viewId.startsWith(PREFIXO_PAGINA_BH) ||
-				viewId.startsWith(PREFIXO_PAGINA_REL_HORAS_TRAB)) {
+				viewId.startsWith(PREFIXO_PAGINA_REL_HORAS_TRAB) ||
+				viewId.startsWith(PREFIXO_PAGINA_REL_SALDO_BH)) {
 			
 			return true;
 		}
