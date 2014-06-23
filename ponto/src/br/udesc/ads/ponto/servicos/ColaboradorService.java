@@ -110,7 +110,15 @@ public class ColaboradorService {
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Colaborador> query = cb.createQuery(Colaborador.class);
 		Root<Colaborador> root = query.from(Colaborador.class);
-		query.select(root).where(cb.equal(root.get("setor"), setor));
+		
+		query.select(root);
+		
+		if (setor != null) {
+			query.where(cb.equal(root.get("setor"), setor));
+		}
+		
+		query.orderBy(cb.asc(root.get("nome")));
+		
 		return entityManager.createQuery(query).getResultList();
 	}
 	

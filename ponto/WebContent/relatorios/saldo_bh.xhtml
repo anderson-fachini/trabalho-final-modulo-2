@@ -22,11 +22,13 @@
 					
 					<h:outputLabel value="#{msg.dataInicial}" />
 					<ace:dateTimeEntry value="#{relSaldoBh.dataInicial}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}" />
+						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}"
+						required="true" requiredMessage="#{msg.msgInformeDataInicial}" />
 						
 					<h:outputLabel value="#{msg.dataFinal}" />
 					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}" />
+						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}"
+						required="true" requiredMessage="#{msg.msgInformeDataFinal}" />
 						
 					<h:commandButton value="#{msg.gerar}" action="#{relSaldoBh.gerarRelatorio}" />
 				</h:panelGrid>
