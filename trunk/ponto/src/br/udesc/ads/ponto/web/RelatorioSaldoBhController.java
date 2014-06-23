@@ -3,9 +3,9 @@ package br.udesc.ads.ponto.web;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -72,9 +72,14 @@ public class RelatorioSaldoBhController implements Serializable {
 	
 	private void buscaColaboradores() {
 		Usuario usuarioAutenticado = new MenuController().getUsuarioAutenticado();
-		Setor setor = usuarioAutenticado.getColaborador().getSetor();
+		Colaborador colaborador = usuarioAutenticado.getColaborador();
+		Setor setor = null;
+		
+		if (colaborador != null) {
+			setor = colaborador.getSetor();
+		}
 
-		colaboradoresMap = new HashMap<Long, Colaborador>();
+		colaboradoresMap = new TreeMap<Long, Colaborador>();
 		
 		colaboradores = new ArrayList<SelectItem>();
 		colaboradores.add(new SelectItem(0L, "Todos"));
