@@ -13,7 +13,9 @@ import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.ApuracaoService;
 import br.udesc.ads.ponto.servicos.UsuarioService;
+import br.udesc.ads.ponto.servicos.impl.ImportadorMarcacoes;
 import br.udesc.ads.ponto.util.CriptografaSenha;
 import br.udesc.ads.ponto.util.StringUtils;
 
@@ -49,10 +51,20 @@ public class PopuladorBasePadrao {
 			criarUsuario(nomeUsuario, nomeUsuario, PerfilUsuario.GERENTE, gerente);
 		}
 	}
-
-	public static void main(String[] args) {
-		criarUsuariosParaOsGerentes();
-		// criarUsuarioAdmin();
+	
+	public static void resetarMarcacoes() {
+		new ImportadorMarcacoes().resetarLeitora();
 	}
-
+	
+	public static void main(String[] args) {
+//		criarUsuarioAdmin();
+//		criarUsuariosParaOsGerentes();
+		
+//		resetarMarcacoes();
+		
+//		ApuracaoService.get().importarMarcacoes();
+		ApuracaoService.get().apurarMarcacoesPendentes();
+		
+	}
+	
 }

@@ -45,7 +45,7 @@ public class ImportadorMarcacoes {
 	public void importar() {
 		// Importa da leitora para uma fila no banco, ignorando duplicidades:
 		importarRegistrosDaLeitora();
-		
+
 		// Seleciona da fila e converte para Apuracoes:
 		List<MarcacaoLida> lidas = selecionarMarcacoesLidas();
 		List<Apuracao> apuracoes = converterRegistrosEmApuracoes(lidas);
@@ -65,6 +65,10 @@ public class ImportadorMarcacoes {
 			transaction.rollback();
 			throw ex;
 		}
+	}
+
+	public void resetarLeitora() {
+		leitora.resetarConfirmacoes();
 	}
 
 	private void importarRegistrosDaLeitora() {
