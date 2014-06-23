@@ -1,8 +1,12 @@
 package br.udesc.ads.ponto.servicos.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -26,6 +30,7 @@ import br.udesc.ads.ponto.entidades.Escala;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
+import br.udesc.ads.ponto.servicos.ColaboradorService;
 import br.udesc.ads.ponto.servicos.FeriadoService;
 import br.udesc.ads.ponto.util.TimeUtils;
 
@@ -40,21 +45,18 @@ public class ApuradorMarcacoes {
 	public void apurarMarcacoesPendentes() {
 		// Carrega:
 		List<Apuracao> apuracoes = getApuracoesPendentes();
+		if (apuracoes.isEmpty()) {
+			// Se não há nenhuma marcação pendente, ignora.
+			return;
+		}
+		
+		// Descobre faltantes:
+		incluirMarcacoesFaltantes(apuracoes);
 
 		// Processa:
 		for (Apuracao apuracao : apuracoes) {
 			processarApuracao(apuracao);
 		}
-
-		// TODO Descobrir os dias trabalhados que não tem nenhuma marcação e
-		// criar apurações para eles.
-		/*
-		 * No momento que estou importando da leitora, eu vejo qual é a data da
-		 * última apuração que tinha na base, e qual é a data da última apuração
-		 * que está sendo recebida aí faço uma varredura entre essas duas datas,
-		 * ignorando os feriados e finais de semana. O que não tiver marcação,
-		 * eu crio uma apuração nova com as devidas ocorrências.
-		 */
 
 		// Persiste:
 		EntityTransaction transaction = entityManager.getTransaction();
@@ -68,6 +70,83 @@ public class ApuradorMarcacoes {
 			transaction.rollback();
 			throw ex;
 		}
+	}
+
+	private void incluirMarcacoesFaltantes(List<Apuracao> apuracoes) {
+		LocalDate dataInicial = getDataUltimaApurada();
+		if (dataInicial != null) {
+			dataInicial = dataInicial.plusDays(1);
+		} else {
+			// Se não há apuração anterior, assume a data da primeira apuração desse lote
+			dataInicial = apuracoes.get(0).getData();
+		}
+		LocalDate dataFinal = apuracoes.get(apuracoes.size() - 1).getData();
+		List<Apuracao> faltantes = descobrirDatasSemMarcacao(dataInicial, dataFinal, apuracoes);
+		apuracoes.addAll(faltantes);
+		ordenarPorDataEColaborador(apuracoes);
+	}
+
+	private LocalDate getDataUltimaApurada() {
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<LocalDate> query = cb.createQuery(LocalDate.class);
+		Root<Apuracao> root = query.from(Apuracao.class);
+		Predicate condicao = cb.equal(root.get("apurada"), Boolean.TRUE);
+		query.select(root.<LocalDate> get("data")).where(condicao).orderBy(cb.desc(root.get("data")));
+		List<LocalDate> result = entityManager.createQuery(query).setMaxResults(1).getResultList();
+		if (result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
+	}
+
+	private void ordenarPorDataEColaborador(List<Apuracao> apuracoes) {
+		Collections.sort(apuracoes, new Comparator<Apuracao>() {
+
+			@Override
+			public int compare(Apuracao o1, Apuracao o2) {
+				int res = o1.getData().compareTo(o2.getData());
+				if (res != 0) {
+					return res;
+				}
+				return o1.getColaborador().getCodigo().compareTo(o2.getColaborador().getCodigo());
+			}
+
+		});
+	}
+
+	private List<Apuracao> descobrirDatasSemMarcacao(LocalDate dataInicial, LocalDate dataFinal, List<Apuracao> apuracoes) {
+		List<Apuracao> result = new ArrayList<>();
+		Map<ChaveApuracao, Apuracao> mapa = getMapaApuracoes(apuracoes);
+		List<Colaborador> colaboradores = ColaboradorService.get().getColaboradoresAtivos();
+		for (LocalDate data = dataInicial; !data.isAfter(dataFinal); data = data.plusDays(1)) {
+			if (DiaSemana.fromLocalDate(data).isFinalDeSemana()) {
+				continue;
+			}
+			if (FeriadoService.get().existeFeriado(data)) {
+				continue;
+			}
+			for (Colaborador col : colaboradores) {
+				ChaveApuracao chave = new ChaveApuracao(data, col.getCodigo());
+				if (mapa.containsKey(chave)) {
+					continue;
+				}
+				Apuracao faltante = new Apuracao();
+				faltante.setColaborador(col);
+				faltante.setData(data);
+				faltante.setApurada(false);
+				result.add(faltante);
+			}
+		}
+		return result;
+	}
+
+	private Map<ChaveApuracao, Apuracao> getMapaApuracoes(List<Apuracao> apuracoes) {
+		Map<ChaveApuracao, Apuracao> result = new HashMap<>();
+		for (Apuracao a : apuracoes) {
+			System.out.println("Put >> " + a.getData() + " >> " + a.getColaborador().getCodigo());
+			result.put(new ChaveApuracao(a.getData(), a.getColaborador().getCodigo()), a);
+		}
+		return result;
 	}
 
 	public void apurarMarcacoes(Apuracao apuracao) {
@@ -146,8 +225,7 @@ public class ApuradorMarcacoes {
 	 * É considerado como incompleto se for:
 	 * <ul>
 	 * <li>menor que o mínimo;</li>
-	 * <li>entre 2 intervalos trabalhados que, somados, ultrapassam o intervalo
-	 * máximo de trabalho contíguo;</li>
+	 * <li>entre 2 intervalos trabalhados que, somados, ultrapassam o intervalo máximo de trabalho contíguo;</li>
 	 * </ul>
 	 */
 	private boolean isIntervaloIntraJornadaIncompleto(Apuracao apuracao) {
@@ -438,7 +516,7 @@ public class ApuradorMarcacoes {
 		CriteriaQuery<Apuracao> query = cb.createQuery(Apuracao.class);
 		Root<Apuracao> root = query.from(Apuracao.class);
 		Path<Object> apurada = root.get("apurada");
-		query.select(root).where(cb.or(cb.isNull(apurada), cb.equal(apurada, "false")));
+		query.select(root).where(cb.equal(apurada, Boolean.FALSE)).orderBy(cb.asc(root.get("data")));
 		return entityManager.createQuery(query).getResultList();
 	}
 

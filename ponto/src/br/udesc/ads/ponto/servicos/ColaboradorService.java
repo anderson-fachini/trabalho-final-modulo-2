@@ -15,6 +15,7 @@ import org.joda.time.LocalDateTime;
 import br.udesc.ads.ponto.entidades.AjusteBH;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Setor;
+import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.servicos.impl.ImportadorColaboradores;
@@ -119,6 +120,16 @@ public class ColaboradorService {
 		
 		query.orderBy(cb.asc(root.get("nome")));
 		
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	public List<Colaborador> getColaboradoresAtivos() {
+		EntityManager entityManager = Manager.get().getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Colaborador> query = cb.createQuery(Colaborador.class);
+		Root<Colaborador> root = query.from(Colaborador.class);
+		query.select(root).where(cb.equal(root.get("situacao"), Situacao.ATIVO));
+		query.orderBy(cb.asc(root.get("codigo")));
 		return entityManager.createQuery(query).getResultList();
 	}
 	
