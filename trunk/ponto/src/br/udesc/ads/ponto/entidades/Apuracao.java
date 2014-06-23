@@ -61,7 +61,7 @@ public class Apuracao implements Serializable {
 
 	private Boolean inconsistente;
 
-	private Boolean apurada;
+	private Boolean apurada = Boolean.FALSE;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
 	@OrderBy("hora")
