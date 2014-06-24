@@ -10,8 +10,17 @@
 	<ui:param name="pageTitle" value="#{msg.relatorioSaldoBh}" />
 
 	<ui:define name="pageContent">
-		
-		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
+	
+		<style type="text/css">
+			#dadosRelatorio { width: 650px; }
+			.tb-dados-relatorio { font-size: 14px; }
+			.col-nome { width: 200px; text-align: left !important; }
+			.col-hora { width: 50px; }
+			tbody .col-hora { text-align: right !important; }
+		</style>
+
+		<h:form id="filtrosRelatorio" styleClass="centralized-form"
+			style="margin-bottom: 15px;">
 			<fieldset>
 				<legend>#{msg.filtros}</legend>
 				<h:panelGrid columns="2" style="margin-left: 50px;">
@@ -19,61 +28,77 @@
 					<h:selectOneMenu value="#{relSaldoBh.colaboradorSelecionado}">
 						<f:selectItems value="#{relSaldoBh.colaboradores}" />
 					</h:selectOneMenu>
-					
+
 					<h:outputLabel value="#{msg.dataInicial}" />
-					<ace:dateTimeEntry value="#{relSaldoBh.dataInicial}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}"
-						required="true" requiredMessage="#{msg.msgInformeDataInicial}" />
-						
+					<ace:dateTimeEntry value="#{relSaldoBh.dataInicial}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true"
+						maxdate="#{relSaldoBh.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataInicial}" />
+
 					<h:outputLabel value="#{msg.dataFinal}" />
-					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR" timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}"
-						required="true" requiredMessage="#{msg.msgInformeDataFinal}" />
-						
-					<h:commandButton value="#{msg.gerar}" action="#{relSaldoBh.gerarRelatorio}" />
+					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
+						renderAsPopup="true" navigator="true"
+						maxdate="#{relSaldoBh.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataFinal}" />
+
+					<h:commandButton value="#{msg.gerar}"
+						action="#{relSaldoBh.gerarRelatorio}" />
 				</h:panelGrid>
-				
+
 				<ace:messages />
 			</fieldset>
 		</h:form>
-		
-		<h:form id="dadosRelatorio" rendered="#{relSaldoBh.listouRelatorio}" styleClass="centralized-form bordered-form">
+
+		<h:form id="dadosRelatorio" rendered="#{relSaldoBh.listouRelatorio}"
+			styleClass="centralized-form bordered-form">
 			<h:panelGroup rendered="#{!relSaldoBh.existemDadosListar}">
-				<p class="text-center"><h:outputText value="#{msg.msgNaoHaDadosListar}" /></p>
+				<p class="text-center">
+					<h:outputText value="#{msg.msgNaoHaDadosListar}" />
+				</p>
 			</h:panelGroup>
-			
+
 			<h:commandLink styleClass="link-imprimir">
 				<h:graphicImage value="/images/printerIcon.png" />
 				<h:outputText value="#{msg.imprimir}" />
 				<ace:printer for="conteudoRelatorio" />
 			</h:commandLink>
-			
-			<h:panelGrid id="conteudoRelatorio" rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
+
+			<h:panelGroup id="conteudoRelatorio"
+				rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
 				<h1 class="titulo-relatorio">#{msg.tituloRelatorioSaldoBh}</h1>
-				<h:outputText value="#{msg.periodo}: #{relSaldoBh.dataInicialFormatada} #{msg.ate} #{relSaldoBh.dataFinalFormatada}" style="margin-bottom: 15px;" />
-				
-				<ui:repeat var="saldo" value="#{relSaldoBh.saldosBh}">
-				<p style="margin-bottom: 5px;"><strong>#{msg.colaborador}:</strong> #{saldo.colaborador.nome}</p>
-				<table class="table-report" style="margin-bottom: 15px;">
-					<thead>
-						<tr>
-							<th class="ui-widget-header">#{msg.totalizador}</th>
-							<th class="ui-widget-header">#{msg.valor}</th>
-						</tr>
-					</thead>
-					<tbody>
-						
-							<tr><th>#{msg.bancoHoras} (+)</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.entradasBH)}</td></tr>
-							<tr><th>#{msg.bancoHoras} (-)</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saidasBH)}</td></tr>
-							<tr><th>#{msg.ajustesManuaisBH}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.ajustesManuaisBH)}</td></tr>
-							<tr><th>#{msg.saldoInicialPeriodo}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saldoInicialPeriodo)}</td></tr>
-							<tr><th>#{msg.saldoFinalPeriodo}</th><td class="text-right">#{relSaldoBh.getHoraFormatada(saldo.saldoFinalPeriodo)}</td></tr>
-						
-					</tbody>
-				</table>
-				</ui:repeat>
-			</h:panelGrid>
+				<h:outputText
+					value="#{msg.periodo}: #{relSaldoBh.dataInicialFormatada} #{msg.ate} #{relSaldoBh.dataFinalFormatada}"
+					style="margin-bottom: 15px;" />
+					
+				<ace:dataTable value="#{relSaldoBh.saldosBh}" var="saldo" styleClass="tb-dados-relatorio">
+					<ace:column headerText="#{msg.colaborador}" styleClass="col-nome">
+						<h:outputText value="#{saldo.colaborador.nome}" />
+					</ace:column>
+					
+					<ace:column headerText="#{msg.bancoHoras} (+)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.entradasBH)}" />
+					</ace:column>
+					
+					<ace:column headerText="#{msg.bancoHoras} (-)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saidasBH)}" />
+					</ace:column>
+					
+					<ace:column headerText="#{msg.ajustesManuaisBH}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.ajustesManuaisBH)}" />
+					</ace:column>
+					
+					<ace:column headerText="#{msg.saldoInicialPeriodo}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saldoInicialPeriodo)}" />
+					</ace:column>
+					
+					<ace:column headerText="#{msg.saldoFinalPeriodo}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saldoFinalPeriodo)}" />
+					</ace:column>
+				</ace:dataTable>
+			</h:panelGroup>
 		</h:form>
-		
+
 	</ui:define>
 </ui:composition>
