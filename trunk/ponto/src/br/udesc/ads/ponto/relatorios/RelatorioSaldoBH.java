@@ -1,6 +1,8 @@
 package br.udesc.ads.ponto.relatorios;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -69,7 +71,20 @@ public class RelatorioSaldoBH {
 			item.setSaldoFinalPeriodo(item.getSaldoInicialPeriodo() + item.getEntradasBH() - item.getSaidasBH());
 			result.add(item);
 		}
+		ordenarPorNome(result);
 		return result;
+	}
+
+	private void ordenarPorNome(List<SaldoBHResult> list) {
+		Collections.sort(list, new Comparator<SaldoBHResult>() {
+
+			@Override
+			public int compare(SaldoBHResult o1, SaldoBHResult o2) {
+				String nome1 = o1.getColaborador().getNome();
+				String nome2 = o2.getColaborador().getNome();
+				return nome1.compareToIgnoreCase(nome2);
+			}
+		});
 	}
 
 	private double getSaldoBHColaboradorNaData(LocalDate data, Colaborador colaborador) {
