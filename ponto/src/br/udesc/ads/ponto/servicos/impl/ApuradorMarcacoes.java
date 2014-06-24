@@ -143,7 +143,6 @@ public class ApuradorMarcacoes {
 	private Map<ChaveApuracao, Apuracao> getMapaApuracoes(List<Apuracao> apuracoes) {
 		Map<ChaveApuracao, Apuracao> result = new HashMap<>();
 		for (Apuracao a : apuracoes) {
-			System.out.println("Put >> " + a.getData() + " >> " + a.getColaborador().getCodigo());
 			result.put(new ChaveApuracao(a.getData(), a.getColaborador().getCodigo()), a);
 		}
 		return result;
@@ -169,6 +168,7 @@ public class ApuradorMarcacoes {
 		boolean calculou = calcularHoras(apuracao);
 		apuracao.setInconsistente(!calculou);
 		resolverOcorrencias(apuracao);
+		apuracao.setExigeConfirmacao(apuracao.getInconsistente() || apuracao.getOcorrenciasSize() > 0);
 		apuracao.setApurada(true);
 	}
 
