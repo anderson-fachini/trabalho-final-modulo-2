@@ -70,6 +70,7 @@ public class Apuracao implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
 	private List<Abono> abonos = new ArrayList<>();
 
+	// TODO Ajustar os mapeamentos para que o EclipseLink utilize o OcorrenciaToIntConverter para persistir esse cara.
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
