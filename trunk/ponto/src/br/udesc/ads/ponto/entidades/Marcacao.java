@@ -1,5 +1,7 @@
 package br.udesc.ads.ponto.entidades;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,9 @@ import javax.persistence.ManyToOne;
 import org.joda.time.LocalTime;
 
 @Entity
-public class Marcacao {
+public class Marcacao implements Serializable {
+
+	private static final long serialVersionUID = 3492459317717648128L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

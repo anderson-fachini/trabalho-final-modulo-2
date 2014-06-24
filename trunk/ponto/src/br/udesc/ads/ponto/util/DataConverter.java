@@ -37,6 +37,9 @@ public class DataConverter {
 		int horas = (int)number;
 		int minutos = (int)Math.round((number - horas) * 60);
 		
+		if (minutos < 0)
+			minutos *= -1;
+		
 		return String.format("%02d:%02d", horas, minutos);
 	}
 	

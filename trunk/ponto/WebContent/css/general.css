@@ -42,6 +42,14 @@
 	text-align: center;
 }
 
+.text-right {
+	text-align: right;
+}
+
+.text-left {
+	text-align: left;
+}
+
 #filtrosRelatorio fieldset {
 	border: 1px solid #000;
 	border-radius: 5px;
@@ -54,10 +62,6 @@
 .titulo-relatorio {
 	text-align: center;
 	font-size: 18px;
-}
-
-.text-right {
-	text-align: right;
 }
 
 .table-report {

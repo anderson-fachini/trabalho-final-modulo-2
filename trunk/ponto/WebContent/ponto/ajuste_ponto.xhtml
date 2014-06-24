@@ -36,20 +36,22 @@
 			
 			<ace:messages />
 			
-			<ace:dataTable rendered="#{ajustePonto.buscouApuracoes}" value="#{ajustePonto.apuracoes}" var="apuracao" style="margin-top: 15px;">
+			<ace:dataTable rendered="#{ajustePonto.buscouApuracoes}" value="#{ajustePonto.apuracoesPonto}" var="apuracaoPonto" 
+				style="margin-top: 15px;">
 				<ace:column headerText="#{msg.data}" style="width: 125px;">
-					<h:outputText value="#{ajustePonto.getDataFormatadaDiaMes(apuracao.data)}" /><br />
-					<h:outputText value="#{ajustePonto.getDiaSemanaData(apuracao.data)}" />
+					<h:outputText value="#{apuracaoPonto.diaMes}" /><br />
+					<h:outputText value="#{apuracaoPonto.diaSemana}" />
 				</ace:column>
 				
 				<ace:column headerText="#{msg.marcacoes}" style="text-align: left;">
-					<ui:repeat var="marcacao" value="#{apuracao.marcacoes}">
-						<h:outputText value="#{ajustePonto.getHoraFormatada(marcacao.hora)}" style="margin-right: 5px;" />
+					<ui:repeat var="marcacao" value="#{apuracaoPonto.marcacoes}">
+						<h:outputText value="#{marcacao}" style="margin-right: 5px;" />
 					</ui:repeat>
 				</ace:column>
-				
-				<ace:column headerText="#{msg.situacoes}">
-					<h:outputText value="---" />
+				<ace:column headerText="#{msg.situacoes}" style="text-align: left;">
+					<ui:repeat value="#{apuracaoPonto.ocorrencias}" var="ocorrencia" varStatus="status">
+						<h:outputText value="#{ocorrencia}" style="display: block; margin-bottom: 5px;" />
+					</ui:repeat>
 				</ace:column>
 				
 				<ace:column headerText="#{msg.acao}">

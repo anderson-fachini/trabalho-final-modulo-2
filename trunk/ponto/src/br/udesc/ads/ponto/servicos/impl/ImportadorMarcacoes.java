@@ -85,8 +85,8 @@ public class ImportadorMarcacoes {
 					lida.setData(getDateSection(reg.getMarcacao()));
 					lida.setHora(getTimeSection(reg.getMarcacao()));
 
-					// Caso a marca��o j� esteja na base, ignora.
-					// (Isto pode acontecer se ficou uma opera��o incompleta)
+					// Caso a marcação já esteja na base, ignora.
+					// (Isto pode acontecer se ficou uma operação incompleta)
 					MarcacaoLida existente = entityManager.find(MarcacaoLida.class, reg.getId());
 					if (!lida.equals(existente)) {
 						entityManager.persist(lida);
@@ -149,7 +149,7 @@ public class ImportadorMarcacoes {
 
 	private void confirmarRegistrosProcessados(List<RegistroMarcacao> registros) {
 
-		// Gera uma c�pia da lista para n�o avacalhar com a original
+		// Gera uma cópia da lista para não avacalhar com a original
 		registros = new ArrayList<>(registros);
 
 		// Ordena os registros por ID (para o caso de terem vindo fora de ordem)
@@ -161,7 +161,7 @@ public class ImportadorMarcacoes {
 			}
 		});
 
-		// Envia as confirma��es de leitura, em intervalos cont�guos
+		// Envia as confirmações de leitura, em intervalos contíguos
 		if (registros.isEmpty()) {
 			return;
 		}
