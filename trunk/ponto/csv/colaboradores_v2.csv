@@ -1,0 +1,31 @@
+Codigo;Nome;CPF;Setor;CodigoGerente
+11000;Thais Nepomuceno;080.700.796-06;ProduÁ„o;
+11001;Alana Monteiro Bispo da Silva;333.881.656-10;ProduÁ„o;11000
+11002;Amanda C. Moreira;863.125.234-46;ProduÁ„o;11000
+11003;Ang√©lica Augusta Linhares do Monte;011.667.548-98;ProduÁ„o;11000
+11004;Carolina Neves;736.053.736-31;ProduÁ„o;11000
+11005;Cristiano Rodrigues Alexandre da Silva;701.897.854-89;ProduÁ„o;11000
+11006;Edileuza Maria Amorim Torres;531.251.828-08;ProduÁ„o;11000
+11007;Elza Camelo da Silva;703.689.646-98;ProduÁ„o;11000
+11008;Expedita Maria;145.335.592-80;ProduÁ„o;11000
+11009;Gabriely Basilio de F. Cardoso;144.326.226-95;Financeiro;
+11010;Glaucia Adriana Dantas Pereira;436.028.237-09;Financeiro;11009
+11011;Helouise Thain√° da Silva Macedo;669.308.399-49;Financeiro;11009
+11012;√çtalo Nathan da Silva;344.335.175-18;Financeiro;11009
+11013;Jane Gard√™nia Gomes da Silva;886.980.165-96;Financeiro;11009
+11014;Jhony Kleyton do Nascimento;613.868.810-40;Comercial;
+11015;Joane Maria da Silva Carvalho;422.438.188-50;Comercial;11014
+11016;Joyce Raissa de Sousa Santos;223.196.577-11;Comercial;11014
+11017;Leilianne D. Gurgel d'√Åvila;317.362.528-52;Comercial;11014
+11018;Lorena Freire Alves de Oliveira;156.341.247-00;Comercial;11014
+11019;Maria Edilma de Abreu;125.918.882-56;ServiÁos;
+11020;Maryane Christine Teixeira da Costa;203.216.628-30;ServiÁos;11019
+11021;Mayra Patr√≠cia Teixeira da Costa;848.982.585-81;ServiÁos;11019
+11022;M√≠riam S√≠ria R. de Souza;219.834.577-36;ServiÁos;11019
+11023;Monalisa da Silva Godeiro;233.626.076-08;ServiÁos;11019
+11024;Patricia Kallyane do Vale Peixoto;793.248.221-60;ServiÁos;11019
+11025;Rafael Felipe de Lima Miranda;086.275.299-06;ServiÁos;11019
+11026;Rafaela Souza Teixeira;116.726.135-66;RH;
+11027;Ramon Douglas Nunes de Andrade;261.240.564-02;RH;11026
+11028;Sara da G. Ferreira;873.522.602-18;RH;11026
+11029;Silvana Medeiros de Araujo;646.276.025-70;RH;11026
