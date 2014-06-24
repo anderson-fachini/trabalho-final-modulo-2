@@ -153,9 +153,15 @@ public class ApuracaoService {
 		CriteriaQuery<Apuracao> query = cb.createQuery(Apuracao.class);
 		Root<Apuracao> root = query.from(Apuracao.class);
 		Path<Object> dataConfirmacao = root.get("dataConfirmacao");
+		Predicate filtroConfirmadas;
+		if (confirmadas) {
+			filtroConfirmadas = cb.or(cb.equal(root.get("exigeConfirmacao"), Boolean.FALSE), cb.isNotNull(dataConfirmacao));
+		} else {
+			filtroConfirmadas = cb.and(cb.equal(root.get("exigeConfirmacao"), Boolean.TRUE), cb.isNull(dataConfirmacao));
+		}
 		Predicate[] filtros = { //
 		cb.equal(root.get("colaborador"), colaborador), //
-				confirmadas ? cb.isNotNull(dataConfirmacao) : cb.isNull(dataConfirmacao), //
+				filtroConfirmadas,
 				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
 		};
 		query.select(root).where(filtros).orderBy(cb.asc(root.get("data")));

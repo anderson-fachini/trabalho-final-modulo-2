@@ -43,6 +43,8 @@ public class Apuracao implements Serializable {
 	@Column(columnDefinition = "DATE")
 	private LocalDate data;
 
+	private Boolean exigeConfirmacao = Boolean.FALSE;
+
 	private Usuario responsavelConfirmacao;
 
 	@Column(columnDefinition = "TIMESTAMP")
@@ -99,6 +101,14 @@ public class Apuracao implements Serializable {
 
 	public void setData(LocalDate data) {
 		this.data = data;
+	}
+
+	public Boolean getExigeConfirmacao() {
+		return exigeConfirmacao;
+	}
+
+	public void setExigeConfirmacao(Boolean exigeConfirmacao) {
+		this.exigeConfirmacao = exigeConfirmacao;
 	}
 
 	public Usuario getResponsavelConfirmacao() {
