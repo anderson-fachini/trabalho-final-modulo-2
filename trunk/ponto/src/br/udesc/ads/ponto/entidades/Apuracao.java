@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +23,8 @@ import javax.persistence.UniqueConstraint;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
+
+import br.udesc.ads.ponto.jpaconverters.OcorrenciaToIntConverter;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "colaborador_id", "data" }))
@@ -70,8 +73,8 @@ public class Apuracao implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "apuracao")
 	private List<Abono> abonos = new ArrayList<>();
 
-	// TODO Ajustar os mapeamentos para que o EclipseLink utilize o OcorrenciaToIntConverter para persistir esse cara.
 	@ElementCollection(fetch = FetchType.EAGER)
+	@Convert(converter = OcorrenciaToIntConverter.class)
 	private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
 	public Long getId() {
@@ -188,7 +191,7 @@ public class Apuracao implements Serializable {
 	public int getMarcacoesSize() {
 		return this.marcacoes.size();
 	}
-	
+
 	public List<LocalTime> getSequenciaMarcacoes() {
 		List<LocalTime> result = new ArrayList<>();
 		for (int i = 0; i < this.getMarcacoesSize(); ++i) {
@@ -243,7 +246,7 @@ public class Apuracao implements Serializable {
 	public List<Marcacao> getMarcacoes() {
 		return Collections.unmodifiableList(marcacoes);
 	}
-	
+
 	public List<Ocorrencia> getOcorrencias() {
 		return Collections.unmodifiableList(ocorrencias);
 	}
