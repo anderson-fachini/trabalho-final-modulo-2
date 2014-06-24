@@ -15,7 +15,7 @@ import br.udesc.ads.ponto.leitora.RegistroMarcacao;
 @WebService(serviceName = "LeitoraPontoService")
 public class LeitoraPontoService {
 
-	private static final String ARQUIVO_MARCACOES = "marcacoes.csv";
+	private static final String ARQUIVO_MARCACOES = "marcacoes_v2.csv";
 	private static final String ARQUIVO_CONFIRMACOES = "confirmacoes.txt";
 
 	private LeitoraPonto leitora;
@@ -35,7 +35,7 @@ public class LeitoraPontoService {
 			return leitora.lerMarcacoes(quantidade);
 
 		} catch (IOException | FormatoInvalidoException e) {
-			// TODO Vamos fazer um tratamento de exceção mais elegante?
+			// TODO Vamos fazer um tratamento de exceï¿½ï¿½o mais elegante?
 			e.printStackTrace();
 			return null;
 		}
@@ -47,7 +47,7 @@ public class LeitoraPontoService {
 		try {
 			leitora.confirmarMarcacoes(idInicial, idFinal);
 		} catch (IOException e) {
-			// TODO Vamos fazer um tratamento de exceção mais elegante?
+			// TODO Vamos fazer um tratamento de exceï¿½ï¿½o mais elegante?
 			e.printStackTrace();
 		}
 	}
@@ -58,7 +58,7 @@ public class LeitoraPontoService {
 		try {
 			leitora.resetarConfirmacoes();
 		} catch (IOException e) {
-			// TODO Vamos fazer um tratamento de exceção mais elegante?
+			// TODO Vamos fazer um tratamento de exceï¿½ï¿½o mais elegante?
 			e.printStackTrace();
 		}
 	}
