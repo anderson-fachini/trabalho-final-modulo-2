@@ -12,11 +12,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Marcacao;
+import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.ApuracaoService;
@@ -32,6 +32,7 @@ public class AjustePontoController implements Serializable {
 	private static final long serialVersionUID = 6585193392870549078L;
 	
 	private List<Apuracao> apuracoes;
+	private List<ApuracaoPonto> apuracoesPonto;
 	private List<SelectItem> colaboradores;
 	private Map<Long, Colaborador> colaboradoresMapa;
 	
@@ -42,9 +43,17 @@ public class AjustePontoController implements Serializable {
 	
 	private boolean apenasExcecoes = true;
 	private boolean buscouApuracoes = false;
+	
+	private String quebraLinha = "<br />";
 		
 	public AjustePontoController() {
 		buscaListaColaboradores();
+	}
+	
+	public List<String> getSituacoes(List<Ocorrencia> ocorrencias) {
+		
+		
+		return null;
 	}
 	
 	public void buscaApuracoes() {
@@ -55,6 +64,65 @@ public class AjustePontoController implements Serializable {
 																	 LocalDate.fromDateFields(dataFinal), 
 																	 colaboradoresMapa.get(codColabSelecionado));
 			buscouApuracoes = true;
+			
+			converteApuracoesParaApuracaoPonto();
+		}
+	}
+	
+	private void converteApuracoesParaApuracaoPonto() {
+		apuracoesPonto = new ArrayList<ApuracaoPonto>();
+		
+		ApuracaoPonto ap;
+		for (Apuracao a : apuracoes) {
+			ap = new ApuracaoPonto();
+			ap.setDiaMes(DataConverter.formataData(a.getData().toDate(), DataConverter.formatoDDMM));
+			ap.setDiaSemana(DataConverter.formataData(a.getData().toDate(), DataConverter.formatoDiaSemanaExtenso));
+			
+			for (Marcacao m : a.getMarcacoes()) {
+				ap.addMarcacao(DataConverter.formataData(m.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
+			}
+			
+			String formatoOcorrencia = "%s - %s";
+			
+			if (a.getHorasTrabalhadas().getMillisOfDay() > 0) {
+				ap.addOcorrencia(String.format(formatoOcorrencia,
+						DataConverter.formataData(a.getHorasTrabalhadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+						Messages.getString("horasNormais")));
+			}
+			
+			if (a.getHorasAbonadas().getMillisOfDay() > 0) {
+				ap.addOcorrencia(String.format(formatoOcorrencia,
+						DataConverter.formataData(a.getHorasAbonadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+						Messages.getString("horasAbonadas")));
+			}
+			
+			for (Ocorrencia o : a.getOcorrencias()) {
+				if (o.getId() == 0) {
+					continue;
+					// TODO - remover isso quando for ajustada a apuração
+				}
+				
+				switch (o) {
+					case HORAS_EXCEDENTES: {
+						ap.addOcorrencia(String.format(formatoOcorrencia, 
+								DataConverter.formataData(a.getHorasExcedentes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+								o.getDescricao()));
+						break;
+					}
+					case HORAS_FALTANTES: {
+						ap.addOcorrencia(String.format(formatoOcorrencia, 
+								DataConverter.formataData(a.getHorasFaltantes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+								o.getDescricao()));
+						break;
+					}
+					
+					default: {
+						ap.addOcorrencia(o.getDescricao());
+					}
+				}
+			}
+			
+			apuracoesPonto.add(ap);
 		}
 	}
 	
@@ -76,7 +144,12 @@ public class AjustePontoController implements Serializable {
 	
 	private void buscaListaColaboradores() {
 		Usuario usuarioAutenticado = new MenuController().getUsuarioAutenticado();
-		Setor setor = usuarioAutenticado.getColaborador().getSetor();
+		Colaborador colaborador = usuarioAutenticado.getColaborador(); 
+		Setor setor = null;
+		
+		if (colaborador != null) {
+			setor = colaborador.getSetor();
+		}
 		
 		colaboradores = new ArrayList<SelectItem>();
 		colaboradores.add(new SelectItem(0L, "-- Selecione --"));
@@ -89,12 +162,12 @@ public class AjustePontoController implements Serializable {
 		}
 	}
 
-	public List<Apuracao> getApuracoes() {
-		return apuracoes;
+	public List<ApuracaoPonto> getApuracoesPonto() {
+		return apuracoesPonto;
 	}
 
-	public void setApuracoes(List<Apuracao> apuracoes) {
-		this.apuracoes = apuracoes;
+	public void setApuracoesPonto(List<ApuracaoPonto> apuracoesPonto) {
+		this.apuracoesPonto = apuracoesPonto;
 	}
 
 	public Date getDataInicial() {
@@ -153,16 +226,12 @@ public class AjustePontoController implements Serializable {
 		this.buscouApuracoes = buscouApuracoes;
 	}
 
-	public String getDataFormatadaDiaMes(LocalDate data) {
-		return DataConverter.formataData(data.toDate(), DataConverter.formatoDDMM);
+	public String getQuebraLinha() {
+		return quebraLinha;
 	}
-	
-	public String getDiaSemanaData(LocalDate data) {
-		return DataConverter.formataData(data.toDate(), DataConverter.formatoDiaSemanaExtenso);
-	}
-	
-	public String getHoraFormatada(LocalTime hora) {
-		return DataConverter.formataData(hora.toDateTimeToday().toDate(), DataConverter.formatoHHMM);
+
+	public void setQuebraLinha(String quebraLinha) {
+		this.quebraLinha = quebraLinha;
 	}
 	
 }

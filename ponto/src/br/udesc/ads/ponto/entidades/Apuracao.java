@@ -241,7 +241,11 @@ public class Apuracao implements Serializable {
 	}
 
 	public List<Marcacao> getMarcacoes() {
-		return marcacoes;
+		return new ArrayList<Marcacao>(marcacoes);
+	}
+	
+	public List<Ocorrencia> getOcorrencias() {
+		return new ArrayList<Ocorrencia>(ocorrencias);
 	}
 
 }
