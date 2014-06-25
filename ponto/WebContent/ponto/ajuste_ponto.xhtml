@@ -64,7 +64,7 @@
 					rendered="#{apuracaoPonto.precisaAjustar || apuracaoPonto.exigeConfirmacao}">
 						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.precisaAjustar}" />
 						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.precisaAjustar}" />
-						<ace:menuItem value="#{msg.aprovarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
+						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
 							action="#{ajustePonto.aprovarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
 					</ace:menuButton>
 				</ace:column>
@@ -75,11 +75,11 @@
 		</h:form>
 		
 		<ice:panelPopup visible="#{ajustePonto.popupAprovarApuracaoOpened}" rendered="#{ajustePonto.popupAprovarApuracaoOpened}"
-		modal="true" autoCentre="true" style="width: 460px;">
+		modal="true" autoCentre="true" style="width: 470px;">
 			<f:facet name="header">
 				<h:panelGroup>
 					<h:panelGroup style="float: left;">
-                         #{msg.aprovarApuracao}
+                         #{msg.confirmarApuracao}
                      </h:panelGroup>
 					<h:panelGroup style="float: right;">
 						<h:form>
@@ -97,7 +97,7 @@
 						<h:inputTextarea cols="40" rows="2" style="width: 300px;"
 							value="#{ajustePonto.apuracaoConfirmarSelecionada.observacoes}" />
 						
-						<h:commandButton value="#{msg.aprovarApuracao}"
+						<h:commandButton value="#{msg.confirmarApuracao}"
 							action="#{ajustePonto.aprovarApuracaoSelecioandaSalvar}" />
 					</h:panelGrid>					
 				</h:form>
