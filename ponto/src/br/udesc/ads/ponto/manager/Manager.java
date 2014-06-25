@@ -50,7 +50,7 @@ public class Manager {
 	}
 
 	public int getTamanhoBlocoLeituraMarcacoes() {
-		return 64; // TODO Parametrizar;
+		return 256; // TODO Parametrizar;
 	}
 
 	public Config getConfig() {
