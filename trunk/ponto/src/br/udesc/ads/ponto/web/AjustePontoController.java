@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
+import br.udesc.ads.ponto.entidades.Abono;
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Marcacao;
@@ -30,21 +33,22 @@ import br.udesc.ads.ponto.util.Messages;
 public class AjustePontoController implements Serializable {
 	
 	private static final long serialVersionUID = 6585193392870549078L;
-	
-	private List<Apuracao> apuracoes;
+
 	private List<ApuracaoPonto> apuracoesPonto;
 	private List<SelectItem> colaboradores;
 	private Map<Long, Colaborador> colaboradoresMapa;
+	private Map<Long, Apuracao> apuracoesMap;
 	
 	private Long codColabSelecionado;
 	private Date dataInicial;
 	private Date dataFinal;
 	private Date maxDate = new Date(System.currentTimeMillis());
 	
+	private Apuracao apuracaoConfirmarSelecionada;
+	
 	private boolean apenasExcecoes = true;
 	private boolean buscouApuracoes = false;
-	
-	private String quebraLinha = "<br />";
+	private boolean popupAprovarApuracaoOpened = false;
 		
 	public AjustePontoController() {
 		buscaListaColaboradores();
@@ -56,74 +60,115 @@ public class AjustePontoController implements Serializable {
 		return null;
 	}
 	
+	public void aprovarApuracaoSetaSelecionada(Long id) {		
+		togglePopupAprovarApuracaoOpened();
+		apuracaoConfirmarSelecionada = apuracoesMap.get(id);
+	}
+	
+	public void aprovarApuracaoSelecioandaSalvar() {
+		apuracaoConfirmarSelecionada.setDataConfirmacao(new LocalDateTime());
+		apuracaoConfirmarSelecionada.setResponsavelConfirmacao(new MenuController().getUsuarioAutenticado());
+		apuracaoConfirmarSelecionada.setExigeConfirmacao(false);
+		
+		apuracoesMap.put(apuracaoConfirmarSelecionada.getId(), apuracaoConfirmarSelecionada);
+		
+		geraListaApuracoesPonto();
+		
+		togglePopupAprovarApuracaoOpened();
+	}
+	
 	public void buscaApuracoes() {
 		boolean temErros = validaBusca();
 		
 		if (!temErros) {
-			apuracoes = ApuracaoService.get().getApuracoesPorPeriodo(LocalDate.fromDateFields(dataInicial), 
+			List<Apuracao> apuracoes = ApuracaoService.get().getApuracoesPorPeriodo(LocalDate.fromDateFields(dataInicial), 
 																	 LocalDate.fromDateFields(dataFinal), 
 																	 colaboradoresMapa.get(codColabSelecionado));
+			
+			apuracoesMap = new LinkedHashMap<Long, Apuracao>();
+			for (Apuracao apuracao : apuracoes) {
+				apuracoesMap.put(apuracao.getId(), apuracao);
+			}
+			
 			buscouApuracoes = true;
 			
-			converteApuracoesParaApuracaoPonto();
+			geraListaApuracoesPonto();
 		}
 	}
 	
-	private void converteApuracoesParaApuracaoPonto() {
+	private void geraListaApuracoesPonto() {
 		apuracoesPonto = new ArrayList<ApuracaoPonto>();
 		
-		ApuracaoPonto ap;
-		for (Apuracao a : apuracoes) {
-			ap = new ApuracaoPonto();
-			ap.setDiaMes(DataConverter.formataData(a.getData().toDate(), DataConverter.formatoDDMM));
-			ap.setDiaSemana(DataConverter.formataData(a.getData().toDate(), DataConverter.formatoDiaSemanaExtenso));
+		String formatoOcorrencia = "%s - %s";
+		String formatoAbono = "%s - %s: %s";
+		ApuracaoPonto apuracaoPonto;
+		
+		for (Apuracao apuracao : apuracoesMap.values()) {
+			apuracoesMap.put(apuracao.getId(), apuracao);
 			
-			for (Marcacao m : a.getMarcacoes()) {
-				ap.addMarcacao(DataConverter.formataData(m.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
+			apuracaoPonto = new ApuracaoPonto();
+			apuracaoPonto.setId(apuracao.getId());
+			apuracaoPonto.setDiaMes(DataConverter.formataData(apuracao.getData().toDate(), DataConverter.formatoDDMM));
+			apuracaoPonto.setDiaSemana(DataConverter.formataData(apuracao.getData().toDate(), DataConverter.formatoDiaSemanaExtenso));
+			apuracaoPonto.setExigeConfirmacao(apuracao.getExigeConfirmacao());
+			
+			for (Marcacao marcacao : apuracao.getMarcacoes()) {
+				apuracaoPonto.addMarcacao(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
 			}
 			
-			String formatoOcorrencia = "%s - %s";
-			
-			if (a.getHorasTrabalhadas().getMillisOfDay() > 0) {
-				ap.addOcorrencia(String.format(formatoOcorrencia,
-						DataConverter.formataData(a.getHorasTrabalhadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+			if (apuracao.getHorasTrabalhadas().getMillisOfDay() > 0) {
+				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
+						DataConverter.formataData(apuracao.getHorasTrabalhadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						Messages.getString("horasNormais")));
 			}
 			
-			if (a.getHorasAbonadas().getMillisOfDay() > 0) {
-				ap.addOcorrencia(String.format(formatoOcorrencia,
-						DataConverter.formataData(a.getHorasAbonadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+			if (apuracao.getHorasAbonadas().getMillisOfDay() > 0) {
+				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
+						DataConverter.formataData(apuracao.getHorasAbonadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						Messages.getString("horasAbonadas")));
 			}
 			
-			for (Ocorrencia o : a.getOcorrencias()) {
-				if (o.getId() == 0) {
-					continue;
-					// TODO - remover isso quando for ajustada a apuração
-				}
-				
-				switch (o) {
+			List<Ocorrencia> ocorrencias = apuracao.getOcorrencias();
+			
+			if (isOcorrenciasPrecisamAjuste(ocorrencias)) {
+				apuracaoPonto.setPrecisaAjustar(true);
+			}
+			
+			for (Ocorrencia ocorrencia : ocorrencias) {				
+				switch (ocorrencia) {
 					case HORAS_EXCEDENTES: {
-						ap.addOcorrencia(String.format(formatoOcorrencia, 
-								DataConverter.formataData(a.getHorasExcedentes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
-								o.getDescricao()));
+						apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia, 
+								DataConverter.formataData(apuracao.getHorasExcedentes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+								ocorrencia.getDescricao()));
 						break;
 					}
 					case HORAS_FALTANTES: {
-						ap.addOcorrencia(String.format(formatoOcorrencia, 
-								DataConverter.formataData(a.getHorasFaltantes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
-								o.getDescricao()));
+						apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia, 
+								DataConverter.formataData(apuracao.getHorasFaltantes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+								ocorrencia.getDescricao()));
 						break;
-					}
-					
+					}					
 					default: {
-						ap.addOcorrencia(o.getDescricao());
+						apuracaoPonto.addOcorrencia(ocorrencia.getDescricao());
 					}
 				}
 			}
 			
-			apuracoesPonto.add(ap);
+			for (Abono abono : apuracao.getAbonos()) {
+				apuracaoPonto.addAbono(String.format(formatoAbono, 
+						DataConverter.formataData(abono.getHoraInicio().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+						DataConverter.formataData(abono.getHoraFim().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
+						abono.getMotivo().getDescricao()));
+			}
+			
+			apuracoesPonto.add(apuracaoPonto);
 		}
+	}
+	
+	private boolean isOcorrenciasPrecisamAjuste(List<Ocorrencia> ocorrencias) {
+		return ocorrencias.contains(Ocorrencia.HORAS_FALTANTES) ||
+			   ocorrencias.contains(Ocorrencia.MARCACOES_FALTANTES) ||
+			   ocorrencias.contains(Ocorrencia.MARCACOES_EXCEDENTES);
 	}
 	
 	private boolean validaBusca() {
@@ -160,6 +205,12 @@ public class AjustePontoController implements Serializable {
 			colaboradores.add(new SelectItem(c.getId(), c.getNome()));
 			colaboradoresMapa.put(c.getId(), c);
 		}
+	}
+	
+	public void togglePopupAprovarApuracaoOpened() {
+		popupAprovarApuracaoOpened = !popupAprovarApuracaoOpened;
+		
+		apuracaoConfirmarSelecionada = new Apuracao();
 	}
 
 	public List<ApuracaoPonto> getApuracoesPonto() {
@@ -226,12 +277,21 @@ public class AjustePontoController implements Serializable {
 		this.buscouApuracoes = buscouApuracoes;
 	}
 
-	public String getQuebraLinha() {
-		return quebraLinha;
+	public Apuracao getApuracaoConfirmarSelecionada() {
+		return apuracaoConfirmarSelecionada;
 	}
 
-	public void setQuebraLinha(String quebraLinha) {
-		this.quebraLinha = quebraLinha;
+	public void setApuracaoConfirmarSelecionada(
+			Apuracao apuracaoConfirmarSelecionada) {
+		this.apuracaoConfirmarSelecionada = apuracaoConfirmarSelecionada;
+	}
+
+	public boolean isPopupAprovarApuracaoOpened() {
+		return popupAprovarApuracaoOpened;
+	}
+
+	public void setPopupAprovarApuracaoOpened(boolean popupAprovarApuracaoOpened) {
+		this.popupAprovarApuracaoOpened = popupAprovarApuracaoOpened;
 	}
 	
 }

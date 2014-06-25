@@ -260,5 +260,9 @@ public class Apuracao implements Serializable {
 	public List<Ocorrencia> getOcorrencias() {
 		return Collections.unmodifiableList(ocorrencias);
 	}
+	
+	public List<Abono> getAbonos() {
+		return Collections.unmodifiableList(abonos);
+	}
 
 }
