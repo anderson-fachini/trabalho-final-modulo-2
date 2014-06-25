@@ -81,7 +81,11 @@ public class RelatorioSaldoBhController implements Serializable {
 		colaboradoresMap = new HashMap<Long, Colaborador>();
 
 		colaboradores = new ArrayList<SelectItem>();
-		colaboradores.add(new SelectItem(0L, "Todos"));
+		if (colaborador == null) {
+			colaboradores.add(new SelectItem(0L, "Todos"));
+		} else {
+			colaboradores.add(new SelectItem(0L, "Todos de '" + setor.getNome() + "'"));
+		}
 
 		for (Colaborador c : ColaboradorService.get().getColaboradoresAtivosPorSetor(setor)) {
 			colaboradoresMap.put(c.getId(), c);
