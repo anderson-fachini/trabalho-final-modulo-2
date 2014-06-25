@@ -85,6 +85,7 @@ public class Manager {
 
 	private Escala criarEscalaPadrao() {
 		Escala escala = new Escala();
+		escala.setNome("Escala padrão");
 		for (DiaSemana dia : DiaSemana.getDiasUteisPadrao()) {
 			escala.addMarcacao(new EscalaMarcacao(dia, new LocalTime(8, 0)));
 			escala.addMarcacao(new EscalaMarcacao(dia, new LocalTime(12, 0)));
