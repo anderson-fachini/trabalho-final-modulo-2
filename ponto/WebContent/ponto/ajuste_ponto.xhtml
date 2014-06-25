@@ -37,7 +37,7 @@
 			<ace:messages />
 			
 			<ace:dataTable rendered="#{ajustePonto.buscouApuracoes}" value="#{ajustePonto.apuracoesPonto}" var="apuracaoPonto" 
-				style="margin-top: 15px;">
+				style="margin-top: 15px; font-size: 14px;">
 				<ace:column headerText="#{msg.data}" style="width: 125px;">
 					<h:outputText value="#{apuracaoPonto.diaMes}" /><br />
 					<h:outputText value="#{apuracaoPonto.diaSemana}" />
@@ -47,18 +47,62 @@
 					<ui:repeat var="marcacao" value="#{apuracaoPonto.marcacoes}">
 						<h:outputText value="#{marcacao}" style="margin-right: 5px;" />
 					</ui:repeat>
+					
+					<ui:repeat var="abono" value="#{apuracaoPonto.abonos}">
+						<h:outputText value="#{abono}" style="display: block; margin-top: 5px;" />
+					</ui:repeat>
 				</ace:column>
-				<ace:column headerText="#{msg.situacoes}" style="text-align: left;">
+				
+				<ace:column headerText="#{msg.ocorrencias}" style="text-align: left;">
 					<ui:repeat value="#{apuracaoPonto.ocorrencias}" var="ocorrencia" varStatus="status">
 						<h:outputText value="#{ocorrencia}" style="display: block; margin-bottom: 5px;" />
 					</ui:repeat>
 				</ace:column>
 				
-				<ace:column headerText="#{msg.acao}">
-					<h:outputText value="---" />
+				<ace:column style="width: 100px;">					
+					<ace:menuButton value="#{msg.acoes}" 
+					rendered="#{apuracaoPonto.precisaAjustar || apuracaoPonto.exigeConfirmacao}">
+						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.precisaAjustar}" />
+						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.precisaAjustar}" />
+						<ace:menuItem value="#{msg.aprovarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
+							action="#{ajustePonto.aprovarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
+					</ace:menuButton>
 				</ace:column>
 			</ace:dataTable>
+			
+			<h:commandButton rendered="#{ajustePonto.buscouApuracoes}" style="margin-top: 10px;" 
+				value="#{msg.confirmarAjustes}" />
 		</h:form>
+		
+		<ice:panelPopup visible="#{ajustePonto.popupAprovarApuracaoOpened}" rendered="#{ajustePonto.popupAprovarApuracaoOpened}"
+		modal="true" autoCentre="true" style="width: 460px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                         #{msg.aprovarApuracao}
+                     </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
+							<h:commandButton action="#{ajustePonto.togglePopupAprovarApuracaoOpened}" 
+								image="/images/popup-close.png" alt="Close" type="button"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="body">
+				<h:form>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="#{msg.observacoes}" />
+						<h:inputTextarea cols="40" rows="2" style="width: 300px;"
+							value="#{ajustePonto.apuracaoConfirmarSelecionada.observacoes}" />
+						
+						<h:commandButton value="#{msg.aprovarApuracao}"
+							action="#{ajustePonto.aprovarApuracaoSelecioandaSalvar}" />
+					</h:panelGrid>					
+				</h:form>
+			</f:facet>
+		</ice:panelPopup>
 		
 	</ui:define>
 </ui:composition>
