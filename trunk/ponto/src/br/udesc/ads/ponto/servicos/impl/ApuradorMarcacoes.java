@@ -365,6 +365,9 @@ public class ApuradorMarcacoes {
 		int minAlmoco = Manager.get().getConfig().getIntervaloMinimoAlmoco();
 
 		List<Intervalo> intervalos = getIntervalos(escala, diaSemana);
+		if (intervalos.isEmpty()) {
+			return null; // Situação normal de um sábado/domingo.
+		}
 		if (intervalos.size() % 2 == 0) {
 			throw new AssertionError("Quantidade de intervalos da escala padrão deveria ser ímpar.");
 		}
