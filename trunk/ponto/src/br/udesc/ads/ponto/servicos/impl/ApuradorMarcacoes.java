@@ -284,7 +284,7 @@ public class ApuradorMarcacoes {
 		}
 		LocalTime ultimaOntem = marcacoesOntem.get(marcacoesOntem.size() - 1);
 		int descansoOntem = MILLIS_POR_DIA - ultimaOntem.getMillisOfDay();
-		return descansoOntem + descansoHoje >= min;
+		return descansoOntem + descansoHoje < min;
 	}
 
 	private Apuracao buscarApuracaoDiaAnterior(Apuracao apuracao) {
