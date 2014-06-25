@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	template="/WEB-INF/templates/templateBase.xhtml">
@@ -10,41 +8,50 @@
 	<ui:param name="pageTitle" value="#{msg.relatorioSaldoBh}" />
 
 	<ui:define name="pageContent">
-	
-		<style type="text/css">
-			#dadosRelatorio { width: 650px; }
-			.tb-dados-relatorio { font-size: 14px; }
-			.col-nome { width: 200px; text-align: left !important; }
-			.col-hora { width: 50px; }
-			tbody .col-hora { text-align: right !important; }
-		</style>
 
-		<h:form id="filtrosRelatorio" styleClass="centralized-form"
-			style="margin-bottom: 15px;">
+		<style type="text/css">
+#dadosRelatorio {
+	width: 650px;
+}
+
+.tb-dados-relatorio {
+	font-size: 14px;
+}
+
+.col-nome {
+	width: 200px;
+	text-align: left !important;
+}
+
+.col-hora {
+	width: 50px;
+}
+
+tbody .col-hora {
+	text-align: right !important;
+}
+</style>
+
+		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
 			<fieldset>
 				<legend>#{msg.filtros}</legend>
 				<h:panelGrid columns="2" style="margin-left: 50px;">
-					<h:outputLabel value="#{msg.colaborador}" />
+					<h:outputLabel value="#{msg.colaborador}:" />
 					<h:selectOneMenu value="#{relSaldoBh.colaboradorSelecionado}">
 						<f:selectItems value="#{relSaldoBh.colaboradores}" />
 					</h:selectOneMenu>
 
-					<h:outputLabel value="#{msg.dataInicial}" />
+					<h:outputLabel value="#{msg.dataInicial}:" />
 					<ace:dateTimeEntry value="#{relSaldoBh.dataInicial}" locale="pt-BR"
-						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true"
-						maxdate="#{relSaldoBh.maxDate}" required="true"
-						requiredMessage="#{msg.msgInformeDataInicial}" />
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true"
+						maxdate="#{relSaldoBh.maxDate}" required="true" requiredMessage="#{msg.msgInformeDataInicial}" />
 
-					<h:outputLabel value="#{msg.dataFinal}" />
-					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR"
-						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy"
-						renderAsPopup="true" navigator="true"
-						maxdate="#{relSaldoBh.maxDate}" required="true"
-						requiredMessage="#{msg.msgInformeDataFinal}" />
+					<h:outputLabel value="#{msg.dataFinal}:" />
+					<ace:dateTimeEntry value="#{relSaldoBh.dataFinal}" locale="pt-BR" timezone="America/Sao_Paulo"
+						pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true" maxdate="#{relSaldoBh.maxDate}"
+						required="true" requiredMessage="#{msg.msgInformeDataFinal}" />
 
-					<h:commandButton value="#{msg.gerar}"
-						action="#{relSaldoBh.gerarRelatorio}" />
+					<h:commandButton value="#{msg.gerar}" action="#{relSaldoBh.gerarRelatorio}" />
 				</h:panelGrid>
 
 				<ace:messages />
@@ -65,34 +72,34 @@
 				<ace:printer for="conteudoRelatorio" />
 			</h:commandLink>
 
-			<h:panelGroup id="conteudoRelatorio"
-				rendered="#{relSaldoBh.existemDadosListar}" style="width: 100%;">
+			<h:panelGroup id="conteudoRelatorio" rendered="#{relSaldoBh.existemDadosListar}"
+				style="width: 100%;">
 				<h1 class="titulo-relatorio">#{msg.tituloRelatorioSaldoBh}</h1>
 				<h:outputText
 					value="#{msg.periodo}: #{relSaldoBh.dataInicialFormatada} #{msg.ate} #{relSaldoBh.dataFinalFormatada}"
 					style="margin-bottom: 15px;" />
-					
+
 				<ace:dataTable value="#{relSaldoBh.saldosBh}" var="saldo" styleClass="tb-dados-relatorio">
 					<ace:column headerText="#{msg.colaborador}" styleClass="col-nome">
 						<h:outputText value="#{saldo.colaborador.nome}" />
 					</ace:column>
-					
-					<ace:column headerText="#{msg.bancoHoras} (+)" styleClass="col-hora">
-						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.entradasBH)}" />
-					</ace:column>
-					
-					<ace:column headerText="#{msg.bancoHoras} (-)" styleClass="col-hora">
-						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saidasBH)}" />
-					</ace:column>
-					
-					<ace:column headerText="#{msg.ajustesManuaisBH}" styleClass="col-hora">
-						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.ajustesManuaisBH)}" />
-					</ace:column>
-					
+
 					<ace:column headerText="#{msg.saldoInicialPeriodo}" styleClass="col-hora">
 						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saldoInicialPeriodo)}" />
 					</ace:column>
-					
+
+					<ace:column headerText="#{msg.bancoHoras} (+)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.entradasBH)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.bancoHoras} (-)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saidasBH)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.ajustesManuaisBH}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.ajustesManuaisBH)}" />
+					</ace:column>
+
 					<ace:column headerText="#{msg.saldoFinalPeriodo}" styleClass="col-hora">
 						<h:outputText value="#{relSaldoBh.getHoraFormatada(saldo.saldoFinalPeriodo)}" />
 					</ace:column>

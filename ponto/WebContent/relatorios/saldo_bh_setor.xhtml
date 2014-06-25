@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	template="/WEB-INF/templates/templateBase.xhtml">
@@ -10,6 +8,106 @@
 	<ui:param name="pageTitle" value="#{msg.relatorioSaldoBhSetor}" />
 
 	<ui:define name="pageContent">
+	
+			<style type="text/css">
+#dadosRelatorio {
+	width: 650px;
+}
+
+.tb-dados-relatorio {
+	font-size: 14px;
+}
+
+.col-nome {
+	width: 200px;
+	text-align: left !important;
+}
+
+.col-hora {
+	width: 50px;
+}
+
+tbody .col-hora {
+	text-align: right !important;
+}
+</style>
+
+		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
+			<fieldset>
+				<legend>#{msg.filtros}</legend>
+				<h:panelGrid columns="2" style="margin-left: 50px;">
+					<h:outputLabel value="#{msg.setor}:" />
+					<h:selectOneMenu value="#{relSaldoBhSetor.setorSelecionado}">
+						<f:selectItems value="#{relSaldoBhSetor.setores}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="#{msg.dataInicial}:" />
+					<ace:dateTimeEntry value="#{relSaldoBhSetor.dataInicial}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true"
+						maxdate="#{relSaldoBhSetor.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataInicial}" />
+
+					<h:outputLabel value="#{msg.dataFinal}:" />
+					<ace:dateTimeEntry value="#{relSaldoBhSetor.dataFinal}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true"
+						maxdate="#{relSaldoBhSetor.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataFinal}" />
+
+					<h:commandButton value="#{msg.gerar}" action="#{relSaldoBhSetor.gerarRelatorio}" />
+				</h:panelGrid>
+
+				<ace:messages />
+			</fieldset>
+		</h:form>
+
+		<h:form id="dadosRelatorio" rendered="#{relSaldoBhSetor.listouRelatorio}"
+			styleClass="centralized-form bordered-form">
+			<h:panelGroup rendered="#{!relSaldoBhSetor.existemDadosListar}">
+				<p class="text-center">
+					<h:outputText value="#{msg.msgNaoHaDadosListar}" />
+				</p>
+			</h:panelGroup>
+
+			<h:commandLink styleClass="link-imprimir">
+				<h:graphicImage value="/images/printerIcon.png" />
+				<h:outputText value="#{msg.imprimir}" />
+				<ace:printer for="conteudoRelatorio" />
+			</h:commandLink>
+
+			<h:panelGroup id="conteudoRelatorio" rendered="#{relSaldoBhSetor.existemDadosListar}"
+				style="width: 100%;">
+				<h1 class="titulo-relatorio">#{msg.tituloRelatorioSaldoBhSetor}</h1>
+				<h:outputText
+					value="#{msg.periodo}: #{relSaldoBhSetor.dataInicialFormatada} #{msg.ate} #{relSaldoBhSetor.dataFinalFormatada}"
+					style="margin-bottom: 15px;" />
+
+				<ace:dataTable value="#{relSaldoBhSetor.saldosBh}" var="saldo" styleClass="tb-dados-relatorio">
+					<ace:column headerText="#{msg.setor}" styleClass="col-nome">
+						<h:outputText value="#{saldo.setor.nome}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.saldoInicialPeriodo}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBhSetor.getHoraFormatada(saldo.saldoInicialPeriodo)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.bancoHoras} (+)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBhSetor.getHoraFormatada(saldo.entradasBH)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.bancoHoras} (-)" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBhSetor.getHoraFormatada(saldo.saidasBH)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.ajustesManuaisBH}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBhSetor.getHoraFormatada(saldo.ajustesManuaisBH)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.saldoFinalPeriodo}" styleClass="col-hora">
+						<h:outputText value="#{relSaldoBhSetor.getHoraFormatada(saldo.saldoFinalPeriodo)}" />
+					</ace:column>
+				</ace:dataTable>
+			</h:panelGroup>
+		</h:form>
 
 	</ui:define>
 </ui:composition>

@@ -33,7 +33,7 @@ public class SetorService {
 	}
 	
 	/**
-	 * Métod que retorna a lista de setores ativos
+	 * Retorna a lista de setores ativos.
 	 * @return
 	 */
 	public List<Setor> getSetores() {
@@ -54,7 +54,7 @@ public class SetorService {
 	}
 	
 	/**
-	 * Obtem um setor pelo seu id
+	 * Obtem um setor pelo seu id.
 	 * @param id
 	 * @return Setor caso seja encontrado ou então null
 	 */

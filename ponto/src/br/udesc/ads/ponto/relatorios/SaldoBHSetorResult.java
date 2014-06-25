@@ -1,8 +1,12 @@
 package br.udesc.ads.ponto.relatorios;
 
+import java.io.Serializable;
+
 import br.udesc.ads.ponto.entidades.Setor;
 
-public class SaldoBHSetorResult {
+public class SaldoBHSetorResult implements Serializable {
+
+	private static final long serialVersionUID = -1410581208156627203L;
 
 	private Setor setor;
 	private double entradasBH;
