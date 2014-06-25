@@ -37,7 +37,7 @@ public class RelatorioSaldoBHPorSetor {
 	public List<SaldoBHSetorResult> consultar(LocalDate dataInicial, LocalDate dataFinal, List<Setor> setores) {
 		List<SaldoBHSetorResult> result = new ArrayList<>();
 		for (Setor setor : setores) {
-			List<Colaborador> colaboradores = ColaboradorService.get().getColaboradoresPorSetor(setor);
+			List<Colaborador> colaboradores = ColaboradorService.get().getColaboradoresAtivosPorSetor(setor);
 
 			List<SaldoBHResult> listaBHs = RelatorioSaldoBH.get().consultar(dataInicial, dataFinal, colaboradores);
 			SaldoBHSetorResult item = new SaldoBHSetorResult();

@@ -156,7 +156,7 @@ public class AjustePontoController implements Serializable {
 		
 		colaboradoresMapa = new HashMap<Long, Colaborador>();
 		
-		for (Colaborador c : ColaboradorService.get().getColaboradoresPorSetor(setor)) {
+		for (Colaborador c : ColaboradorService.get().getColaboradoresAtivosPorSetor(setor)) {
 			colaboradores.add(new SelectItem(c.getId(), c.getNome()));
 			colaboradoresMapa.put(c.getId(), c);
 		}

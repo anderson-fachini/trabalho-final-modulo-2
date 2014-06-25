@@ -16,35 +16,31 @@ import org.joda.time.LocalDate;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
-import br.udesc.ads.ponto.relatorios.RelatorioSaldoBH;
-import br.udesc.ads.ponto.relatorios.SaldoBHResult;
-import br.udesc.ads.ponto.servicos.ColaboradorService;
+import br.udesc.ads.ponto.relatorios.RelatorioSaldoBHPorSetor;
+import br.udesc.ads.ponto.relatorios.SaldoBHSetorResult;
+import br.udesc.ads.ponto.servicos.SetorService;
 import br.udesc.ads.ponto.util.DataConverter;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
 
-@ManagedBean(name = "relSaldoBh")
+@ManagedBean(name = "relSaldoBhSetor")
 @SessionScoped
-public class RelatorioSaldoBhController implements Serializable {
+public class RelatorioSaldoBhSetorController implements Serializable {
 
-	private static final long serialVersionUID = -8102191811460863725L;
+	private static final long serialVersionUID = 4688803327731861791L;
 
-	private List<SaldoBHResult> saldosBh;
-	private Map<Long, Colaborador> colaboradoresMap;
-	private List<SelectItem> colaboradores;
-
+	private List<SaldoBHSetorResult> saldosBh;
+	private Map<Long, Setor> setoresMap = new HashMap<>();
+	private List<SelectItem> setores = new ArrayList<SelectItem>();
 	private Date maxDate = LocalDate.now().minusDays(1).toDate();
 	private Date dataInicial;
 	private Date dataFinal;
-
-	private Long colaboradorSelecionado;
-
+	private Long setorSelecionado;
 	private boolean listouRelatorio = false;
 
-	public RelatorioSaldoBhController() {
-		colaboradorSelecionado = 0L;
-
-		buscaColaboradores();
+	public RelatorioSaldoBhSetorController() {
+		setorSelecionado = 0L;
+		buscaSetores();
 	}
 
 	public void gerarRelatorio() {
@@ -57,52 +53,53 @@ public class RelatorioSaldoBhController implements Serializable {
 	}
 
 	private void buscaDadosRelatorio() {
-		List<Colaborador> colabsRelatorio = new ArrayList<Colaborador>();
+		List<Setor> setoresRelatorio = new ArrayList<>();
 
-		if (colaboradorSelecionado == 0) {
-			colabsRelatorio.addAll(colaboradoresMap.values());
+		if (setorSelecionado == 0) {
+			setoresRelatorio.addAll(setoresMap.values());
 		} else {
-			colabsRelatorio.add(colaboradoresMap.get(colaboradorSelecionado));
+			setoresRelatorio.add(setoresMap.get(setorSelecionado));
 		}
+
 		LocalDate dtInicial = LocalDate.fromDateFields(dataInicial);
 		LocalDate dtFinal = LocalDate.fromDateFields(dataFinal);
-		saldosBh = RelatorioSaldoBH.get().consultar(dtInicial, dtFinal, colabsRelatorio);
+		saldosBh = RelatorioSaldoBHPorSetor.get().consultar(dtInicial, dtFinal, setoresRelatorio);
 	}
 
-	private void buscaColaboradores() {
+	private void buscaSetores() {
 		Usuario usuarioAutenticado = new MenuController().getUsuarioAutenticado();
 		Colaborador colaborador = usuarioAutenticado.getColaborador();
-		Setor setor = null;
+		Setor setor = colaborador != null ? colaborador.getSetor() : null;
 
-		if (colaborador != null) {
-			setor = colaborador.getSetor();
+		setoresMap.clear();
+		setores.clear();
+		if (setor == null) {
+			setores.add(new SelectItem(0L, "Todos"));
+			for (Setor s : SetorService.get().getSetores()) {
+				setoresMap.put(s.getId(), s);
+				setores.add(new SelectItem(s.getId(), s.getNome()));
+			}
+		} else {
+			setoresMap.put(setor.getId(), setor);
+			setores.add(new SelectItem(setor.getId(), setor.getNome()));
 		}
 
-		colaboradoresMap = new HashMap<Long, Colaborador>();
-
-		colaboradores = new ArrayList<SelectItem>();
-		colaboradores.add(new SelectItem(0L, "Todos"));
-
-		for (Colaborador c : ColaboradorService.get().getColaboradoresAtivosPorSetor(setor)) {
-			colaboradoresMap.put(c.getId(), c);
-			colaboradores.add(new SelectItem(c.getId(), c.getNome()));
-		}
 	}
 
-	public List<SaldoBHResult> getSaldosBh() {
+	public List<SaldoBHSetorResult> getSaldosBh() {
 		return saldosBh;
 	}
 
-	public void setSaldosBh(List<SaldoBHResult> saldosBh) {
+	public void setSaldosBh(List<SaldoBHSetorResult> saldosBh) {
 		this.saldosBh = saldosBh;
 	}
 
-	public List<SelectItem> getColaboradores() {
-		return colaboradores;
+	public List<SelectItem> getSetores() {
+		return setores;
 	}
 
-	public void setColaboradores(List<SelectItem> colaboradores) {
-		this.colaboradores = colaboradores;
+	public void setSetores(List<SelectItem> setores) {
+		this.setores = setores;
 	}
 
 	public Date getDataInicial() {
@@ -121,12 +118,12 @@ public class RelatorioSaldoBhController implements Serializable {
 		this.dataFinal = dataFinal;
 	}
 
-	public Long getColaboradorSelecionado() {
-		return colaboradorSelecionado;
+	public Long getSetorSelecionado() {
+		return setorSelecionado;
 	}
 
-	public void setColaboradorSelecionado(Long colaboradorSelecionado) {
-		this.colaboradorSelecionado = colaboradorSelecionado;
+	public void setSetorSelecionado(Long setorSelecionado) {
+		this.setorSelecionado = setorSelecionado;
 	}
 
 	public Date getMaxDate() {

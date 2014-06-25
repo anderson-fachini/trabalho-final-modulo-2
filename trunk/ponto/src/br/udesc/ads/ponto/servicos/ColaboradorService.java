@@ -106,20 +106,20 @@ public class ColaboradorService {
 		}
 	}
 	
-	public List<Colaborador> getColaboradoresPorSetor(Setor setor) {
+	/**
+	 * @param setor O setor a ser filtrado, ou null para buscar de todos os setores.
+	 * @return A lista de colaboradores.
+	 */
+	public List<Colaborador> getColaboradoresAtivosPorSetor(Setor setor) {
 		EntityManager entityManager = Manager.get().getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Colaborador> query = cb.createQuery(Colaborador.class);
 		Root<Colaborador> root = query.from(Colaborador.class);
-		
-		query.select(root);
-		
+		query.select(root).where(cb.equal(root.get("situacao"), Situacao.ATIVO));
 		if (setor != null) {
 			query.where(cb.equal(root.get("setor"), setor));
 		}
-		
 		query.orderBy(cb.asc(root.get("nome")));
-		
 		return entityManager.createQuery(query).getResultList();
 	}
 
