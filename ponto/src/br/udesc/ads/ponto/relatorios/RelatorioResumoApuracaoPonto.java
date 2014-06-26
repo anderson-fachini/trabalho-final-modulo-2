@@ -45,19 +45,19 @@ public class RelatorioResumoApuracaoPonto {
 				if (todas || apenasPendentes && apuracao.isPendente() || apenasConfirmadas && !apuracao.isPendente()) {
 					ResumoApuracaoPontoResult item = new ResumoApuracaoPontoResult(d);
 					item.setMarcacoes(apuracao.getSequenciaMarcacoes());
-					item.setSituacoes(getOcorrenciasAsString(apuracao));
+					item.setDetalhes(getOcorrenciasAsString(apuracao));
 					result.add(item);
 				}
 			} else if (!apenasPendentes) {
 				Feriado feriado = FeriadoService.get().buscarPorData(d);
 				if (feriado != null) {
 					ResumoApuracaoPontoResult item = new ResumoApuracaoPontoResult(d);
-					item.setSituacoes(Messages.getString("feriado") + ": " + feriado.getNome());
+					item.setDetalhes(Messages.getString("feriado") + ": " + feriado.getNome());
 					result.add(item);
 
 				} else if (DiaSemana.fromLocalDate(d).isFinalDeSemana()) {
 					ResumoApuracaoPontoResult item = new ResumoApuracaoPontoResult(d);
-					item.setSituacoes(Messages.getString("descansoSemanalRemunerado"));
+					item.setDetalhes(Messages.getString("descansoSemanalRemunerado"));
 					result.add(item);
 				}
 			}
