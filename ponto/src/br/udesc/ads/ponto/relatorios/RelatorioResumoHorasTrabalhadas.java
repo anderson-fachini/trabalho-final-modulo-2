@@ -1,6 +1,8 @@
 package br.udesc.ads.ponto.relatorios;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -49,7 +51,20 @@ public class RelatorioResumoHorasTrabalhadas {
 			}
 			result.add(item);
 		}
+		ordenarPorNomeColaborador(result);
 		return result;
+	}
+
+	private void ordenarPorNomeColaborador(List<ResumoHorasTrabalhadasResult> lista) {
+		Collections.sort(lista, new Comparator<ResumoHorasTrabalhadasResult>() {
+
+			@Override
+			public int compare(ResumoHorasTrabalhadasResult o1, ResumoHorasTrabalhadasResult o2) {
+				String nome1 = o1.getColaborador().getNome();
+				String nome2 = o2.getColaborador().getNome();
+				return nome1.compareTo(nome2);
+			}
+		});
 	}
 
 }
