@@ -88,6 +88,9 @@ public class AjustePontoController implements Serializable {
 			
 			apuracoesMap = new LinkedHashMap<Long, Apuracao>();
 			for (Apuracao apuracao : apuracoes) {
+				if (apenasExcecoes && !apuracao.getExigeConfirmacao())
+					continue;
+				
 				apuracoesMap.put(apuracao.getId(), apuracao);
 			}
 			
