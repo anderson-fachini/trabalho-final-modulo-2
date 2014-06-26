@@ -62,7 +62,8 @@
 				<ace:column style="width: 100px;">					
 					<ace:menuButton value="#{msg.acoes}" 
 					rendered="#{apuracaoPonto.precisaAjustar || apuracaoPonto.exigeConfirmacao}">
-						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.precisaAjustar}" />
+						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.precisaAjustar}"
+							action="#{ajustePonto.abonarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
 						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.precisaAjustar}" />
 						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
 							action="#{ajustePonto.aprovarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
@@ -95,11 +96,72 @@
 					<h:panelGrid columns="2">
 						<h:outputLabel value="#{msg.observacoes}" />
 						<h:inputTextarea cols="40" rows="2" style="width: 300px;"
-							value="#{ajustePonto.apuracaoConfirmarSelecionada.observacoes}" />
+							value="#{ajustePonto.apuracaoSelecionada.observacoes}" />
 						
 						<h:commandButton value="#{msg.confirmarApuracao}"
-							action="#{ajustePonto.aprovarApuracaoSelecioandaSalvar}" />
+							action="#{ajustePonto.aprovarApuracaoSelecionadaSalvar}" />
 					</h:panelGrid>					
+				</h:form>
+			</f:facet>
+		</ice:panelPopup>
+		
+		<ice:panelPopup visible="#{ajustePonto.popupAbonarApuracaoOpened}" rendered="#{ajustePonto.popupAbonarApuracaoOpened}"
+		modal="true" autoCentre="true" style="width: 470px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                         #{msg.abonarPeriodo}
+                     </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
+							<h:commandButton action="#{ajustePonto.togglePopupAbonarApuracaoOpened}" 
+								image="/images/popup-close.png" alt="Close" type="button"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="body">
+				<h:form>
+					<h:panelGrid columns="3">
+						<h:outputLabel value="#{msg.horaInicio}" />
+						<h:inputText id="horaInicioAbono" value="#{apuracaoPonto.abonoAdicionar.horaInicio}"
+							required="true" requiredMessage="#{msg.msgInformeHoraInicio}" immediate="true">
+							<f:converter converterId="br.udesc.ponto.LocalTimeConverter" />
+						</h:inputText>
+						<h:message for="horaInicioAbono" />
+						
+						<h:outputLabel value="#{msg.horaFim}" />
+						<h:inputText id="horaFimAbono" value="#{apuracaoPonto.abonoAdicionar.horaFim}"
+							required="true" requiredMessage="#{msg.msgInformeHoraFim}" immediate="true">
+							<f:converter converterId="br.udesc.ponto.LocalTimeConverter" />
+						</h:inputText>
+						<h:message for="horaFimAbono" />
+						
+						<h:outputLabel value="#{msg.motivoAbono}" />
+						<h:selectOneMenu id="motivoAbono" value="#{apuracaoPonto.idMotivoAbonoAdicionar}">
+							<f:selectItems value="#{ajustePonto.motivosAbono}" var="motivo"
+								itemValue="#{motivo.id}" itemLabel="#{motivo.descricao}" />
+						</h:selectOneMenu>
+						<h:message for="motivoAbono" />
+						
+						<h:commandButton value="#{msg.adicionarAbono}" />						
+					</h:panelGrid>
+					
+					<ace:dataTable value="#{apuracaoPonto.apuracaoSelecionada.abonos}" var="abono">
+						<ace:column headerText="#{msg.horaInicio}">
+							<h:outputText value="#{abono.horaInicio}" />
+						</ace:column>
+						<ace:column headerText="#{msg.horaFim}">
+							<h:outputText value="#{abono.horaInicio}" />
+						</ace:column>
+						<ace:column headerText="#{msg.motivoAbono}">
+							<h:outputText value="#{abono.motivo.descricao}" />
+						</ace:column>
+					</ace:dataTable>
+					
+					<h:commandButton value="#{msg.abonarPeriodo}"
+							action="#{ajustePonto.abonarApuracaoSelecionadaSalvar}" />			
 				</h:form>
 			</f:facet>
 		</ice:panelPopup>

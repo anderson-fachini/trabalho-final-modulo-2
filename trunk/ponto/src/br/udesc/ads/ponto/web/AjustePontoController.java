@@ -20,11 +20,13 @@ import br.udesc.ads.ponto.entidades.Abono;
 import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Marcacao;
+import br.udesc.ads.ponto.entidades.MotivoAbono;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.ApuracaoService;
 import br.udesc.ads.ponto.servicos.ColaboradorService;
+import br.udesc.ads.ponto.servicos.MotivoAbonoService;
 import br.udesc.ads.ponto.util.DataConverter;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
@@ -39,20 +41,28 @@ public class AjustePontoController implements Serializable {
 	private List<SelectItem> colaboradores;
 	private Map<Long, Colaborador> colaboradoresMapa;
 	private Map<Long, Apuracao> apuracoesMap;
+	private List<MotivoAbono> motivosAbono;
 	
 	private Long codColabSelecionado;
+	private Long idMotivoAbonoAdicionar;
+	
 	private Date dataInicial;
 	private Date dataFinal;
 	private Date maxDate = new Date(System.currentTimeMillis());
+	private Date horaInicioAbono;
+	private Date horaFimAbono;
 	
-	private Apuracao apuracaoConfirmarSelecionada;
+	private Apuracao apuracaoSelecionada;
+	private Abono abonoAdicionar;
 	
 	private boolean apenasExcecoes = true;
 	private boolean buscouApuracoes = false;
 	private boolean popupAprovarApuracaoOpened = false;
+	private boolean popupAbonarApuracaoOpened = false;
 		
 	public AjustePontoController() {
 		buscaListaColaboradores();
+		motivosAbono = MotivoAbonoService.get().getMotivosAbono();
 	}
 	
 	public List<String> getSituacoes(List<Ocorrencia> ocorrencias) {
@@ -61,17 +71,38 @@ public class AjustePontoController implements Serializable {
 		return null;
 	}
 	
-	public void aprovarApuracaoSetaSelecionada(Long id) {		
-		togglePopupAprovarApuracaoOpened();
-		apuracaoConfirmarSelecionada = apuracoesMap.get(id);
+	public void abonarApuracaoSetaSelecionada(Long id) {
+		togglePopupAbonarApuracaoOpened();
+		apuracaoSelecionada = apuracoesMap.get(id);
 	}
 	
-	public void aprovarApuracaoSelecioandaSalvar() {
-		apuracaoConfirmarSelecionada.setDataConfirmacao(new LocalDateTime());
-		apuracaoConfirmarSelecionada.setResponsavelConfirmacao(new MenuController().getUsuarioAutenticado());
-		apuracaoConfirmarSelecionada.setExigeConfirmacao(false);
+	public void abonarApuracaoSelecionadaSalvar() {
+//		Abono abono = new Abono();
+//		abono.setHoraInicio(LocalTime.fromDateFields(horaInicioAbono));
+//		abono.setHoraFim(LocalTime.fromDateFields(horaFimAbono));
+//		abono.setApuracao(apuracaoSelecionada);
+//		abono.setMotivo(motivoAbonoSelecionado);
+//		
+//		apuracaoSelecionada.addAbono(abono);
+//		
+//		apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
+//		
+//		geraListaApuracoesPonto();
+//		
+//		togglePopupAbonarApuracaoOpened();
+	}
+	
+	public void aprovarApuracaoSetaSelecionada(Long id) {		
+		togglePopupAprovarApuracaoOpened();
+		apuracaoSelecionada = apuracoesMap.get(id);
+	}
+	
+	public void aprovarApuracaoSelecionadaSalvar() {
+		apuracaoSelecionada.setDataConfirmacao(new LocalDateTime());
+		apuracaoSelecionada.setResponsavelConfirmacao(new MenuController().getUsuarioAutenticado());
+		apuracaoSelecionada.setExigeConfirmacao(false);
 		
-		apuracoesMap.put(apuracaoConfirmarSelecionada.getId(), apuracaoConfirmarSelecionada);
+		apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
 		
 		geraListaApuracoesPonto();
 		
@@ -213,10 +244,16 @@ public class AjustePontoController implements Serializable {
 		}
 	}
 	
+	public void togglePopupAbonarApuracaoOpened() {
+		popupAbonarApuracaoOpened = !popupAbonarApuracaoOpened;
+		
+		apuracaoSelecionada = new Apuracao();
+	}
+	
 	public void togglePopupAprovarApuracaoOpened() {
 		popupAprovarApuracaoOpened = !popupAprovarApuracaoOpened;
 		
-		apuracaoConfirmarSelecionada = new Apuracao();
+		apuracaoSelecionada = new Apuracao();
 	}
 
 	public List<ApuracaoPonto> getApuracoesPonto() {
@@ -283,13 +320,12 @@ public class AjustePontoController implements Serializable {
 		this.buscouApuracoes = buscouApuracoes;
 	}
 
-	public Apuracao getApuracaoConfirmarSelecionada() {
-		return apuracaoConfirmarSelecionada;
+	public Apuracao getApuracaoSelecionada() {
+		return apuracaoSelecionada;
 	}
 
-	public void setApuracaoConfirmarSelecionada(
-			Apuracao apuracaoConfirmarSelecionada) {
-		this.apuracaoConfirmarSelecionada = apuracaoConfirmarSelecionada;
+	public void setApuracaoSelecionada(Apuracao apuracaoSelecionada) {
+		this.apuracaoSelecionada = apuracaoSelecionada;
 	}
 
 	public boolean isPopupAprovarApuracaoOpened() {
@@ -298,6 +334,58 @@ public class AjustePontoController implements Serializable {
 
 	public void setPopupAprovarApuracaoOpened(boolean popupAprovarApuracaoOpened) {
 		this.popupAprovarApuracaoOpened = popupAprovarApuracaoOpened;
+	}
+
+	public List<MotivoAbono> getMotivosAbono() {
+		return motivosAbono;
+	}
+
+	public void setMotivosAbono(List<MotivoAbono> motivosAbono) {
+		this.motivosAbono = motivosAbono;
+	}
+
+	public Date getDataInicioAbono() {
+		return horaInicioAbono;
+	}
+
+	public void setDataInicioAbono(Date dataInicioAbono) {
+		this.horaInicioAbono = dataInicioAbono;
+	}
+
+	public Date getDataFimAbono() {
+		return horaFimAbono;
+	}
+
+	public void setDataFimAbono(Date dataFimAbono) {
+		this.horaFimAbono = dataFimAbono;
+	}
+
+	public boolean isPopupAbonarApuracaoOpened() {
+		return popupAbonarApuracaoOpened;
+	}
+
+	public void setPopupAbonarApuracaoOpened(boolean popupAbonaApuracaoOpened) {
+		this.popupAbonarApuracaoOpened = popupAbonaApuracaoOpened;
+	}
+
+	public void addAbonoMarcacaoSelecionada() {
+		
+	}
+
+	public Abono getAbonoAdicionar() {
+		return abonoAdicionar;
+	}
+
+	public void setAbonoAdicionar(Abono abonoAdicionar) {
+		this.abonoAdicionar = abonoAdicionar;
+	}
+
+	public Long getIdMotivoAbonoAdicionar() {
+		return idMotivoAbonoAdicionar;
+	}
+
+	public void setIdMotivoAbonoAdicionar(Long idAbonoAdicionar) {
+		this.idMotivoAbonoAdicionar = idAbonoAdicionar;
 	}
 	
 }
