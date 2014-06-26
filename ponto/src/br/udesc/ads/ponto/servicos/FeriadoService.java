@@ -1,6 +1,7 @@
 package br.udesc.ads.ponto.servicos;
 
 import java.io.File;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -46,12 +47,20 @@ public class FeriadoService {
 	 *         <code>false</code>.
 	 */
 	public boolean existeFeriado(LocalDate data) {
+		return buscarPorData(data) != null;
+	}
+	
+	public Feriado buscarPorData(LocalDate data) {
 		EntityManager entityManager = Manager.get().getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Feriado> query = cb.createQuery(Feriado.class);
 		Root<Feriado> root = query.from(Feriado.class);
 		query.select(root).where(cb.equal(root.get("data"), data));
-		return !entityManager.createQuery(query).getResultList().isEmpty();
+		List<Feriado> result = entityManager.createQuery(query).getResultList();
+		if (result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
 	}
 
 }

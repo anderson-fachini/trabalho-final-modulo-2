@@ -14,6 +14,14 @@ public class ResumoApuracaoPontoResult {
 	private DiaSemana diaSemana;
 	private List<LocalTime> marcacoes = new ArrayList<>();
 	private String situacoes;
+	
+	public ResumoApuracaoPontoResult() {
+	}
+	
+	public ResumoApuracaoPontoResult(LocalDate data) {
+		this.data = data;
+		this.diaSemana = DiaSemana.fromLocalDate(data);
+	}
 
 	public LocalDate getData() {
 		return data;
