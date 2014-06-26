@@ -3,15 +3,17 @@ package br.udesc.ads.ponto.entidades;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
+import br.udesc.ads.ponto.util.Messages;
+
 public enum DiaSemana {
 
-	DOMINGO(1, "Domingo"), //
-	SEGUNDA_FEIRA(2, "Segunda-feira"), //
-	TERCA_FEIRA(3, "Terça-feira"), //
-	QUARTA_FEIRA(4, "Quarta-feira"), //
-	QUINTA_FEIRA(5, "Quinta-feira"), //
-	SEXTA_FEIRA(6, "Sexta-feira"), //
-	SABADO(7, "Sábado");
+	DOMINGO(1, Messages.getString("domingo")), //
+	SEGUNDA_FEIRA(2, Messages.getString("segundaFeira")), //
+	TERCA_FEIRA(3, Messages.getString("tercaFeira")), //
+	QUARTA_FEIRA(4, Messages.getString("quartaFeira")), //
+	QUINTA_FEIRA(5, Messages.getString("quintaFeira")), //
+	SEXTA_FEIRA(6, Messages.getString("sextaFeira")), //
+	SABADO(7, Messages.getString("sabado"));
 
 	private int id;
 	private String descricao;
