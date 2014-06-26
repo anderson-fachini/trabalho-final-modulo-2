@@ -1,15 +1,111 @@
 <?xml version="1.0"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	template="/WEB-INF/templates/templateBase.xhtml">
 
-	<ui:param name="pageTitle" value="#{msg.relatorioResumoHorasTrabEBh}" />
+	<ui:param name="pageTitle" value="#{msg.relatorioResumoHorasTrabalhadas}" />
 
 	<ui:define name="pageContent">
+
+		<style type="text/css">
+#dadosRelatorio {
+	width: 650px;
+}
+
+.tb-dados-relatorio {
+	font-size: 14px;
+}
+
+.col-nome {
+	width: 200px;
+	text-align: left !important;
+}
+
+.col-hora {
+	width: 50px;
+}
+
+tbody .col-hora {
+	text-align: right !important;
+}
+</style>
+
+		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
+			<fieldset>
+				<legend>#{msg.filtros}</legend>
+				<h:panelGrid columns="2" style="margin-left: 50px;">
+					<h:outputLabel value="#{msg.colaborador}:" />
+					<h:selectOneMenu value="#{relResHorasTrabalhadas.colaboradorSelecionado}">
+						<f:selectItems value="#{relResHorasTrabalhadas.colaboradores}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="#{msg.dataInicial}:" />
+					<ace:dateTimeEntry value="#{relResHorasTrabalhadas.dataInicial}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true"
+						maxdate="#{relResHorasTrabalhadas.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataInicial}" />
+
+					<h:outputLabel value="#{msg.dataFinal}:" />
+					<ace:dateTimeEntry value="#{relResHorasTrabalhadas.dataFinal}" locale="pt-BR"
+						timezone="America/Sao_Paulo" pattern="dd/MM/yyyy" renderAsPopup="true" navigator="true"
+						maxdate="#{relResHorasTrabalhadas.maxDate}" required="true"
+						requiredMessage="#{msg.msgInformeDataFinal}" />
+
+					<h:commandButton value="#{msg.gerar}" action="#{relResHorasTrabalhadas.gerarRelatorio}" />
+				</h:panelGrid>
+
+				<ace:messages />
+			</fieldset>
+		</h:form>
+
+		<h:form id="dadosRelatorio" rendered="#{relResHorasTrabalhadas.listouRelatorio}"
+			styleClass="centralized-form bordered-form">
+			<h:panelGroup rendered="#{!relResHorasTrabalhadas.existemDadosListar}">
+				<p class="text-center">
+					<h:outputText value="#{msg.msgNaoHaDadosListar}" />
+				</p>
+			</h:panelGroup>
+
+			<h:commandLink styleClass="link-imprimir">
+				<h:graphicImage value="/images/printerIcon.png" />
+				<h:outputText value="#{msg.imprimir}" />
+				<ace:printer for="conteudoRelatorio" />
+			</h:commandLink>
+
+			<h:panelGroup id="conteudoRelatorio" rendered="#{relResHorasTrabalhadas.existemDadosListar}"
+				style="width: 100%;">
+				<h1 class="titulo-relatorio">#{msg.tituloRelatorioResumoHorasTrabalhadas}</h1>
+				<h:outputText
+					value="#{msg.periodo}: #{relResHorasTrabalhadas.dataInicialFormatada} #{msg.ate} #{relResHorasTrabalhadas.dataFinalFormatada}"
+					style="margin-bottom: 15px;" />
+
+				<ace:dataTable value="#{relResHorasTrabalhadas.registros}" var="registro"
+					styleClass="tb-dados-relatorio">
+					<ace:column headerText="#{msg.colaborador}" styleClass="col-nome">
+						<h:outputText value="#{registro.colaborador.nome}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.horasTrabalhadas}" styleClass="col-hora">
+						<h:outputText value="#{relResHorasTrabalhadas.getHoraFormatada(registro.horasTrabalhadas)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.horasExcedentes}" styleClass="col-hora">
+						<h:outputText value="#{relResHorasTrabalhadas.getHoraFormatada(registro.horasExcedentes)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.horasFaltantes}" styleClass="col-hora">
+						<h:outputText value="#{relResHorasTrabalhadas.getHoraFormatada(registro.horasFaltantes)}" />
+					</ace:column>
+
+					<ace:column headerText="#{msg.horasAbonadas}" styleClass="col-hora">
+						<h:outputText value="#{relResHorasTrabalhadas.getHoraFormatada(registro.horasAbonadas)}" />
+					</ace:column>
+
+				</ace:dataTable>
+			</h:panelGroup>
+		</h:form>
 
 	</ui:define>
 </ui:composition>
