@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 
 import br.udesc.ads.ponto.entidades.Abono;
 import br.udesc.ads.ponto.entidades.Apuracao;
@@ -116,13 +117,15 @@ public class AjustePontoController implements Serializable {
 				apuracaoPonto.addMarcacao(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
 			}
 			
-			if (apuracao.getHorasTrabalhadas().getMillisOfDay() > 0) {
+			LocalTime horasTrabalhadas = apuracao.getHorasTrabalhadas(); 
+			if (horasTrabalhadas != null && horasTrabalhadas.getMillisOfDay() > 0) {
 				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
 						DataConverter.formataData(apuracao.getHorasTrabalhadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						Messages.getString("horasNormais")));
 			}
 			
-			if (apuracao.getHorasAbonadas().getMillisOfDay() > 0) {
+			LocalTime horasAbonadas = apuracao.getHorasAbonadas(); 
+			if (horasAbonadas != null && horasAbonadas.getMillisOfDay() > 0) {
 				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
 						DataConverter.formataData(apuracao.getHorasAbonadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						Messages.getString("horasAbonadas")));
