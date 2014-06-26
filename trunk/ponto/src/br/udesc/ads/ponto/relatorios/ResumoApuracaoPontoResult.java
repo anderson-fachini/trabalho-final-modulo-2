@@ -13,7 +13,7 @@ public class ResumoApuracaoPontoResult {
 	private LocalDate data;
 	private DiaSemana diaSemana;
 	private List<LocalTime> marcacoes = new ArrayList<>();
-	private String situacoes;
+	private String detalhes;
 	
 	public ResumoApuracaoPontoResult() {
 	}
@@ -47,12 +47,12 @@ public class ResumoApuracaoPontoResult {
 		this.marcacoes = marcacoes;
 	}
 
-	public String getSituacoes() {
-		return situacoes;
+	public String getDetalhes() {
+		return detalhes;
 	}
 
-	public void setSituacoes(String situacoes) {
-		this.situacoes = situacoes;
+	public void setDetalhes(String detalhes) {
+		this.detalhes = detalhes;
 	}
 
 }

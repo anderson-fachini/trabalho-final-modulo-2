@@ -27,7 +27,7 @@
 	text-align: left !important;
 }
 
-.col-situacoes {
+.col-detalhes {
 	width: 240px;
 	text-align: left !important;
 }
@@ -113,8 +113,8 @@
 						<h:outputText value="#{relResApuracoesPonto.marcacoesToStr(apuracao.marcacoes)}" />
 					</ace:column>
 
-					<ace:column headerText="#{msg.situacoes}" styleClass="col-situacoes">
-						<h:outputText value="#{apuracao.situacoes}" />
+					<ace:column headerText="#{msg.detalhes}" styleClass="col-detalhes">
+						<h:outputText value="#{apuracao.detalhes}" />
 					</ace:column>
 				</ace:dataTable>
 			</h:panelGroup>
