@@ -32,7 +32,7 @@ public class RelatorioSaldoBhSetorController implements Serializable {
 	private List<SaldoBHSetorResult> saldosBh;
 	private Map<Long, Setor> setoresMap = new HashMap<>();
 	private List<SelectItem> setores = new ArrayList<SelectItem>();
-	private Date maxDate = LocalDate.now().minusDays(1).toDate();
+	private Date maxDate = LocalDate.now().toDate();
 	private Date dataInicial;
 	private Date dataFinal;
 	private Long setorSelecionado;

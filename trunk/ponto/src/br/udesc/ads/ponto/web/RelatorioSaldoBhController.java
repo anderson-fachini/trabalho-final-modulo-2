@@ -33,7 +33,7 @@ public class RelatorioSaldoBhController implements Serializable {
 	private Map<Long, Colaborador> colaboradoresMap;
 	private List<SelectItem> colaboradores;
 
-	private Date maxDate = LocalDate.now().minusDays(1).toDate();
+	private Date maxDate = LocalDate.now().toDate();
 	private Date dataInicial;
 	private Date dataFinal;
 
