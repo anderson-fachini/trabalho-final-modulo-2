@@ -59,20 +59,20 @@
 					</ui:repeat>
 				</ace:column>
 				
-				<ace:column style="width: 100px;">					
+				<ace:column style="width: 100px;">
 					<ace:menuButton value="#{msg.acoes}" 
-					rendered="#{apuracaoPonto.precisaAjustar || apuracaoPonto.exigeConfirmacao}">
+					rendered="#{apuracaoPonto.inconsistente || apuracaoPonto.exigeConfirmacao}">
 						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.podeAbonar}"
 							action="#{ajustePonto.abonarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
-						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.precisaAjustar}" />
-						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
+						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.inconsistente}" />
+						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{!apuracaoPonto.inconsistente and apuracaoPonto.exigeConfirmacao }"
 							action="#{ajustePonto.aprovarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
 					</ace:menuButton>
 				</ace:column>
 			</ace:dataTable>
 			
 			<h:commandButton rendered="#{ajustePonto.buscouApuracoes}" style="margin-top: 10px;" 
-				value="#{msg.confirmarAjustes}" />
+				value="#{msg.confirmarAjustes}" action="#{ajustePonto.confirmarAjustes}" />
 		</h:form>
 		
 		<ice:panelPopup visible="#{ajustePonto.popupAprovarApuracaoOpened}" rendered="#{ajustePonto.popupAprovarApuracaoOpened}"

@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -35,6 +38,10 @@ import br.udesc.ads.ponto.util.Messages;
 @SessionScoped
 public class AjustePontoController implements Serializable {
 	
+	private static final String FORMATO_ABONO = "%s - %s: %s";
+	private static final String FORMATO_OCORRENCIA = "%s - %s";
+	private static final String FORMATO_SELECIONE_ITEM = "-- %s --";
+
 	private static final long serialVersionUID = 6585193392870549078L;
 
 	private List<ApuracaoPonto> apuracoesPonto;
@@ -42,6 +49,7 @@ public class AjustePontoController implements Serializable {
 	private List<SelectItem> motivosAbono;
 	private Map<Long, Colaborador> colaboradoresMapa;
 	private Map<Long, Apuracao> apuracoesMap;
+	private Set<Apuracao> apuracoesConfirmadas;
 	private Map<Long, MotivoAbono> motivosAbonoMap;
 	
 	private Long codColabSelecionado;
@@ -61,12 +69,11 @@ public class AjustePontoController implements Serializable {
 	private boolean popupAbonarApuracaoOpened = false;
 		
 	public AjustePontoController() {
-		buscaListaColaboradores();
-		
 		idMotivoAbonoAdicionar = 0L;
 		horaInicioAbono = new Date();
 		horaFimAbono = new Date();
 		
+		buscaListaColaboradores();
 		carregaListasMotivoAbono();				
 	}
 	
@@ -74,13 +81,26 @@ public class AjustePontoController implements Serializable {
 		motivosAbonoMap = new HashMap<Long, MotivoAbono>();
 		
 		motivosAbono = new ArrayList<SelectItem>();
-		motivosAbono.add(new SelectItem(0L, String.format("-- %s --", Messages.getString("selecione"))));
+		motivosAbono.add(new SelectItem(0L, String.format(FORMATO_SELECIONE_ITEM, Messages.getString("selecione"))));
 		
 		boolean apenasAtivos = true;
 		for (MotivoAbono motivo : MotivoAbonoService.get().getMotivosAbono(apenasAtivos)) {
 			motivosAbono.add(new SelectItem(motivo.getId(), motivo.getDescricao()));
 			motivosAbonoMap.put(motivo.getId(), motivo);
 		}
+	}
+	
+	public void confirmarAjustes() {
+		Usuario usuario = new MenuController().getUsuarioAutenticado();
+		
+		Iterator<Apuracao> iterator = apuracoesConfirmadas.iterator(); 
+		while (iterator.hasNext()) {
+			ApuracaoService.get().aprovarApuracao(iterator.next(), usuario);
+		}
+		
+		JsfUtils.addMensagemInfo(Messages.getString("msgApuracoesConfirmadasSucesso"));
+		
+		buscaApuracoes();
 	}
 	
 	public void abonarApuracaoSetaSelecionada(Long id) {
@@ -91,7 +111,7 @@ public class AjustePontoController implements Serializable {
 	public void abonarApuracaoSelecionadaSalvar() {
 		boolean temErros = validaAbonarApuracao();
 		
-		if (!temErros) {		
+		if (!temErros) {	
 			Abono abono = new Abono();
 			abono.setHoraInicio(LocalTime.fromDateFields(horaInicioAbono));
 			abono.setHoraFim(LocalTime.fromDateFields(horaFimAbono));
@@ -100,6 +120,8 @@ public class AjustePontoController implements Serializable {
 			abono.setMotivo(motivosAbonoMap.get(idMotivoAbonoAdicionar));
 			
 			apuracaoSelecionada.addAbono(abono);
+			
+			ApuracaoService.get().apurarMarcacoes(apuracaoSelecionada);
 			
 			apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
 			
@@ -136,6 +158,7 @@ public class AjustePontoController implements Serializable {
 		apuracaoSelecionada.setExigeConfirmacao(false);
 		
 		apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
+		apuracoesConfirmadas.add(apuracaoSelecionada);
 		
 		geraListaApuracoesPonto();
 		
@@ -146,6 +169,8 @@ public class AjustePontoController implements Serializable {
 		boolean temErros = validaBusca();
 		
 		if (!temErros) {
+			apuracoesConfirmadas = new HashSet<Apuracao>();
+			
 			List<Apuracao> apuracoes = ApuracaoService.get().getApuracoesPorPeriodo(LocalDate.fromDateFields(dataInicial), 
 																	 LocalDate.fromDateFields(dataFinal), 
 																	 colaboradoresMapa.get(codColabSelecionado));
@@ -167,8 +192,6 @@ public class AjustePontoController implements Serializable {
 	private void geraListaApuracoesPonto() {
 		apuracoesPonto = new ArrayList<ApuracaoPonto>();
 		
-		String formatoOcorrencia = "%s - %s";
-		String formatoAbono = "%s - %s: %s";
 		ApuracaoPonto apuracaoPonto;
 		
 		for (Apuracao apuracao : apuracoesMap.values()) {
@@ -180,6 +203,7 @@ public class AjustePontoController implements Serializable {
 			apuracaoPonto.setDiaSemana(DataConverter.formataData(apuracao.getData().toDate(), DataConverter.formatoDiaSemanaExtenso));
 			apuracaoPonto.setExigeConfirmacao(apuracao.getExigeConfirmacao());
 			apuracaoPonto.setPodeAbonar(apuracao.getOcorrencias().contains(Ocorrencia.HORAS_FALTANTES));
+			apuracaoPonto.setInconsistente(apuracao.getInconsistente());
 			
 			for (Marcacao marcacao : apuracao.getMarcacoes()) {
 				apuracaoPonto.addMarcacao(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
@@ -187,34 +211,30 @@ public class AjustePontoController implements Serializable {
 			
 			LocalTime horasTrabalhadas = apuracao.getHorasTrabalhadas(); 
 			if (horasTrabalhadas != null && horasTrabalhadas.getMillisOfDay() > 0) {
-				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
+				apuracaoPonto.addOcorrencia(String.format(FORMATO_OCORRENCIA,
 						DataConverter.formataData(apuracao.getHorasTrabalhadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
-						Messages.getString("horasNormais")));
+						Messages.getString("horasTrabalhadas")));
 			}
 			
 			LocalTime horasAbonadas = apuracao.getHorasAbonadas(); 
 			if (horasAbonadas != null && horasAbonadas.getMillisOfDay() > 0) {
-				apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia,
+				apuracaoPonto.addOcorrencia(String.format(FORMATO_OCORRENCIA,
 						DataConverter.formataData(apuracao.getHorasAbonadas().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						Messages.getString("horasAbonadas")));
 			}
 			
 			List<Ocorrencia> ocorrencias = apuracao.getOcorrencias();
 			
-			if (isOcorrenciasPrecisamAjuste(ocorrencias)) {
-				apuracaoPonto.setPrecisaAjustar(true);
-			}
-			
 			for (Ocorrencia ocorrencia : ocorrencias) {				
 				switch (ocorrencia) {
 					case HORAS_EXCEDENTES: {
-						apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia, 
+						apuracaoPonto.addOcorrencia(String.format(FORMATO_OCORRENCIA, 
 								DataConverter.formataData(apuracao.getHorasExcedentes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 								ocorrencia.getDescricao()));
 						break;
 					}
 					case HORAS_FALTANTES: {
-						apuracaoPonto.addOcorrencia(String.format(formatoOcorrencia, 
+						apuracaoPonto.addOcorrencia(String.format(FORMATO_OCORRENCIA, 
 								DataConverter.formataData(apuracao.getHorasFaltantes().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 								ocorrencia.getDescricao()));
 						break;
@@ -226,7 +246,7 @@ public class AjustePontoController implements Serializable {
 			}
 			
 			for (Abono abono : apuracao.getAbonos()) {
-				apuracaoPonto.addAbono(String.format(formatoAbono, 
+				apuracaoPonto.addAbono(String.format(FORMATO_ABONO, 
 						DataConverter.formataData(abono.getHoraInicio().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						DataConverter.formataData(abono.getHoraFim().toDateTimeToday().toDate(), DataConverter.formatoHHMM),
 						abono.getMotivo().getDescricao()));
@@ -234,12 +254,6 @@ public class AjustePontoController implements Serializable {
 			
 			apuracoesPonto.add(apuracaoPonto);
 		}
-	}
-	
-	private boolean isOcorrenciasPrecisamAjuste(List<Ocorrencia> ocorrencias) {
-		return ocorrencias.contains(Ocorrencia.HORAS_FALTANTES) ||
-			   ocorrencias.contains(Ocorrencia.MARCACOES_FALTANTES) ||
-			   ocorrencias.contains(Ocorrencia.MARCACOES_EXCEDENTES);
 	}
 	
 	private boolean validaBusca() {
