@@ -68,7 +68,8 @@ public class RelatorioSaldoBH {
 					}
 				}
 			}
-			item.setSaldoFinalPeriodo(item.getSaldoInicialPeriodo() + item.getEntradasBH() - item.getSaidasBH());
+			item.setSaldoFinalPeriodo(item.getSaldoInicialPeriodo() + item.getEntradasBH() - item.getSaidasBH()
+					+ item.getAjustesManuaisBH());
 			result.add(item);
 		}
 		ordenarPorNome(result);

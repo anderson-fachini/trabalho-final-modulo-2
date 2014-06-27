@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ace="http://www.icefaces.org/icefaces/components"
 	xmlns:ice="http://www.icesoft.com/icefaces/component"
 	template="/WEB-INF/templates/templateBase.xhtml">
@@ -10,6 +8,33 @@
 	<ui:param name="pageTitle" value="#{msg.ajustarSaldoBancoHoras}" />
 
 	<ui:define name="pageContent">
+
+		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
+			<fieldset>
+				<legend>#{msg.filtros}</legend>
+				<h:panelGrid columns="2" style="margin-left: 50px;">
+					<h:outputLabel value="#{msg.colaborador}:" />
+					<h:selectOneMenu value="#{ajusteBH.idColabSelecionado}">
+						<f:selectItems value="#{ajusteBH.colaboradores}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="#{msg.saldoAtual}:" />
+					<h:inputText id="idSaldoAtual" value="#{ajusteBH.saldoAtual}" />
+
+					<h:outputLabel value="#{msg.novoSaldo}:" />
+					<h:inputText value="#{ajusteBH.novoSaldo}" required="true"
+						requiredMessage="#{msg.msgInformeNovoSaldo}" />
+
+					<h:outputLabel value="#{msg.motivoAjuste}:" />
+					<h:inputText value="#{ajusteBH.motivoAjuste}" required="true"
+						requiredMessage="#{msg.msgInformeMotivoAjuste}" />
+
+					<h:commandButton value="#{msg.salvar}" action="#{ajusteBH.salvar}" />
+				</h:panelGrid>
+
+				<ace:messages />
+			</fieldset>
+		</h:form>
 
 	</ui:define>
 </ui:composition>
