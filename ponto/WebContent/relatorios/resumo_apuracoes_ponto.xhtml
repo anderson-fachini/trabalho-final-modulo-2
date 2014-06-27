@@ -35,6 +35,10 @@
 .col-data {
 	width: 60px;
 }
+
+.col-diasemana {
+	width: 80px;
+}
 </style>
 
 		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
@@ -105,7 +109,7 @@
 						<h:outputText value="#{relResApuracoesPonto.dateToStr(apuracao.data)}" />
 					</ace:column>
 
-					<ace:column headerText="#{msg.diaSemana}" styleClass="col-data">
+					<ace:column headerText="#{msg.diaSemana}" styleClass="col-diasemana">
 						<h:outputText value="#{apuracao.diaSemana.descricao}" />
 					</ace:column>
 
