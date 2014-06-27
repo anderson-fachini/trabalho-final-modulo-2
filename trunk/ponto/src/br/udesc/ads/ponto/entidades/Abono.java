@@ -1,5 +1,7 @@
 package br.udesc.ads.ponto.entidades;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,9 @@ import javax.persistence.ManyToOne;
 import org.joda.time.LocalTime;
 
 @Entity
-public class Abono {
+public class Abono implements Serializable {
+
+	private static final long serialVersionUID = 1470249173903197215L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

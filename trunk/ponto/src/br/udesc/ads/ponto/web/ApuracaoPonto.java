@@ -24,6 +24,8 @@ public class ApuracaoPonto implements Serializable {
 	
 	private boolean exigeConfirmacao;
 	
+	private boolean podeAbonar;
+	
 	public ApuracaoPonto() {
 		marcacoes = new ArrayList<String>();
 		ocorrencias = new ArrayList<String>();
@@ -105,6 +107,14 @@ public class ApuracaoPonto implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isPodeAbonar() {
+		return podeAbonar;
+	}
+
+	public void setPodeAbonar(boolean podeAbonar) {
+		this.podeAbonar = podeAbonar;
 	}
 	
 }

@@ -62,7 +62,7 @@
 				<ace:column style="width: 100px;">					
 					<ace:menuButton value="#{msg.acoes}" 
 					rendered="#{apuracaoPonto.precisaAjustar || apuracaoPonto.exigeConfirmacao}">
-						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.precisaAjustar}"
+						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.podeAbonar}"
 							action="#{ajustePonto.abonarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
 						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.precisaAjustar}" />
 						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{apuracaoPonto.exigeConfirmacao}"
@@ -123,42 +123,32 @@
 			</f:facet>
 			<f:facet name="body">
 				<h:form>
-					<h:panelGrid columns="3">
+					<h:panelGrid columns="2">
 						<h:outputLabel value="#{msg.horaInicio}" />
-						<h:inputText id="horaInicioAbono" value="#{apuracaoPonto.abonoAdicionar.horaInicio}"
-							required="true" requiredMessage="#{msg.msgInformeHoraInicio}" immediate="true">
-							<f:converter converterId="br.udesc.ponto.LocalTimeConverter" />
-						</h:inputText>
-						<h:message for="horaInicioAbono" />
+						<ice:selectInputDate value="#{ajustePonto.horaInicioAbono}"
+							renderAsPopup="false">
+							<f:convertDateTime pattern="kk:mm" type="time" timeZone="America/Sao_Paulo" />
+						</ice:selectInputDate>
 						
 						<h:outputLabel value="#{msg.horaFim}" />
-						<h:inputText id="horaFimAbono" value="#{apuracaoPonto.abonoAdicionar.horaFim}"
-							required="true" requiredMessage="#{msg.msgInformeHoraFim}" immediate="true">
-							<f:converter converterId="br.udesc.ponto.LocalTimeConverter" />
-						</h:inputText>
-						<h:message for="horaFimAbono" />
-						
+						<ice:selectInputDate value="#{ajustePonto.horaFimAbono}"
+							renderAsPopup="false">
+							<f:convertDateTime pattern="kk:mm" type="time" timeZone="America/Sao_Paulo" />
+						</ice:selectInputDate>
+											
 						<h:outputLabel value="#{msg.motivoAbono}" />
-						<h:selectOneMenu id="motivoAbono" value="#{apuracaoPonto.idMotivoAbonoAdicionar}">
-							<f:selectItems value="#{ajustePonto.motivosAbono}" var="motivo"
-								itemValue="#{motivo.id}" itemLabel="#{motivo.descricao}" />
+						<h:selectOneMenu id="motivoAbono" value="#{ajustePonto.idMotivoAbonoAdicionar}">
+							<f:selectItems value="#{ajustePonto.motivosAbono}" />
 						</h:selectOneMenu>
-						<h:message for="motivoAbono" />
-						
-						<h:commandButton value="#{msg.adicionarAbono}" />						
 					</h:panelGrid>
 					
-					<ace:dataTable value="#{apuracaoPonto.apuracaoSelecionada.abonos}" var="abono">
-						<ace:column headerText="#{msg.horaInicio}">
-							<h:outputText value="#{abono.horaInicio}" />
-						</ace:column>
-						<ace:column headerText="#{msg.horaFim}">
-							<h:outputText value="#{abono.horaInicio}" />
-						</ace:column>
-						<ace:column headerText="#{msg.motivoAbono}">
-							<h:outputText value="#{abono.motivo.descricao}" />
-						</ace:column>
-					</ace:dataTable>
+					<ace:messages />
+					
+					<style type="text/css">
+					/*<![CDATA[*/
+						table.iceSelInpDate>tbody>tr { display: none; }
+					/*]]>*/
+					</style>
 					
 					<h:commandButton value="#{msg.abonarPeriodo}"
 							action="#{ajustePonto.abonarApuracaoSelecionadaSalvar}" />			

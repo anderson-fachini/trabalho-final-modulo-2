@@ -77,6 +77,7 @@ public class Apuracao implements Serializable {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Convert(converter = OcorrenciaToIntConverter.class)
+	@OrderBy("id")
 	private List<Ocorrencia> ocorrencias = new ArrayList<>();
 
 	public Long getId() {
