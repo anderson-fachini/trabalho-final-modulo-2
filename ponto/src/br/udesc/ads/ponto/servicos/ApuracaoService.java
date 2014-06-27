@@ -66,12 +66,12 @@ public class ApuracaoService {
 	/**
 	 * Realiza uma apuração específica.<br>
 	 * Serve para as situações em que uma apuração teve marcações alteradas.<br>
+	 * As alterações não são persistidas no banco de dados.<br>
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
 	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
 	 * Ocorrências;</li>
 	 * <li>Marca a apuração como apurada;</li>
-	 * <li>Persiste a Apuracao com os valores apurados;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
 	 */

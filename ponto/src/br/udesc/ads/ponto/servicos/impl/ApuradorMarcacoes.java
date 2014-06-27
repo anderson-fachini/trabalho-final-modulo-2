@@ -151,17 +151,6 @@ public class ApuradorMarcacoes {
 	public void apurarMarcacoes(Apuracao apuracao) {
 		// Processa:
 		processarApuracao(apuracao);
-
-		// Persiste:
-		EntityTransaction transaction = entityManager.getTransaction();
-		transaction.begin();
-		try {
-			entityManager.merge(apuracao);
-			transaction.commit();
-		} catch (Throwable ex) {
-			transaction.rollback();
-			throw ex;
-		}
 	}
 
 	public void processarApuracao(Apuracao apuracao) {
@@ -524,7 +513,10 @@ public class ApuradorMarcacoes {
 	}
 
 	public void aprovarApuracao(Apuracao apuracao, Usuario usuario) {
-
+		if (apuracao.getInconsistente()) {
+			throw new IllegalArgumentException("Apuração está inconsitente. Precisa ser ajustada antes de aprovar.");
+		}
+		
 		LocalDateTime agora = LocalDateTime.now();
 		apuracao.setDataConfirmacao(agora);
 		apuracao.setResponsavelConfirmacao(usuario);
