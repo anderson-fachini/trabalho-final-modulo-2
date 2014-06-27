@@ -9,27 +9,52 @@
 
 	<ui:define name="pageContent">
 
+		<style type="text/css">
+.inputHora {
+	width: 100px;
+}
+
+.inputHoraReadOnly {
+	background-color: #eeeeee;
+	width: 100px;
+}
+
+.inputObservacao {
+	width: 350px;
+	height: 80px;
+}
+
+.botao {
+	width: 100px;
+}
+</style>
+
 		<h:form id="filtrosRelatorio" styleClass="centralized-form" style="margin-bottom: 15px;">
 			<fieldset>
-				<legend>#{msg.filtros}</legend>
+				<legend>#{msg.ajustarSaldoBancoHoras}</legend>
 				<h:panelGrid columns="2" style="margin-left: 50px;">
 					<h:outputLabel value="#{msg.colaborador}:" />
 					<h:selectOneMenu value="#{ajusteBH.idColabSelecionado}">
+						<f:ajax event="change" listener="#{ajusteBH.selecionouColaborador}"
+							render="idSaldoAtual idNovoSaldo" />
 						<f:selectItems value="#{ajusteBH.colaboradores}" />
 					</h:selectOneMenu>
 
 					<h:outputLabel value="#{msg.saldoAtual}:" />
-					<h:inputText id="idSaldoAtual" value="#{ajusteBH.saldoAtual}" />
+					<h:inputText id="idSaldoAtual" value="#{ajusteBH.saldoAtual}" readonly="true"
+						styleClass="inputHoraReadOnly" />
 
 					<h:outputLabel value="#{msg.novoSaldo}:" />
-					<h:inputText value="#{ajusteBH.novoSaldo}" required="true"
-						requiredMessage="#{msg.msgInformeNovoSaldo}" />
+					<h:inputText id="idNovoSaldo" value="#{ajusteBH.novoSaldo}" required="true"
+						requiredMessage="#{msg.msgInformeNovoSaldo}" styleClass="inputHora" />
 
-					<h:outputLabel value="#{msg.motivoAjuste}:" />
-					<h:inputText value="#{ajusteBH.motivoAjuste}" required="true"
-						requiredMessage="#{msg.msgInformeMotivoAjuste}" />
+					<h:outputLabel value="#{msg.motivoAjuste}:" styleClass="label" />
+					<h:inputTextarea value="#{ajusteBH.motivoAjuste}" required="true"
+						requiredMessage="#{msg.msgInformeMotivoAjuste}" styleClass="inputObservacao" />
 
-					<h:commandButton value="#{msg.salvar}" action="#{ajusteBH.salvar}" />
+					<!-- Gambi para colocar o botão na segunda coluna: -->
+					<h:outputLabel value="" styleClass="label" />
+					<h:commandButton value="#{msg.salvar}" action="#{ajusteBH.salvar}" styleClass="botao" />
 				</h:panelGrid>
 
 				<ace:messages />

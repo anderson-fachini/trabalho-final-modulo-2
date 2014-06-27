@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import br.udesc.ads.ponto.entidades.Colaborador;
@@ -17,23 +16,24 @@ import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.ColaboradorService;
 import br.udesc.ads.ponto.util.DataConverter;
+import br.udesc.ads.ponto.util.JsfUtils;
+import br.udesc.ads.ponto.util.Messages;
 
 @ManagedBean(name = "ajusteBH")
 @SessionScoped
 public class AjusteBHController implements Serializable {
-	
-	// TODO Carrega o saldo atual ao selecionar o colaborador no Combo;
+
+	// TODO Carrega o saldo atual ao selecionar o colaborador no Combo; OK. Não está carregando o primeiro.
 	// TODO Melhorar o campo de Novo Saldo para evitar erros de digitação (e criar uma dica do formato);
-	// TODO Colocar um feedback de Ajuste Realizado com sucesso;
 
 	private static final long serialVersionUID = 3078044484313825302L;
 
 	private Map<Long, Colaborador> colaboradoresMap = new HashMap<>();
 	private List<SelectItem> colaboradores = new ArrayList<>();
 	private Long idColabSelecionado = 0L;
-	private String saldoAtual;
-	private String novoSaldo;
-	private String motivoAjuste;
+	private String saldoAtual = "";
+	private String novoSaldo = "";
+	private String motivoAjuste = "";
 
 	public AjusteBHController() {
 		popularView();
@@ -59,27 +59,29 @@ public class AjusteBHController implements Serializable {
 		}
 	}
 
-	public void valueChangeColaborador(ValueChangeEvent e) {
-		Colaborador colab = colaboradoresMap.get(e.getNewValue());
-		saldoAtual = DataConverter.doubleParaHoraStr(colab.getSaldoBH());
-		novoSaldo = null;
-		motivoAjuste = null;
+	public void selecionouColaborador(AjaxBehaviorEvent event) {
+		atualizarTela();
 	}
 
-	public void selecionouColaborador(AjaxBehaviorEvent event) {
-		System.out.println(event.getSource().getClass().getSimpleName());
+	private void atualizarTela() {
 		Colaborador colab = colaboradoresMap.get(idColabSelecionado);
 		saldoAtual = DataConverter.doubleParaHoraStr(colab.getSaldoBH());
-		novoSaldo = null;
-		motivoAjuste = null;
+		novoSaldo = saldoAtual;
+		motivoAjuste = "";
 	}
 
 	public void salvar() {
 		double saldo = DataConverter.strParaHoraDouble(novoSaldo);
 		Colaborador colab = colaboradoresMap.get(idColabSelecionado);
 		double valorAjuste = saldo - colab.getSaldoBH();
-		Usuario responsavel = new MenuController().getUsuarioAutenticado();
-		ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
+		if (Math.abs(valorAjuste) < 0.01) {
+			JsfUtils.addMensagemErro(Messages.getString("msgSaldoBHNaoPodeSerIgual"));
+		} else {
+			Usuario responsavel = new MenuController().getUsuarioAutenticado();
+			ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
+			atualizarTela();
+			JsfUtils.addMensagemInfo(Messages.getString("msgAjusteBHSalvoSucesso"));
+		}
 	}
 
 	public List<SelectItem> getColaboradores() {
