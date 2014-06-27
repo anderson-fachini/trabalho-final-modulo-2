@@ -162,6 +162,8 @@ public class ApuradorMarcacoes {
 	}
 
 	private void resolverOcorrencias(Apuracao apuracao) {
+		apuracao.clearOcorrencias();
+		
 		if (apuracao.getHorasExcedentes() != null) {
 			if (apuracao.getHorasExcedentes().getMillisOfDay() > 0) {
 				apuracao.addOcorrencia(Ocorrencia.HORAS_EXCEDENTES);
@@ -438,6 +440,10 @@ public class ApuradorMarcacoes {
 		int qtdMarcacoes = marcacoes.size();
 		if (qtdMarcacoes % 2 != 0) {
 			// Não é possível calcular com marcações ímpares.
+			apuracao.setHorasTrabalhadas(null);
+			apuracao.setHorasExcedentes(null);
+			apuracao.setHorasFaltantes(null);
+			apuracao.setHorasAbonadas(null);
 			return false;
 		}
 		int tempoPadraoTrab = getTempoPadraoTrabalho(apuracao.getData());

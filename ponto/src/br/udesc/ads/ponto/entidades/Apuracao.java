@@ -222,6 +222,10 @@ public class Apuracao implements Serializable {
 	public boolean containsMarcacao(Marcacao marcacao) {
 		return this.marcacoes.contains(marcacao);
 	}
+	
+	public void clearMarcacoes() {
+		this.marcacoes.clear();
+	}
 
 	public void addAbono(Abono abono) {
 		this.abonos.add(abono);
@@ -241,6 +245,10 @@ public class Apuracao implements Serializable {
 	public boolean containsAbono(Abono abono) {
 		return this.abonos.contains(abono);
 	}
+	
+	public void clearAbonos() {
+		this.abonos.clear();
+	}
 
 	public void addOcorrencia(Ocorrencia ocorrencia) {
 		this.ocorrencias.add(ocorrencia);
@@ -252,6 +260,10 @@ public class Apuracao implements Serializable {
 
 	public Ocorrencia getOcorrencia(int index) {
 		return this.ocorrencias.get(index);
+	}
+	
+	public void clearOcorrencias() {
+		this.ocorrencias.clear();
 	}
 
 	public List<Marcacao> getMarcacoes() {
