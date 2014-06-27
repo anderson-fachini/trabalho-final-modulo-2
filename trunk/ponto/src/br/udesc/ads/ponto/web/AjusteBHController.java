@@ -23,7 +23,6 @@ import br.udesc.ads.ponto.util.Messages;
 @SessionScoped
 public class AjusteBHController implements Serializable {
 
-	// TODO Carrega o saldo atual ao selecionar o colaborador no Combo; OK. Não está carregando o primeiro.
 	// TODO Melhorar o campo de Novo Saldo para evitar erros de digitação (e criar uma dica do formato);
 
 	private static final long serialVersionUID = 3078044484313825302L;
@@ -80,16 +79,20 @@ public class AjusteBHController implements Serializable {
 		if (idColabSelecionado == null || idColabSelecionado.equals(0L)) {
 			JsfUtils.addMensagemErro(Messages.getString("msgSelecionarColaborador"));
 		} else {
-			double saldo = DataConverter.strParaHoraDouble(novoSaldo);
-			Colaborador colab = colaboradoresMap.get(idColabSelecionado);
-			double valorAjuste = saldo - colab.getSaldoBH();
-			if (Math.abs(valorAjuste) < 0.01) {
-				JsfUtils.addMensagemErro(Messages.getString("msgSaldoBHNaoPodeSerIgual"));
-			} else {
-				Usuario responsavel = new MenuController().getUsuarioAutenticado();
-				ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
-				atualizarTela();
-				JsfUtils.addMensagemInfo(Messages.getString("msgAjusteBHSalvoSucesso"));
+			try {
+				double saldo = DataConverter.strParaHoraDouble(novoSaldo);
+				Colaborador colab = colaboradoresMap.get(idColabSelecionado);
+				double valorAjuste = saldo - colab.getSaldoBH();
+				if (Math.abs(valorAjuste) < 0.01) {
+					JsfUtils.addMensagemErro(Messages.getString("msgSaldoBHNaoPodeSerIgual"));
+				} else {
+					Usuario responsavel = new MenuController().getUsuarioAutenticado();
+					ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
+					atualizarTela();
+					JsfUtils.addMensagemInfo(Messages.getString("msgAjusteBHSalvoSucesso"));
+				}
+			} catch (Throwable ex) {
+				JsfUtils.addMensagemErro("Erro ao salvar:\n" + ex.getMessage());
 			}
 		}
 	}
