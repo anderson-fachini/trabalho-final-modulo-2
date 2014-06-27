@@ -36,8 +36,7 @@ public class ApuracaoService {
 	 * Realiza a importação das marcações do Dispositivo de Captura de Ponto.<br>
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
-	 * <li>Invoca o Webservice do dispositivo e recebe uma lista de registros
-	 * marcação;</li>
+	 * <li>Invoca o Webservice do dispositivo e recebe uma lista de registros marcação;</li>
 	 * <li>Converte os registros marcação em objetos Marcacao/Apuracao;</li>
 	 * <li>Persiste as Marcacoes/Apuracoes;</li>
 	 * </ul>
@@ -52,8 +51,7 @@ public class ApuracaoService {
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
 	 * <li>Carrega as marcações/apurações não apuradas do banco de dados;</li>
-	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
-	 * Ocorrências;</li>
+	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e Ocorrências;</li>
 	 * <li>Marca as apurações como apuradas;</li>
 	 * <li>Persiste as Marcacoes/Apuracoes/Ocorrencias com os valores apurados;</li>
 	 * </ul>
@@ -69,8 +67,7 @@ public class ApuracaoService {
 	 * As alterações não são persistidas no banco de dados.<br>
 	 * Esta operação executa os seguintes passos:
 	 * <ul>
-	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e
-	 * Ocorrências;</li>
+	 * <li>Realiza os cálculos de Horas Trabalhadas, Excedentes, Faltantes e Ocorrências;</li>
 	 * <li>Marca a apuração como apurada;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
@@ -97,9 +94,8 @@ public class ApuracaoService {
 	 * Realiza o Caso de Uso: UC04.
 	 * 
 	 * @param apuracao
-	 *            A apuração a ser aprovada/confirmada. Os ajustes de marcações,
-	 *            abonos, motivos e observações devem estar já setados neste
-	 *            objeto.
+	 *            A apuração a ser aprovada/confirmada. Os ajustes de marcações, abonos, motivos e observações devem
+	 *            estar já setados neste objeto.
 	 * @param usuario
 	 *            O usuário que está aprovando a apuração.
 	 */
@@ -116,8 +112,8 @@ public class ApuracaoService {
 	 *            A data final de pesquisa
 	 * @param colaborador
 	 *            O colaborador a ser filtrado
-	 * @return Lista de apurações do colaborador dentro do período especificado.
-	 *         Se não encontrar nada retorna a lista vazia.
+	 * @return Lista de apurações do colaborador dentro do período especificado. Se não encontrar nada retorna a lista
+	 *         vazia.
 	 */
 	public List<Apuracao> getApuracoesPorPeriodo(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador) {
 		EntityManager em = Manager.get().getEntityManager();
@@ -129,7 +125,11 @@ public class ApuracaoService {
 				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
 		};
 		criteria.select(root).where(filtros).orderBy(cb.asc(root.get("data")));
-		return em.createQuery(criteria).getResultList();
+		List<Apuracao> result = em.createQuery(criteria).getResultList();
+		for (Apuracao apuracao : result) {
+			em.refresh(apuracao);
+		}
+		return result;
 	}
 
 	/**
@@ -142,10 +142,9 @@ public class ApuracaoService {
 	 * @param colaborador
 	 *            O colaborador a ser filtrado
 	 * @param confirmadas
-	 *            True para filtrar somente as confirmadas. False para filtrar
-	 *            somente as não confirmadas.
-	 * @return Lista de apurações do colaborador dentro do período
-	 *         especificado. Se não encontrar nada retorna a lista vazia.
+	 *            True para filtrar somente as confirmadas. False para filtrar somente as não confirmadas.
+	 * @return Lista de apurações do colaborador dentro do período especificado. Se não encontrar nada retorna a lista
+	 *         vazia.
 	 */
 	public List<Apuracao> getApuracoesConfirmadas(LocalDate dataInicial, LocalDate dataFinal, Colaborador colaborador, boolean confirmadas) {
 		EntityManager em = Manager.get().getEntityManager();
@@ -161,8 +160,7 @@ public class ApuracaoService {
 		}
 		Predicate[] filtros = { //
 		cb.equal(root.get("colaborador"), colaborador), //
-				filtroConfirmadas,
-				cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
+				filtroConfirmadas, cb.between(root.<LocalDate> get("data"), dataInicial, dataFinal) //
 		};
 		query.select(root).where(filtros).orderBy(cb.asc(root.get("data")));
 		return em.createQuery(query).getResultList();
