@@ -73,7 +73,7 @@ public class CadastroUsuariosController implements Serializable {
 		
 		if (!temErros) {
 			verificaAlterouAtributosUsuario();
-			UsuarioService.get().persisteUsuario(usuarioSelecionado);
+			UsuarioService.get().persistirUsuario(usuarioSelecionado);
 			
 			JsfUtils.addMensagemInfo(Messages.getString("msgUsuarioSalvoSucesso"));
 			
