@@ -37,6 +37,7 @@
 					<h:selectOneMenu value="#{ajusteBH.idColabSelecionado}">
 						<f:ajax event="change" listener="#{ajusteBH.selecionouColaborador}"
 							render="idSaldoAtual idNovoSaldo" />
+						<f:selectItem itemValue="0" itemLabel="-- Selecione --" />
 						<f:selectItems value="#{ajusteBH.colaboradores}" />
 					</h:selectOneMenu>
 
