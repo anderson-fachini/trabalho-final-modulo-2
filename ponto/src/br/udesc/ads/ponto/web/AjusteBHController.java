@@ -64,23 +64,33 @@ public class AjusteBHController implements Serializable {
 	}
 
 	private void atualizarTela() {
-		Colaborador colab = colaboradoresMap.get(idColabSelecionado);
-		saldoAtual = DataConverter.doubleParaHoraStr(colab.getSaldoBH());
-		novoSaldo = saldoAtual;
-		motivoAjuste = "";
+		if (idColabSelecionado == null || idColabSelecionado.equals(0L)) {
+			saldoAtual = "";
+			novoSaldo = "";
+			motivoAjuste = "";
+		} else {
+			Colaborador colab = colaboradoresMap.get(idColabSelecionado);
+			saldoAtual = DataConverter.doubleParaHoraStr(colab.getSaldoBH());
+			novoSaldo = saldoAtual;
+			motivoAjuste = "";
+		}
 	}
 
 	public void salvar() {
-		double saldo = DataConverter.strParaHoraDouble(novoSaldo);
-		Colaborador colab = colaboradoresMap.get(idColabSelecionado);
-		double valorAjuste = saldo - colab.getSaldoBH();
-		if (Math.abs(valorAjuste) < 0.01) {
-			JsfUtils.addMensagemErro(Messages.getString("msgSaldoBHNaoPodeSerIgual"));
+		if (idColabSelecionado == null || idColabSelecionado.equals(0L)) {
+			JsfUtils.addMensagemErro(Messages.getString("msgSelecionarColaborador"));
 		} else {
-			Usuario responsavel = new MenuController().getUsuarioAutenticado();
-			ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
-			atualizarTela();
-			JsfUtils.addMensagemInfo(Messages.getString("msgAjusteBHSalvoSucesso"));
+			double saldo = DataConverter.strParaHoraDouble(novoSaldo);
+			Colaborador colab = colaboradoresMap.get(idColabSelecionado);
+			double valorAjuste = saldo - colab.getSaldoBH();
+			if (Math.abs(valorAjuste) < 0.01) {
+				JsfUtils.addMensagemErro(Messages.getString("msgSaldoBHNaoPodeSerIgual"));
+			} else {
+				Usuario responsavel = new MenuController().getUsuarioAutenticado();
+				ColaboradorService.get().ajustarBancoHoras(colab, valorAjuste, responsavel, motivoAjuste);
+				atualizarTela();
+				JsfUtils.addMensagemInfo(Messages.getString("msgAjusteBHSalvoSucesso"));
+			}
 		}
 	}
 
