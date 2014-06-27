@@ -20,7 +20,7 @@ public class ApuracaoPonto implements Serializable {
 	
 	private List<String> abonos;
 	
-	private boolean precisaAjustar;
+	private boolean inconsistente;
 	
 	private boolean exigeConfirmacao;
 	
@@ -30,7 +30,6 @@ public class ApuracaoPonto implements Serializable {
 		marcacoes = new ArrayList<String>();
 		ocorrencias = new ArrayList<String>();
 		abonos = new ArrayList<String>();
-		precisaAjustar = false;
 	}
 
 	public String getDiaMes() {
@@ -73,12 +72,12 @@ public class ApuracaoPonto implements Serializable {
 		ocorrencias.add(ocorrencia);
 	}
 
-	public boolean isPrecisaAjustar() {
-		return precisaAjustar;
+	public boolean isInconsistente() {
+		return inconsistente;
 	}
 
-	public void setPrecisaAjustar(boolean precisaAjustar) {
-		this.precisaAjustar = precisaAjustar;
+	public void setInconsistente(boolean inconsistente) {
+		this.inconsistente = inconsistente;
 	}
 
 	public List<String> getAbonos() {
