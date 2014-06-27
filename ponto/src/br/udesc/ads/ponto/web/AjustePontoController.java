@@ -39,9 +39,10 @@ public class AjustePontoController implements Serializable {
 
 	private List<ApuracaoPonto> apuracoesPonto;
 	private List<SelectItem> colaboradores;
+	private List<SelectItem> motivosAbono;
 	private Map<Long, Colaborador> colaboradoresMapa;
 	private Map<Long, Apuracao> apuracoesMap;
-	private List<MotivoAbono> motivosAbono;
+	private Map<Long, MotivoAbono> motivosAbonoMap;
 	
 	private Long codColabSelecionado;
 	private Long idMotivoAbonoAdicionar;
@@ -53,7 +54,6 @@ public class AjustePontoController implements Serializable {
 	private Date horaFimAbono;
 	
 	private Apuracao apuracaoSelecionada;
-	private Abono abonoAdicionar;
 	
 	private boolean apenasExcecoes = true;
 	private boolean buscouApuracoes = false;
@@ -62,13 +62,25 @@ public class AjustePontoController implements Serializable {
 		
 	public AjustePontoController() {
 		buscaListaColaboradores();
-		motivosAbono = MotivoAbonoService.get().getMotivosAbono();
+		
+		idMotivoAbonoAdicionar = 0L;
+		horaInicioAbono = new Date();
+		horaFimAbono = new Date();
+		
+		carregaListasMotivoAbono();				
 	}
 	
-	public List<String> getSituacoes(List<Ocorrencia> ocorrencias) {
+	private void carregaListasMotivoAbono() {
+		motivosAbonoMap = new HashMap<Long, MotivoAbono>();
 		
+		motivosAbono = new ArrayList<SelectItem>();
+		motivosAbono.add(new SelectItem(0L, String.format("-- %s --", Messages.getString("selecione"))));
 		
-		return null;
+		boolean apenasAtivos = true;
+		for (MotivoAbono motivo : MotivoAbonoService.get().getMotivosAbono(apenasAtivos)) {
+			motivosAbono.add(new SelectItem(motivo.getId(), motivo.getDescricao()));
+			motivosAbonoMap.put(motivo.getId(), motivo);
+		}
 	}
 	
 	public void abonarApuracaoSetaSelecionada(Long id) {
@@ -77,19 +89,40 @@ public class AjustePontoController implements Serializable {
 	}
 	
 	public void abonarApuracaoSelecionadaSalvar() {
-//		Abono abono = new Abono();
-//		abono.setHoraInicio(LocalTime.fromDateFields(horaInicioAbono));
-//		abono.setHoraFim(LocalTime.fromDateFields(horaFimAbono));
-//		abono.setApuracao(apuracaoSelecionada);
-//		abono.setMotivo(motivoAbonoSelecionado);
-//		
-//		apuracaoSelecionada.addAbono(abono);
-//		
-//		apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
-//		
-//		geraListaApuracoesPonto();
-//		
-//		togglePopupAbonarApuracaoOpened();
+		boolean temErros = validaAbonarApuracao();
+		
+		if (!temErros) {		
+			Abono abono = new Abono();
+			abono.setHoraInicio(LocalTime.fromDateFields(horaInicioAbono));
+			abono.setHoraFim(LocalTime.fromDateFields(horaFimAbono));
+			// Não pode setar a apuração, senão o abono aparece duplicado
+			//abono.setApuracao(apuracaoSelecionada);
+			abono.setMotivo(motivosAbonoMap.get(idMotivoAbonoAdicionar));
+			
+			apuracaoSelecionada.addAbono(abono);
+			
+			apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
+			
+			geraListaApuracoesPonto();
+			
+			togglePopupAbonarApuracaoOpened();
+		}
+	}
+	
+	private boolean validaAbonarApuracao() {
+		boolean temErros = false;
+		
+		if (horaInicioAbono.equals(horaFimAbono) || horaInicioAbono.after(horaFimAbono)) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgHoraInicialDeveSerMenor"));
+		}
+		
+		if (idMotivoAbonoAdicionar == 0L) {
+			temErros = true;
+			JsfUtils.addMensagemWarning(Messages.getString("msgSelecionarMotivoAbono"));
+		}
+		
+		return temErros;
 	}
 	
 	public void aprovarApuracaoSetaSelecionada(Long id) {		
@@ -146,6 +179,7 @@ public class AjustePontoController implements Serializable {
 			apuracaoPonto.setDiaMes(DataConverter.formataData(apuracao.getData().toDate(), DataConverter.formatoDDMM));
 			apuracaoPonto.setDiaSemana(DataConverter.formataData(apuracao.getData().toDate(), DataConverter.formatoDiaSemanaExtenso));
 			apuracaoPonto.setExigeConfirmacao(apuracao.getExigeConfirmacao());
+			apuracaoPonto.setPodeAbonar(apuracao.getOcorrencias().contains(Ocorrencia.HORAS_FALTANTES));
 			
 			for (Marcacao marcacao : apuracao.getMarcacoes()) {
 				apuracaoPonto.addMarcacao(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), DataConverter.formatoHHMM));
@@ -336,28 +370,12 @@ public class AjustePontoController implements Serializable {
 		this.popupAprovarApuracaoOpened = popupAprovarApuracaoOpened;
 	}
 
-	public List<MotivoAbono> getMotivosAbono() {
+	public List<SelectItem> getMotivosAbono() {
 		return motivosAbono;
 	}
 
-	public void setMotivosAbono(List<MotivoAbono> motivosAbono) {
+	public void setMotivosAbono(List<SelectItem> motivosAbono) {
 		this.motivosAbono = motivosAbono;
-	}
-
-	public Date getDataInicioAbono() {
-		return horaInicioAbono;
-	}
-
-	public void setDataInicioAbono(Date dataInicioAbono) {
-		this.horaInicioAbono = dataInicioAbono;
-	}
-
-	public Date getDataFimAbono() {
-		return horaFimAbono;
-	}
-
-	public void setDataFimAbono(Date dataFimAbono) {
-		this.horaFimAbono = dataFimAbono;
 	}
 
 	public boolean isPopupAbonarApuracaoOpened() {
@@ -372,20 +390,28 @@ public class AjustePontoController implements Serializable {
 		
 	}
 
-	public Abono getAbonoAdicionar() {
-		return abonoAdicionar;
-	}
-
-	public void setAbonoAdicionar(Abono abonoAdicionar) {
-		this.abonoAdicionar = abonoAdicionar;
-	}
-
 	public Long getIdMotivoAbonoAdicionar() {
 		return idMotivoAbonoAdicionar;
 	}
 
 	public void setIdMotivoAbonoAdicionar(Long idAbonoAdicionar) {
 		this.idMotivoAbonoAdicionar = idAbonoAdicionar;
+	}
+
+	public Date getHoraInicioAbono() {
+		return horaInicioAbono;
+	}
+
+	public void setHoraInicioAbono(Date horaInicioAbono) {
+		this.horaInicioAbono = horaInicioAbono;
+	}
+
+	public Date getHoraFimAbono() {
+		return horaFimAbono;
+	}
+
+	public void setHoraFimAbono(Date horaFimAbono) {
+		this.horaFimAbono = horaFimAbono;
 	}
 	
 }

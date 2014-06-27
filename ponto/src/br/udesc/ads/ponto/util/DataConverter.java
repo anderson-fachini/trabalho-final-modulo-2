@@ -20,7 +20,7 @@ public class DataConverter {
 	/**
 	 * Formatação de hora em formato hh:mm (0-24). Ex.: 18:30
 	 */
-	public static final String formatoHHMM = "kk:mm";
+	public static final String formatoHHMM = "HH:mm";
 
 	/**
 	 * Dia da semana por extenso. Ex.: Segunda, Sábado, Domingo

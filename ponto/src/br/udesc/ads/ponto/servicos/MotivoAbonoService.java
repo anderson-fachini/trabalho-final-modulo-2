@@ -9,6 +9,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import br.udesc.ads.ponto.entidades.MotivoAbono;
+import br.udesc.ads.ponto.entidades.Situacao;
 import br.udesc.ads.ponto.manager.Manager;
 import br.udesc.ads.ponto.util.JPAUtils;
 
@@ -34,6 +35,15 @@ public class MotivoAbonoService {
 	 * @return
 	 */
 	public List<MotivoAbono> getMotivosAbono() {
+		return getMotivosAbono(false);
+	}
+	
+	/**
+	 * Método que obtém todos os motivos de abono cadastrados na base de dados
+	 * @param apenasAtivos Caso true, busca apenas os motivos de abono ativos
+	 * @return
+	 */
+	public List<MotivoAbono> getMotivosAbono(boolean apenasAtivos) {
 		List<MotivoAbono> motivosAbono = new ArrayList<MotivoAbono>();
 		
 		EntityManager entity = Manager.get().getEntityManager();
@@ -43,6 +53,10 @@ public class MotivoAbonoService {
 		criteria
 			.select(root)
 			.orderBy(builder.asc(root.get("descricao")));
+		
+		if (apenasAtivos) {
+			criteria.where(builder.equal(root.get("situacao"), Situacao.ATIVO));
+		}
 		
 		motivosAbono = entity.createQuery(criteria).getResultList();
 		
