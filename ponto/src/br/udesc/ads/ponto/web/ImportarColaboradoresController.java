@@ -10,6 +10,7 @@ import org.icefaces.ace.component.fileentry.FileEntryEvent;
 import org.icefaces.ace.component.fileentry.FileEntryResults;
 
 import br.udesc.ads.ponto.servicos.ColaboradorService;
+import br.udesc.ads.ponto.servicos.UsuarioService;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
 
@@ -30,6 +31,7 @@ public class ImportarColaboradoresController implements Serializable {
 		for (FileEntryResults.FileInfo i : results.getFiles()) {
 			ColaboradorService.get().importarColaboradores(i.getFile());
 		}
+		UsuarioService.get().criarUsuariosParaOsGerentesNovos();
 		
 		JsfUtils.addMensagemInfo(Messages.getString("msgColaboradoresImportadosSucesso"));
 	}
