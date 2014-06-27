@@ -41,9 +41,11 @@ public class ApuracaoService {
 	 * <li>Persiste as Marcacoes/Apuracoes;</li>
 	 * </ul>
 	 * Realiza o Caso de Uso: UC01.
+	 * 
+	 * @return A quantidade de marcações processadas.
 	 */
-	public void importarMarcacoes() {
-		new ImportadorMarcacoes().importar();
+	public int importarMarcacoes() {
+		return new ImportadorMarcacoes().importar();
 	}
 
 	/**

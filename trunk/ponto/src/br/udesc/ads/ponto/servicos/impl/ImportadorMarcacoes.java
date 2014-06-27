@@ -42,7 +42,7 @@ public class ImportadorMarcacoes {
 		leitora = service.getLeitoraPontoServicePort();
 	}
 
-	public void importar() {
+	public int importar() {
 		// Importa da leitora para uma fila no banco, ignorando duplicidades:
 		importarRegistrosDaLeitora();
 
@@ -65,6 +65,7 @@ public class ImportadorMarcacoes {
 			transaction.rollback();
 			throw ex;
 		}
+		return lidas.size();
 	}
 
 	public void resetarLeitora() {

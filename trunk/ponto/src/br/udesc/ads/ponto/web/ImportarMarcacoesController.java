@@ -14,14 +14,16 @@ import br.udesc.ads.ponto.util.Messages;
 public class ImportarMarcacoesController implements Serializable {
 
 	private static final long serialVersionUID = 4440216532172458253L;
-	
+
 	public String importarMarcacoes() {
-		
-		ApuracaoService.get().importarMarcacoes();
-		ApuracaoService.get().apurarMarcacoesPendentes();
-		
-		JsfUtils.addMensagemInfo(Messages.getString("msgMarcacoesImportadasSucesso"));
-		
+		try {
+			int qtd = ApuracaoService.get().importarMarcacoes();
+			ApuracaoService.get().apurarMarcacoesPendentes();
+			JsfUtils.addMensagemInfo(Messages.getString("msgMarcacoesImportadasSucesso"));
+			JsfUtils.addMensagemInfo(Messages.getString("msgQtdMarcacoesProcessadas") + ": " + qtd + ".");
+		} catch (Throwable ex) {
+			JsfUtils.addMensagemErro(Messages.getString("erroImportandoMarcacoes") + ":\n" + ex.getMessage());
+		}
 		return "";
 	}
 
