@@ -64,7 +64,8 @@ public class MotivoMarcacaoController implements Serializable {
 				
 			MotivoMarcacaoService.get().persisteMotivoMarcacao(motivoMarcacaoSelecionado);
 			
-			JsfUtils.addMensagemInfo(Messages.getString("msgMotivoAjustePontoSalvoSucesso"));
+//			JsfUtils.addMensagemInfo(Messages.getString("msgMotivoAjustePontoSalvoSucesso"));
+			togglePopupOpened();
 			
 			buscaTodosMotivosMarcacao();			
 		}
