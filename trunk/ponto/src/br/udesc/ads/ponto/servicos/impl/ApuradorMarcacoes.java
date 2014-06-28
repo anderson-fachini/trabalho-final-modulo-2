@@ -49,7 +49,7 @@ public class ApuradorMarcacoes {
 			// Se não há nenhuma marcação pendente, ignora.
 			return;
 		}
-		
+
 		// Descobre faltantes:
 		incluirMarcacoesFaltantes(apuracoes);
 
@@ -163,7 +163,7 @@ public class ApuradorMarcacoes {
 
 	private void resolverOcorrencias(Apuracao apuracao) {
 		apuracao.clearOcorrencias();
-		
+
 		if (apuracao.getHorasExcedentes() != null) {
 			if (apuracao.getHorasExcedentes().getMillisOfDay() > 0) {
 				apuracao.addOcorrencia(Ocorrencia.HORAS_EXCEDENTES);
@@ -174,17 +174,6 @@ public class ApuradorMarcacoes {
 				apuracao.addOcorrencia(Ocorrencia.HORAS_FALTANTES);
 			}
 		}
-		if (isMarcacoesForaDaEscalaPadrao(apuracao)) {
-			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FORA_DA_ESCALA);
-		}
-
-		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
-		if (marcacoes.size() < 4) {
-			apuracao.addOcorrencia(Ocorrencia.MARCACOES_FALTANTES);
-		} else if (marcacoes.size() > 4) {
-			apuracao.addOcorrencia(Ocorrencia.MARCACOES_EXCEDENTES);
-		}
-
 		if (isIntervaloAlmocoIncompleto(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.INTERVALO_ALMOCO_INCOMPLETO);
 		}
@@ -196,6 +185,25 @@ public class ApuradorMarcacoes {
 		}
 		if (isIntervaloTrabalhoExcedido(apuracao)) {
 			apuracao.addOcorrencia(Ocorrencia.INTERVALO_TRABALHO_EXCEDIDO);
+		}
+
+		LocalDate data = apuracao.getData();
+		DiaSemana diaSemana = DiaSemana.fromLocalDate(data);
+		Config config = Manager.get().getConfig();
+		List<LocalTime> escalaPadrao = config.getEscalaPadrao().getSequenciaMarcacoes(diaSemana);
+
+		// Em feriados ou dias que não possuem marcações previstas, as ocorrências abaixo são ignoradas.
+		if (!escalaPadrao.isEmpty() && !FeriadoService.get().existeFeriado(data)) {
+
+			if (isMarcacoesForaDaEscalaPadrao(apuracao, escalaPadrao)) {
+				apuracao.addOcorrencia(Ocorrencia.MARCACOES_FORA_DA_ESCALA);
+			}
+			List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
+			if (marcacoes.size() < 4) {
+				apuracao.addOcorrencia(Ocorrencia.MARCACOES_FALTANTES);
+			} else if (marcacoes.size() > 4) {
+				apuracao.addOcorrencia(Ocorrencia.MARCACOES_EXCEDENTES);
+			}
 		}
 	}
 
@@ -407,14 +415,11 @@ public class ApuradorMarcacoes {
 		return result;
 	}
 
-	private boolean isMarcacoesForaDaEscalaPadrao(Apuracao apuracao) {
-		Config config = Manager.get().getConfig();
-		int margem = config.getMargemMarcacoes();
-		DiaSemana diaSemana = DiaSemana.fromLocalDate(apuracao.getData());
-		List<LocalTime> escala = config.getEscalaPadrao().getSequenciaMarcacoes(diaSemana);
+	private boolean isMarcacoesForaDaEscalaPadrao(Apuracao apuracao, List<LocalTime> escalaPadrao) {
+		int margem = Manager.get().getConfig().getMargemMarcacoes();
 		List<LocalTime> marcacoes = apuracao.getSequenciaMarcacoes();
 		for (LocalTime marcacao : marcacoes) {
-			if (!estaNaEscala(marcacao, escala, margem)) {
+			if (!estaNaEscala(marcacao, escalaPadrao, margem)) {
 				return true;
 			}
 		}
@@ -522,7 +527,7 @@ public class ApuradorMarcacoes {
 		if (apuracao.getInconsistente()) {
 			throw new IllegalArgumentException("Apuração está inconsitente. Precisa ser ajustada antes de aprovar.");
 		}
-		
+
 		LocalDateTime agora = LocalDateTime.now();
 		apuracao.setDataConfirmacao(agora);
 		apuracao.setResponsavelConfirmacao(usuario);
