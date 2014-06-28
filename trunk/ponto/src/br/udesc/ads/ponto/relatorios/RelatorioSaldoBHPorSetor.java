@@ -46,7 +46,7 @@ public class RelatorioSaldoBHPorSetor {
 				item.setEntradasBH(item.getEntradasBH() + bh.getEntradasBH());
 				item.setSaidasBH(item.getSaidasBH() + bh.getSaidasBH());
 				item.setAjustesManuaisBH(item.getAjustesManuaisBH() + bh.getAjustesManuaisBH());
-				item.setSaldoInicialPeriodo(item.getSaldoInicialPeriodo() + bh.getSaldoFinalPeriodo());
+				item.setSaldoInicialPeriodo(item.getSaldoInicialPeriodo() + bh.getSaldoInicialPeriodo());
 				item.setSaldoFinalPeriodo(item.getSaldoFinalPeriodo() + bh.getSaldoFinalPeriodo());
 			}
 			result.add(item);
