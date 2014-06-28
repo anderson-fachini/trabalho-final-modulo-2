@@ -64,7 +64,8 @@
 					rendered="#{apuracaoPonto.inconsistente || apuracaoPonto.exigeConfirmacao}">
 						<ace:menuItem value="#{msg.abonarPeriodo}" rendered="#{apuracaoPonto.podeAbonar}"
 							action="#{ajustePonto.abonarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
-						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.inconsistente}" />
+						<ace:menuItem value="#{msg.alterarMarcacoes}" rendered="#{apuracaoPonto.inconsistente}"
+							action="#{ajustePonto.alterarMarcacoesSetaApuracaoSelecionada(apuracaoPonto.id)}" />
 						<ace:menuItem value="#{msg.confirmarApuracao}" rendered="#{!apuracaoPonto.inconsistente and apuracaoPonto.exigeConfirmacao }"
 							action="#{ajustePonto.aprovarApuracaoSetaSelecionada(apuracaoPonto.id)}" />
 					</ace:menuButton>
@@ -74,6 +75,49 @@
 			<h:commandButton rendered="#{ajustePonto.buscouApuracoes}" style="margin-top: 10px;" 
 				value="#{msg.confirmarAjustes}" action="#{ajustePonto.confirmarAjustes}" />
 		</h:form>
+		
+		<ice:panelPopup visible="#{ajustePonto.popupAlterarMarcacoesOpened}" rendered="#{ajustePonto.popupAlterarMarcacoesOpened}"
+		modal="true" autoCentre="true" style="width: 470px;">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:panelGroup style="float: left;">
+                         #{msg.alterarMarcacoes}
+                     </h:panelGroup>
+					<h:panelGroup style="float: right;">
+						<h:form>
+							<h:commandButton action="#{ajustePonto.togglePopupAlterarMarcacoesOpened}" 
+								image="/images/popup-close.png" alt="Close" type="button"
+								title="Close" style="height: 11px; width: 11px; border: 0;" />
+						</h:form>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="body">
+				<h:form>
+					<ace:dataTable value="#{ajustePonto.marcacoes}" var="marcacao">
+						<ace:column headerText="#{msg.hora}">
+							<h:outputText value="#{marcacao.hora}" />
+						</ace:column>
+						
+						<ace:column headerText="#{msg.origem}">
+							<h:outputText value="#{marcacao.origem}" />
+						</ace:column>
+						
+						<ace:column headerText="#{msg.motivoAjuste}">
+							<h:selectOneMenu value="#{marcacao.motivo}">
+								<f:selectItems value="#{ajustePonto.motivosMarcacaoPonto}" />
+							</h:selectOneMenu>
+						</ace:column>
+						
+						<ace:column headerText="#{msg.acao}">
+							<h:commandButton value="#{msg.excluir}" action="#{ajustePonto.excluiMarcacao(marcacao.id)}" />
+						</ace:column>
+					</ace:dataTable>
+					
+					<ace:messages />			
+				</h:form>
+			</f:facet>
+		</ice:panelPopup>
 		
 		<ice:panelPopup visible="#{ajustePonto.popupAprovarApuracaoOpened}" rendered="#{ajustePonto.popupAprovarApuracaoOpened}"
 		modal="true" autoCentre="true" style="width: 470px;">

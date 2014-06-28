@@ -24,12 +24,14 @@ import br.udesc.ads.ponto.entidades.Apuracao;
 import br.udesc.ads.ponto.entidades.Colaborador;
 import br.udesc.ads.ponto.entidades.Marcacao;
 import br.udesc.ads.ponto.entidades.MotivoAbono;
+import br.udesc.ads.ponto.entidades.MotivoMarcacao;
 import br.udesc.ads.ponto.entidades.Ocorrencia;
 import br.udesc.ads.ponto.entidades.Setor;
 import br.udesc.ads.ponto.entidades.Usuario;
 import br.udesc.ads.ponto.servicos.ApuracaoService;
 import br.udesc.ads.ponto.servicos.ColaboradorService;
 import br.udesc.ads.ponto.servicos.MotivoAbonoService;
+import br.udesc.ads.ponto.servicos.MotivoMarcacaoService;
 import br.udesc.ads.ponto.util.DataConverter;
 import br.udesc.ads.ponto.util.JsfUtils;
 import br.udesc.ads.ponto.util.Messages;
@@ -45,12 +47,17 @@ public class AjustePontoController implements Serializable {
 	private static final long serialVersionUID = 6585193392870549078L;
 
 	private List<ApuracaoPonto> apuracoesPonto;
+	private List<MarcacaoPonto> marcacoes;
+	private List<MarcacaoPonto> marcacoesOriginais;
 	private List<SelectItem> colaboradores;
 	private List<SelectItem> motivosAbono;
+	private List<SelectItem> motivosMarcacaoPonto;
 	private Map<Long, Colaborador> colaboradoresMapa;
 	private Map<Long, Apuracao> apuracoesMap;
-	private Set<Apuracao> apuracoesConfirmadas;
 	private Map<Long, MotivoAbono> motivosAbonoMap;
+	private Map<Long, MotivoMarcacao> motivosMarcacaoMap;
+	
+	private Set<Apuracao> apuracoesConfirmadas;
 	
 	private Long codColabSelecionado;
 	private Long idMotivoAbonoAdicionar;
@@ -67,6 +74,7 @@ public class AjustePontoController implements Serializable {
 	private boolean buscouApuracoes = false;
 	private boolean popupAprovarApuracaoOpened = false;
 	private boolean popupAbonarApuracaoOpened = false;
+	private boolean popupAlterarMarcacoesOpened = false;
 		
 	public AjustePontoController() {
 		idMotivoAbonoAdicionar = 0L;
@@ -74,7 +82,8 @@ public class AjustePontoController implements Serializable {
 		horaFimAbono = new Date();
 		
 		buscaListaColaboradores();
-		carregaListasMotivoAbono();				
+		carregaListasMotivoAbono();	
+		buscaMotivosMarcacaoPonto();
 	}
 	
 	private void carregaListasMotivoAbono() {
@@ -101,6 +110,82 @@ public class AjustePontoController implements Serializable {
 		JsfUtils.addMensagemInfo(Messages.getString("msgApuracoesConfirmadasSucesso"));
 		
 		buscaApuracoes();
+	}
+	
+	private void buscaMotivosMarcacaoPonto() {
+		motivosMarcacaoPonto = new ArrayList<SelectItem>();
+		motivosMarcacaoPonto.add(new SelectItem(0L, String.format(FORMATO_SELECIONE_ITEM, Messages.getString("selecione"))));
+		
+		motivosMarcacaoMap = new HashMap<Long, MotivoMarcacao>();
+		
+		List<MotivoMarcacao> motivos = MotivoMarcacaoService.get().getMotivosMarcacao();
+		for (MotivoMarcacao motivo : motivos) {
+			motivosMarcacaoPonto.add(new SelectItem(motivo.getId(), motivo.getDescricao()));
+			motivosMarcacaoMap.put(motivo.getId(), motivo);
+		}
+	}
+	
+	public void alterarMarcacoesSetaApuracaoSelecionada(Long id) {
+		apuracaoSelecionada = apuracoesMap.get(id);
+		
+		marcacoesOriginais = new ArrayList<MarcacaoPonto>();
+		for (Marcacao marcacao : apuracaoSelecionada.getMarcacoes()) {
+			if (!marcacao.isExcluida()) {
+				MarcacaoPonto marcacaoPonto = new MarcacaoPonto();
+				marcacaoPonto.setId(marcacao.getId());
+				marcacaoPonto.setApuracao(marcacao.getId());
+				marcacaoPonto.setHora(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), 
+						DataConverter.formatoHHMM));
+				marcacaoPonto.setDigitada(marcacao.isDigitada());
+				marcacaoPonto.setExcluida(marcacao.isExcluida());
+				
+				MotivoMarcacao motivo = marcacao.getMotivo();
+				marcacaoPonto.setMotivo(motivo != null ? motivo.getId() : 0L);
+				marcacaoPonto.setOrigem(marcacao.isDigitada() ? Messages.getString("digitada") : Messages.getString("eletronica"));
+				
+				marcacoesOriginais.add(marcacaoPonto);
+			}
+		}
+		
+		geraListaMarcacoes();
+		
+		togglePopupAlterarMarcacoesOpened();
+	}
+	
+	private void geraListaMarcacoes() {
+		marcacoes = new ArrayList<MarcacaoPonto>();
+		
+		for (MarcacaoPonto marcacao : marcacoesOriginais) {
+			if (!marcacao.getExcluida()) {
+				marcacoes.add(marcacao);
+			}
+		}
+	}
+	
+	public void excluiMarcacao(Long idMarcacao) {
+		boolean informouMotivo = true;
+		
+		for (MarcacaoPonto marcacao : marcacoes) {
+			if (marcacao.getId().equals(idMarcacao)) {
+				if (marcacao.getMotivo().equals(0L)) {
+					JsfUtils.addMensagemWarning(Messages.getString("msgInformeMotivoAjuste"));
+					
+					informouMotivo = false;
+					break;
+				}
+			}
+		}
+		
+		if (informouMotivo) {
+			for (MarcacaoPonto marcacao : marcacoesOriginais) {
+				if (marcacao.getId().equals(idMarcacao)) {
+					marcacao.setExcluida(true);
+					break;
+				}
+			}
+			
+			geraListaMarcacoes();
+		}
 	}
 	
 	public void abonarApuracaoSetaSelecionada(Long id) {
@@ -298,6 +383,10 @@ public class AjustePontoController implements Serializable {
 		apuracaoSelecionada = new Apuracao();
 	}
 	
+	public void togglePopupAlterarMarcacoesOpened() {
+		popupAlterarMarcacoesOpened = !popupAlterarMarcacoesOpened;
+	}
+	
 	public void togglePopupAprovarApuracaoOpened() {
 		popupAprovarApuracaoOpened = !popupAprovarApuracaoOpened;
 		
@@ -426,6 +515,30 @@ public class AjustePontoController implements Serializable {
 
 	public void setHoraFimAbono(Date horaFimAbono) {
 		this.horaFimAbono = horaFimAbono;
+	}
+
+	public boolean isPopupAlterarMarcacoesOpened() {
+		return popupAlterarMarcacoesOpened;
+	}
+
+	public void setPopupAlterarMarcacoesOpened(boolean popupAlterarMarcacoesOpened) {
+		this.popupAlterarMarcacoesOpened = popupAlterarMarcacoesOpened;
+	}
+
+	public List<MarcacaoPonto> getMarcacoes() {
+		return marcacoes;
+	}
+
+	public void setMarcacoes(List<MarcacaoPonto> marcacoes) {
+		this.marcacoes = marcacoes;
+	}
+
+	public List<SelectItem> getMotivosMarcacaoPonto() {
+		return motivosMarcacaoPonto;
+	}
+
+	public void setMotivosMarcacaoPonto(List<SelectItem> motivosMarcacaoPonto) {
+		this.motivosMarcacaoPonto = motivosMarcacaoPonto;
 	}
 	
 }
