@@ -64,7 +64,8 @@ public class MotivoAbonoController implements Serializable {
 				
 			MotivoAbonoService.get().persisteMotivoAbono(motivoAbonoSelecionado);
 			
-			JsfUtils.addMensagemInfo(Messages.getString("msgMotivoAbonoSalvoSucesso"));
+//			JsfUtils.addMensagemInfo(Messages.getString("msgMotivoAbonoSalvoSucesso"));
+			togglePopupOpened();
 			
 			buscaTodosMotivosAbono();			
 		}
