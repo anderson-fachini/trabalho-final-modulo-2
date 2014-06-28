@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -61,12 +62,14 @@ public class AjustePontoController implements Serializable {
 	
 	private Long codColabSelecionado;
 	private Long idMotivoAbonoAdicionar;
+	private Long idMotivoMarcacao;
 	
 	private Date dataInicial;
 	private Date dataFinal;
 	private Date maxDate = new Date(System.currentTimeMillis());
 	private Date horaInicioAbono;
 	private Date horaFimAbono;
+	private Date horaMarcacao;
 	
 	private Apuracao apuracaoSelecionada;
 	
@@ -78,8 +81,10 @@ public class AjustePontoController implements Serializable {
 		
 	public AjustePontoController() {
 		idMotivoAbonoAdicionar = 0L;
+		idMotivoMarcacao = 0L;
 		horaInicioAbono = new Date();
 		horaFimAbono = new Date();
+		horaMarcacao = new Date();
 		
 		buscaListaColaboradores();
 		carregaListasMotivoAbono();	
@@ -133,7 +138,6 @@ public class AjustePontoController implements Serializable {
 			if (!marcacao.isExcluida()) {
 				MarcacaoPonto marcacaoPonto = new MarcacaoPonto();
 				marcacaoPonto.setId(marcacao.getId());
-				marcacaoPonto.setApuracao(marcacao.getId());
 				marcacaoPonto.setHora(DataConverter.formataData(marcacao.getHora().toDateTimeToday().toDate(), 
 						DataConverter.formatoHHMM));
 				marcacaoPonto.setDigitada(marcacao.isDigitada());
@@ -162,30 +166,76 @@ public class AjustePontoController implements Serializable {
 		}
 	}
 	
-	public void excluiMarcacao(Long idMarcacao) {
-		boolean informouMotivo = true;
-		
-		for (MarcacaoPonto marcacao : marcacoes) {
-			if (marcacao.getId().equals(idMarcacao)) {
-				if (marcacao.getMotivo().equals(0L)) {
-					JsfUtils.addMensagemWarning(Messages.getString("msgInformeMotivoAjuste"));
-					
-					informouMotivo = false;
-					break;
-				}
-			}
-		}
-		
-		if (informouMotivo) {
-			for (MarcacaoPonto marcacao : marcacoesOriginais) {
-				if (marcacao.getId().equals(idMarcacao)) {
-					marcacao.setExcluida(true);
-					break;
+	public void excluiMarcacao(MarcacaoPonto marcacaoPonto) {
+		if (marcacaoPonto.getMotivo().equals(0L)) {
+			JsfUtils.addMensagemWarning(Messages.getString("msgInformeMotivoAjuste"));
+		} else {
+			if (marcacaoPonto.getId() == null) {
+				marcacoesOriginais.remove(marcacaoPonto);
+			} else {
+				for (MarcacaoPonto marcacao : marcacoesOriginais) {
+					if (marcacao.getId().equals(marcacaoPonto.getId())) {
+						marcacao.setExcluida(true);
+						marcacao.setAlterada(true);
+						break;
+					}
 				}
 			}
 			
 			geraListaMarcacoes();
 		}
+	}
+	
+	public void incluirMarcacao() {
+		if (idMotivoMarcacao.equals(0L)) {
+			JsfUtils.addMensagemWarning(Messages.getString("msgInformeMotivoAjuste"));
+		} else {
+			MarcacaoPonto marcacao = new MarcacaoPonto();
+			marcacao.setDigitada(true);
+			marcacao.setExcluida(false);
+			marcacao.setHoraDate(horaMarcacao);
+			marcacao.setHora(DataConverter.formataData(horaMarcacao, DataConverter.formatoHHMM));
+			marcacao.setMotivo(idMotivoMarcacao);
+			marcacao.setOrigem(Messages.getString("digitada"));
+			marcacao.setAlterada(true);
+			
+			marcacoesOriginais.add(marcacao);
+			
+			idMotivoMarcacao = 0L;
+			geraListaMarcacoes();
+		}
+	}
+	
+	public void salvaAlteracaoMarcacoes() {		
+		for (MarcacaoPonto marcacaoPonto : marcacoesOriginais) {
+			if (marcacaoPonto.getAlterada()) {
+				// significa que ela é nova
+				if (marcacaoPonto.getId() == null) {
+					Marcacao marcacao = new Marcacao();
+					marcacao.setDigitada(marcacaoPonto.getDigitada());
+					marcacao.setExcluida(marcacaoPonto.getExcluida());
+					marcacao.setHora(LocalTime.fromDateFields(marcacaoPonto.getHoraDate()));
+					marcacao.setMotivo(motivosMarcacaoMap.get(marcacaoPonto.getMotivo()));
+					
+					apuracaoSelecionada.addMarcacao(marcacao);
+				} else {
+					for (Marcacao marcacao : apuracaoSelecionada.getMarcacoes()) {
+						if (marcacao.getId().equals(marcacaoPonto.getId())) {
+							marcacao.setExcluida(true);
+							marcacao.setMotivo(motivosMarcacaoMap.get(marcacaoPonto.getMotivo()));
+						}
+					}
+				}
+			}
+		}
+		
+		ApuracaoService.get().apurarMarcacoes(apuracaoSelecionada);
+		
+		apuracoesMap.put(apuracaoSelecionada.getId(), apuracaoSelecionada);
+		
+		geraListaApuracoesPonto();
+		
+		togglePopupAlterarMarcacoesOpened();
 	}
 	
 	public void abonarApuracaoSetaSelecionada(Long id) {
@@ -539,6 +589,22 @@ public class AjustePontoController implements Serializable {
 
 	public void setMotivosMarcacaoPonto(List<SelectItem> motivosMarcacaoPonto) {
 		this.motivosMarcacaoPonto = motivosMarcacaoPonto;
+	}
+
+	public Long getIdMotivoMarcacao() {
+		return idMotivoMarcacao;
+	}
+
+	public void setIdMotivoMarcacao(Long idMotivoMarcacao) {
+		this.idMotivoMarcacao = idMotivoMarcacao;
+	}
+
+	public Date getHoraMarcacao() {
+		return horaMarcacao;
+	}
+
+	public void setHoraMarcacao(Date horaMarcacao) {
+		this.horaMarcacao = horaMarcacao;
 	}
 	
 }

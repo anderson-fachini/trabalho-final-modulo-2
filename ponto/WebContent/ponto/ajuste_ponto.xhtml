@@ -94,7 +94,20 @@
 			</f:facet>
 			<f:facet name="body">
 				<h:form>
-					<ace:dataTable value="#{ajustePonto.marcacoes}" var="marcacao">
+					<h:panelGrid columns="2" style="margin-bottom: 15px;">
+						<h:outputLabel value="#{msg.hora}" />
+						<ace:dateTimeEntry value="#{ajustePonto.horaMarcacao}" styleClass="minimal"
+							timezone="America/Sao_Paulo" pattern="HH:mm" timeOnly="true" />
+						
+						<h:outputLabel value="#{msg.motivoAjuste}" />
+						<h:selectOneMenu value="#{ajustePonto.idMotivoMarcacao}">
+							<f:selectItems value="#{ajustePonto.motivosMarcacaoPonto}" />
+						</h:selectOneMenu>
+						
+						<h:commandButton value="#{msg.adicionarMarcacao}" action="#{ajustePonto.incluirMarcacao}" />						
+					</h:panelGrid>
+				
+					<ace:dataTable value="#{ajustePonto.marcacoes}" var="marcacao" style="margin-bottom: 15px;">
 						<ace:column headerText="#{msg.hora}">
 							<h:outputText value="#{marcacao.hora}" />
 						</ace:column>
@@ -110,11 +123,13 @@
 						</ace:column>
 						
 						<ace:column headerText="#{msg.acao}">
-							<h:commandButton value="#{msg.excluir}" action="#{ajustePonto.excluiMarcacao(marcacao.id)}" />
+							<h:commandButton value="#{msg.excluir}" action="#{ajustePonto.excluiMarcacao(marcacao)}" />
 						</ace:column>
 					</ace:dataTable>
 					
-					<ace:messages />			
+					<ace:messages />
+					
+					<h:commandButton value="#{msg.alterarMarcacoes}" action="#{ajustePonto.salvaAlteracaoMarcacoes}" />			
 				</h:form>
 			</f:facet>
 		</ice:panelPopup>
