@@ -83,3 +83,12 @@
 .link-imprimir {
 	position: absolute;
 }
+
+.minimal .ui-datepicker .ui-widget-header,
+.minimal .ui-datepicker .ui-datepicker-buttonpane {
+	display: none;
+}
+
+.minimal .ui-datepicker .ui-timepicker-div dl {
+	margin: 0px;
+}

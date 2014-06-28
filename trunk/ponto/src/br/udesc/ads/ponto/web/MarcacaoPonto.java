@@ -1,6 +1,7 @@
 package br.udesc.ads.ponto.web;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class MarcacaoPonto implements Serializable {
 
@@ -8,7 +9,7 @@ public class MarcacaoPonto implements Serializable {
 
 	private Long id;
 	
-	private Long apuracao;
+	private Date horaDate;
 	
 	private String hora;
 	
@@ -17,6 +18,8 @@ public class MarcacaoPonto implements Serializable {
 	private Boolean digitada = Boolean.FALSE;
 	
 	private Boolean excluida = Boolean.FALSE;
+	
+	private Boolean alterada = Boolean.FALSE;
 	
 	private String origem;
 	
@@ -28,14 +31,6 @@ public class MarcacaoPonto implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getApuracao() {
-		return apuracao;
-	}
-
-	public void setApuracao(Long apuracao) {
-		this.apuracao = apuracao;
 	}
 
 	public String getHora() {
@@ -77,4 +72,21 @@ public class MarcacaoPonto implements Serializable {
 	public void setOrigem(String origem) {
 		this.origem = origem;
 	}
+
+	public Boolean getAlterada() {
+		return alterada;
+	}
+
+	public void setAlterada(Boolean alterada) {
+		this.alterada = alterada;
+	}
+
+	public Date getHoraDate() {
+		return horaDate;
+	}
+
+	public void setHoraDate(Date horaDate) {
+		this.horaDate = horaDate;
+	}
+	
 }
